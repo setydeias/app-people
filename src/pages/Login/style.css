@@ -91,18 +91,16 @@
   }
   
   .button {
-    width: 100%;
-    padding: 16px 0px;
+    width: 45%;
+    padding: 14px 0px;
     border: none;
-    border-radius: 6px;
+    border-radius: 26px;
     outline: none;
-    text-transform: uppercase;
-    font-weight: 900;
+    font-weight: 600;
     letter-spacing: 3px;
     cursor: pointer;
-    margin-top: 15px;
-    background: #B3DAF2;
-    color: black;
+    background: #4785fa;
+    color: #fff;
   }
   
   @media (max-width: 950px){
