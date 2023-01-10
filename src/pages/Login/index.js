@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import './style.css';
 import { Form, FormGroup, Button, Alert } from 'reactstrap';
 import Img from "../../assets/imgs/Login01.jpg"
-
+import { login } from '../../api/User';
 
 const Login = (props) => { 
   
@@ -11,10 +11,26 @@ const Login = (props) => {
     userPassword: useRef(null)
   }
 
+  const validateStatus = {
+    valide: 'form-control is-valid',
+    invalide: 'form-control is-invalid',
+    default: 'form-control'
+  }
+
+  const formStatusDefault = {
+    erro: '',
+    validate: validateStatus.default
+  } 
+
   const userDefault = {
     user_document: '',
     user_password: '',
-    valid_document: false
+    valid_document: false,
+    statusSpinner: false,
+    status: {
+      document: formStatusDefault,
+      password: formStatusDefault
+    }
   } 
 
   const [user, setUser] = useState(()=> userDefault);
@@ -29,10 +45,50 @@ const Login = (props) => {
 
     try {    
       
+      if (testUserDocument()) {
+        setUser({
+          ...user,
+          valid_document: true
+        });
+      }
+
     }            
     catch (error) {
             
     }
+  }
+
+  const testUserDocument = () => {
+    
+    console.log(user.user_document)
+
+    if (user.user_document === '') {
+      referencces.userDocument.current.focus();
+      setUser({
+        ...user,
+        status: {
+          document: {
+            erro: 'Campo obrigatório!',
+            validate: validateStatus.invalide
+          }
+        }
+      });
+      return false;
+    }
+    setUser({
+      ...user,
+      status: {
+        document: {
+          erro: '',
+          validate: validateStatus.valide
+        }
+      }
+    });
+    return true;
+  }
+
+  const testUserPassword = () => {
+    
   }
 
   return(
@@ -63,7 +119,7 @@ const Login = (props) => {
                     <div className="form-floating is-invalid">
                       <input 
                         type="passwords" 
-                        className='form-control is-invalid' 
+                        className={ user.status.password.validate } 
                         id="user_password" 
                         name='user_password' 
                         ref={ referencces.userPassword }
@@ -75,7 +131,7 @@ const Login = (props) => {
                     </div>
                     <span className="input-group-text"><i className="fas fa-eye"></i></span>
                     <div className="invalid-feedback">
-                      Favor a senha.
+                      {user.status.password.erro}
                     </div>
                   </div>
                 </FormGroup>
@@ -89,18 +145,19 @@ const Login = (props) => {
                     <div className="form-floating is-invalid">
                       <input 
                         type="text" 
-                        className='form-control is-invalid' 
+                        className={user.status.document.validate} 
                         id="user_document" 
                         name='user_document' 
                         ref={ referencces.userDocument }
                         onChange={ handleChange }
+                        onBlur={ testUserDocument }
                         placeholder="UserDocument" 
                         required 
                       />
                       <label for="user-document">CPF</label>
                     </div>
                     <div className="invalid-feedback">
-                      Favor informar o CPF.
+                     { user.status.document.erro }
                     </div>
                   </div>
                 </FormGroup>                
