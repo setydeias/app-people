@@ -103,6 +103,10 @@
     color: #fff;
   }
   
+  .caption {
+    color: dimgray;
+  }
+
   @media (max-width: 950px){
     .card-login{
       width: 100%;
