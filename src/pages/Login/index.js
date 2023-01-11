@@ -3,6 +3,7 @@ import './style.css';
 import { Form, FormGroup, Button, Alert } from 'reactstrap';
 import Img from "../../assets/imgs/Login01.jpg"
 import { login } from '../../api/User';
+import Spinner from '../../components/Spinner';
 
 const Login = (props) => { 
   
@@ -26,7 +27,7 @@ const Login = (props) => {
     user_document: '',
     user_password: '',
     valid_document: false,
-    statusSpinner: false,
+    statusSpinner: true,
     status: {
       document: formStatusDefault,
       password: formStatusDefault
@@ -91,6 +92,10 @@ const Login = (props) => {
     
   }
 
+  const cancel = () => {
+    setUser(() => userDefault);
+  }
+
   return(
     <div className="body">
       <div className="left-login">
@@ -118,8 +123,8 @@ const Login = (props) => {
                     <span className="input-group-text"><i className="fas fa-lock"></i></span>
                     <div className="form-floating is-invalid">
                       <input 
-                        type="passwords" 
-                        className={ user.status.password.validate } 
+                        type="password" 
+                        className={ user.status.document.validate } 
                         id="user_password" 
                         name='user_password' 
                         ref={ referencces.userPassword }
@@ -131,7 +136,7 @@ const Login = (props) => {
                     </div>
                     <span className="input-group-text"><i className="fas fa-eye"></i></span>
                     <div className="invalid-feedback">
-                      {user.status.password.erro}
+                      {  user.status.document.erro }
                     </div>
                   </div>
                 </FormGroup>
@@ -163,11 +168,21 @@ const Login = (props) => {
                 </FormGroup>                
               </>
             }
+            {
+              user.valid_document ?
+              <Button 
+                type='button' 
+                className='button-cancelar'
+                onClick={ cancel }
+              >
+                Cancelar                               
+              </Button> : ''
+            }
             <Button 
               type='submit' 
-              className='button'
+              className='button-continuar'
             >
-              Continuar                             
+              Continuar                               
             </Button>
           </Form>
         </div>

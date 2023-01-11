@@ -90,7 +90,7 @@
     color: #f0ffff94;
   }
   
-  .button {
+  .button-continuar {
     width: 45%;
     padding: 14px 0px;
     border: none;
@@ -101,6 +101,20 @@
     cursor: pointer;
     background: #4785fa;
     color: #fff;
+  }
+
+  .button-cancelar {
+    width: 45%;
+    padding: 14px 0px;
+    border-color: #4785fa;
+    border-radius: 26px;
+    outline: none;
+    font-weight: 600;
+    letter-spacing: 3px;
+    cursor: pointer;
+    background: #fff;
+    color: #4785fa;
+    margin: 0.5em;
   }
   
   .caption {
