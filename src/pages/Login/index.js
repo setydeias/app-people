@@ -90,7 +90,20 @@ const Login = (props) => {
   }
 
   const testUserPassword = () => {
-    
+    if(user.user_password === '') {
+      referencces.userPassword.current.focus();
+      setUser({
+        ...user,
+        status: {
+          password: {
+            erro: 'Senha inválida!',
+            validate: validateStatus.invalide
+          }
+        }
+      });
+      return false;
+    }
+    return true;
   }
 
   const cancel = () => {
