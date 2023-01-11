@@ -4,7 +4,7 @@ import { Form, FormGroup, Button, Alert } from 'reactstrap';
 import Img from "../../assets/imgs/Login01.jpg"
 import { login } from '../../api/User';
 import Spinner from '../../components/Spinner';
-import { noMask, maskCPF } from '../../utilities/Masks';
+import { noMask, maskCPF, setMaskCPF } from '../../utilities/Masks';
 import { isValidCPF } from '../../utilities/Validations';
  
 const Login = (props) => { 
@@ -118,7 +118,7 @@ const Login = (props) => {
             { 
               user.valid_document ? <>
                 <h4>Digite sua senha</h4>                
-                <div><b>CPF: </b> {user.user_document}</div><br/>
+                <div><b>CPF: </b> { setMaskCPF(user.user_document)}</div><br/>
                 <FormGroup>
                   <div className="input-group has-validation">
                     <span className="input-group-text"><i className="fas fa-lock"></i></span>
