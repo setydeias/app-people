@@ -4,7 +4,9 @@ import { Form, FormGroup, Button, Alert } from 'reactstrap';
 import Img from "../../assets/imgs/Login01.jpg"
 import { login } from '../../api/User';
 import Spinner from '../../components/Spinner';
-
+import { noMask, maskCPF } from '../../utilities/Masks';
+import { isValidCPF } from '../../utilities/Validations';
+ 
 const Login = (props) => { 
   
   var referencces = {
@@ -36,10 +38,11 @@ const Login = (props) => {
 
   const [user, setUser] = useState(()=> userDefault);
   
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUser({ ...user, [name]: value });
-  };
+  const handleChangeMaskCPF = (e) => { 
+    e.preventDefault();
+    maskCPF(e);
+    setUser({ ...user, [e.target.name]: noMask(e.target.value) });
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -59,17 +62,15 @@ const Login = (props) => {
     }
   }
 
-  const testUserDocument = () => {
+  const testUserDocument = () => {    
     
-    console.log(user.user_document)
-
-    if (user.user_document === '') {
+    if ((user.user_document === '') || (!isValidCPF(user.user_document))) {
       referencces.userDocument.current.focus();
       setUser({
         ...user,
         status: {
           document: {
-            erro: 'Campo obrigatório!',
+            erro: 'CPF invalido!',
             validate: validateStatus.invalide
           }
         }
@@ -128,7 +129,7 @@ const Login = (props) => {
                         id="user_password" 
                         name='user_password' 
                         ref={ referencces.userPassword }
-                        onChange={ handleChange }
+                        onChange={ ()=>{} }
                         placeholder="UserPassword" 
                         required 
                       />
@@ -154,7 +155,7 @@ const Login = (props) => {
                         id="user_document" 
                         name='user_document' 
                         ref={ referencces.userDocument }
-                        onChange={ handleChange }
+                        onChange={ handleChangeMaskCPF }
                         onBlur={ testUserDocument }
                         placeholder="UserDocument" 
                         required 
