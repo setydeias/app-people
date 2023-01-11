@@ -29,7 +29,7 @@ const Login = (props) => {
     user_document: '',
     user_password: '',
     valid_document: false,
-    statusSpinner: true,
+    statusSpinner: false,
     statusPassword: false,
     status: {
       document: formStatusDefault,
@@ -56,6 +56,12 @@ const Login = (props) => {
     try {    
       
       if (testUserDocument()) {
+        const data = { document: user.user_document, password_user: user.user_password };
+        console.log(data);
+
+        const result = await login(data);
+        console.log(result);
+
         setUser({
           ...user,
           valid_document: true
@@ -64,7 +70,14 @@ const Login = (props) => {
 
     }            
     catch (error) {
-            
+
+      if (error.message === 'Request failed with status code 401') {
+          return; 
+      }
+      if(error.message === 'Network Error') {
+          console.log('Não foi possível a conexão com a API. Verifique sua conexão com a internet ou entre em contato: Setydeias (85) 3290-3496/(85) 9.8627-7777.');
+          return; 
+      }    
     }
   }
 
@@ -108,6 +121,7 @@ const Login = (props) => {
       setUser({
         ...user,
         status: {
+          document: formStatusDefault,
           password: {
             erro: 'Senha inválida!',
             validate: validateStatus.invalide
@@ -116,6 +130,16 @@ const Login = (props) => {
       });
       return false;
     }
+    setUser({
+      ...user,
+      status: {
+        document: formStatusDefault,
+        password: {
+          erro: '',
+          validate: validateStatus.valide
+        }
+      }
+    });
     return true;
   }
 
@@ -202,6 +226,12 @@ const Login = (props) => {
                 </FormGroup>                
               </>
             }
+            <Button 
+              type='submit' 
+              className='button-continuar'
+            >
+              { user.valid_document ? 'Entrar' : 'Continuar' }                               
+            </Button>
             {
               user.valid_document ?
               <Button 
@@ -211,13 +241,7 @@ const Login = (props) => {
               >
                 Cancelar                               
               </Button> : ''
-            }
-            <Button 
-              type='submit' 
-              className='button-continuar'
-            >
-              { user.valid_document ? 'Entrar' : 'Continuar' }                               
-            </Button>
+            }           
           </Form>
         </div>
       </div>
