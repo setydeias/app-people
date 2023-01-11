@@ -183,7 +183,7 @@ const Login = (props) => {
               type='submit' 
               className='button-continuar'
             >
-              Continuar                               
+              { user.valid_document ? 'Entrar' : 'Continuar' }                               
             </Button>
           </Form>
         </div>
