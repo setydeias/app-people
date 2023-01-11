@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import './style.css';
 import { Form, FormGroup, Button, Alert } from 'reactstrap';
 import Img from "../../assets/imgs/Login01.jpg"
-import { login } from '../../api/User';
+import { login, getUserForDescription } from '../../api/User';
 import Spinner from '../../components/Spinner';
 import { noMask, maskCPF, setMaskCPF } from '../../utilities/Masks';
 import { isValidCPF } from '../../utilities/Validations';
@@ -56,20 +56,9 @@ const Login = (props) => {
     try {    
       
       if (testUserDocument()) {
-        const data = { document: user.user_document, password_user: user.user_password };
-        console.log(data);
 
-        const result = await login(data);
-        if (result.status === 404) {
-          alert('Usuário não cadastrado!')
-        }
-        if (result.status === 200) {
-          setUser({
-            ...user,
-            valid_document: true
-          });
-        }
-        
+        const data = { document: user.user_document, password_user: user.user_password };
+        const resultGetDescription = await getUserForDescription(data);        
       }
 
     }            

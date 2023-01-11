@@ -6,7 +6,7 @@ export const login = async (user) => {
     return response;
 }
 
-export const getUserForDescription = async (description_user) => {
-    const response = await axios.post(`${Config.default.api_endpoint}usuario/login`, description_user);
+export const getUserForDescription = async (user) => {
+    const response = await axios.get(`${Config.default.api_endpoint}usuario/consultar/descricao`, user);
     return response;
 }
