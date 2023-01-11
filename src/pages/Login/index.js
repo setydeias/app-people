@@ -30,6 +30,7 @@ const Login = (props) => {
     user_password: '',
     valid_document: false,
     statusSpinner: true,
+    statusPassword: false,
     status: {
       document: formStatusDefault,
       password: formStatusDefault
@@ -38,6 +39,11 @@ const Login = (props) => {
 
   const [user, setUser] = useState(()=> userDefault);
   
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUser({ ...user, [name]: value });
+};
+
   const handleChangeMaskCPF = (e) => { 
     e.preventDefault();
     maskCPF(e);
@@ -62,6 +68,11 @@ const Login = (props) => {
     }
   }
 
+  const handleShowPassword = (e) => {
+    e.preventDefault();
+    setUser({ ...user, statusPassword : !user.statusPassword });
+  }
+
   const testUserDocument = () => {    
     
     if ((user.user_document === '') || (!isValidCPF(user.user_document))) {
@@ -72,7 +83,8 @@ const Login = (props) => {
           document: {
             erro: 'CPF invalido!',
             validate: validateStatus.invalide
-          }
+          },
+          password: formStatusDefault
         }
       });
       return false;
@@ -83,7 +95,8 @@ const Login = (props) => {
         document: {
           erro: '',
           validate: validateStatus.valide
-        }
+        },
+        password: formStatusDefault
       }
     });
     return true;
@@ -137,20 +150,27 @@ const Login = (props) => {
                     <span className="input-group-text"><i className="fas fa-lock"></i></span>
                     <div className="form-floating is-invalid">
                       <input 
-                        type="password" 
-                        className={ user.status.document.validate } 
+                        type={ user.statusPassword ? 'text' : 'password' } 
+                        className={ user.status.password.validate } 
                         id="user_password" 
                         name='user_password' 
                         ref={ referencces.userPassword }
-                        onChange={ ()=>{} }
+                        onChange={ handleChange }
+                        onBlur={ testUserPassword }
                         placeholder="UserPassword" 
                         required 
                       />
                       <label for="user-document">Senha</label>                  
                     </div>
-                    <span className="input-group-text"><i className="fas fa-eye"></i></span>
+                    <span 
+                      type="button"
+                      className="input-group-text"
+                      onClick={(e) => handleShowPassword(e)}
+                    >
+                      <i className="fas fa-eye"></i>
+                    </span>
                     <div className="invalid-feedback">
-                      {  user.status.document.erro }
+                      {  user.status.password.erro }
                     </div>
                   </div>
                 </FormGroup>
