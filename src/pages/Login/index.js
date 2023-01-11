@@ -60,12 +60,16 @@ const Login = (props) => {
         console.log(data);
 
         const result = await login(data);
-        console.log(result);
-
-        setUser({
-          ...user,
-          valid_document: true
-        });
+        if (result.status === 404) {
+          alert('Usuário não cadastrado!')
+        }
+        if (result.status === 200) {
+          setUser({
+            ...user,
+            valid_document: true
+          });
+        }
+        
       }
 
     }            
