@@ -4,7 +4,11 @@ import { Form, FormGroup, Button, Alert } from 'reactstrap';
 import Img from "../../assets/imgs/Login01.jpg"
 import { login, getUserForDescription } from '../../api/User';
 import Spinner from '../../components/Spinner';
-import { noMask, maskCPF, setMaskCPF } from '../../utilities/Masks';
+import { 
+  noMask, 
+  maskCPF, 
+  setMaskCPF
+} from '../../utilities/Masks';
 import { isValidCPF } from '../../utilities/Validations';
  
 const Login = (props) => { 
@@ -13,7 +17,6 @@ const Login = (props) => {
     userDocument: useRef(null),
     userPassword: useRef(null),
     userEmil: useRef(null),
-    userTelephone: useRef(null)
   }
 
   const validateStatus = {
@@ -31,7 +34,6 @@ const Login = (props) => {
     user_document: '',
     user_password: '123456',
     user_email: '',
-    user_telephone: '',
     valid_document: false,
     statusSpinner: false,
     statusPassword: false,
@@ -40,7 +42,6 @@ const Login = (props) => {
       document: formStatusDefault,
       password: formStatusDefault,
       email: formStatusDefault,
-      telephone: formStatusDefault
     }
   } 
 
@@ -105,8 +106,7 @@ const Login = (props) => {
             validate: validateStatus.invalide
           },
           password: formStatusDefault,
-          email: formStatusDefault,
-          telephone: formStatusDefault
+          email: formStatusDefault
         }
       });
       return false;
@@ -119,8 +119,7 @@ const Login = (props) => {
           validate: validateStatus.valide
         },
         password: formStatusDefault,
-        email: formStatusDefault,
-        telephone: formStatusDefault
+        email: formStatusDefault
       }
     });
     return true;
@@ -219,26 +218,7 @@ const Login = (props) => {
                     <div className="invalid-feedback">
                      { user.status.email.erro }
                     </div>
-                  </div>
-                  <div className="input-group has-validation">
-                    <span className="input-group-text"><i className="fas fa-phone"></i></span>
-                    <div className="form-floating is-invalid">
-                      <input 
-                        type="text" 
-                        className={user.status.telephone.validate} 
-                        id="user_telephone" 
-                        name='user_telephone' 
-                        ref={ referencces.userTelephone }
-                        onChange={ ()=>{} }
-                        onBlur={ ()=>{} }
-                        required 
-                      />
-                      <label for="user-document">Telefone</label>
-                    </div>
-                    <div className="invalid-feedback">
-                     { user.status.telephone.erro }
-                    </div>
-                  </div>
+                  </div>                  
                 </FormGroup>
                 <Button 
                 type='button' 
