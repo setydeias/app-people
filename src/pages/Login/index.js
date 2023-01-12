@@ -7,14 +7,18 @@ import Spinner from '../../components/Spinner';
 import { 
   noMask, 
   maskCPF, 
-  setMaskCPF
+  setMaskCPF,
 } from '../../utilities/Masks';
-import { isValidCPF } from '../../utilities/Validations';
+import { 
+  isValidCPF,
+  isValidEMail
+} from '../../utilities/Validations';
  
 const Login = (props) => { 
   
   var referencces = {
     userDocument: useRef(null),
+    userDocumentRegistration: useRef(null),
     userPassword: useRef(null),
     userEmil: useRef(null),
   }
@@ -125,6 +129,37 @@ const Login = (props) => {
     return true;
   }
 
+  const testUserEmail = () => {    
+    
+    if ((user.user_email === '') || (!isValidEMail(user.user_email))) {
+      referencces.userEmil.current.focus();
+      setUser({
+        ...user,
+        status: {
+          email: {
+            erro: 'E-mail invalido!',
+            validate: validateStatus.invalide
+          },
+          password: formStatusDefault,
+          document: formStatusDefault
+        }
+      });
+      return false;
+    }
+    setUser({
+      ...user,
+      status: {
+        email: {
+          erro: '',
+          validate: validateStatus.valide
+        },
+        password: formStatusDefault,
+        document: formStatusDefault
+      }
+    });
+    return true;
+  }
+
   const testUserPassword = () => {
     if(user.user_password === '') {
       referencces.userPassword.current.focus();
@@ -186,9 +221,9 @@ const Login = (props) => {
                       <input 
                         type="text" 
                         className={user.status.document.validate} 
-                        id="user_document" 
+                        id="user_document_registration" 
                         name='user_document' 
-                        ref={ referencces.userDocument }
+                        ref={ referencces.userDocumentRegistration }
                         onChange={ handleChangeMaskCPF }
                         onBlur={ testUserDocument }
                         value={ setMaskCPF(user.user_document) }
@@ -209,8 +244,8 @@ const Login = (props) => {
                         id="user_email" 
                         name='user_email' 
                         ref={ referencces.userEmil }
-                        onChange={ ()=>{} }
-                        onBlur={ ()=>{} }
+                        onChange={ handleChange }
+                        onBlur={ testUserEmail }
                         required 
                       />
                       <label for="user-document">E-mail</label>
