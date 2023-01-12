@@ -11,7 +11,9 @@ const Login = (props) => {
   
   var referencces = {
     userDocument: useRef(null),
-    userPassword: useRef(null)
+    userPassword: useRef(null),
+    userEmil: useRef(null),
+    userTelephone: useRef(null)
   }
 
   const validateStatus = {
@@ -27,13 +29,18 @@ const Login = (props) => {
 
   const userDefault = {
     user_document: '',
-    user_password: '',
+    user_password: '123456',
+    user_email: '',
+    user_telephone: '',
     valid_document: false,
     statusSpinner: false,
     statusPassword: false,
+    notRegistered: false,
     status: {
       document: formStatusDefault,
-      password: formStatusDefault
+      password: formStatusDefault,
+      email: formStatusDefault,
+      telephone: formStatusDefault
     }
   } 
 
@@ -53,24 +60,29 @@ const Login = (props) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {    
-      
+    try { 
+
       if (testUserDocument()) {
 
-        const data = { document: user.user_document, password_user: user.user_password };
-        const resultGetDescription = await getUserForDescription(data);        
-      }
+        const resultGetDescription = await getUserForDescription({ document: user.user_document });
 
+        if(resultGetDescription.status === 200) { 
+          setUser({
+            ...user,
+            valid_document: true,
+          });
+          return;     
+        }
+        if(resultGetDescription.status === 204) {
+          setUser({
+            ...user,
+            notRegistered: true,
+          });
+        }        
+      }
     }            
     catch (error) {
-
-      if (error.message === 'Request failed with status code 401') {
-          return; 
-      }
-      if(error.message === 'Network Error') {
-          console.log('Não foi possível a conexão com a API. Verifique sua conexão com a internet ou entre em contato: Setydeias (85) 3290-3496/(85) 9.8627-7777.');
-          return; 
-      }    
+      console.log(error.message);
     }
   }
 
@@ -78,6 +90,8 @@ const Login = (props) => {
     e.preventDefault();
     setUser({ ...user, statusPassword : !user.statusPassword });
   }
+
+
 
   const testUserDocument = () => {    
     
@@ -90,7 +104,9 @@ const Login = (props) => {
             erro: 'CPF invalido!',
             validate: validateStatus.invalide
           },
-          password: formStatusDefault
+          password: formStatusDefault,
+          email: formStatusDefault,
+          telephone: formStatusDefault
         }
       });
       return false;
@@ -102,7 +118,9 @@ const Login = (props) => {
           erro: '',
           validate: validateStatus.valide
         },
-        password: formStatusDefault
+        password: formStatusDefault,
+        email: formStatusDefault,
+        telephone: formStatusDefault
       }
     });
     return true;
@@ -159,6 +177,79 @@ const Login = (props) => {
           <h1></h1>
           <Form className="login-form" onSubmit={handleSubmit}>
             { 
+              user.notRegistered ? <>              
+                <h3>Cadastro inicial</h3>
+                <p className='caption'>Você não possui uma conta Setydeias, vamos <b>criar</b>?</p>
+                <FormGroup>
+                  <div className="input-group has-validation">
+                    <span className="input-group-text"><i className="fas fa-id-card"></i></span>
+                    <div className="form-floating is-invalid">
+                      <input 
+                        type="text" 
+                        className={user.status.document.validate} 
+                        id="user_document" 
+                        name='user_document' 
+                        ref={ referencces.userDocument }
+                        onChange={ handleChangeMaskCPF }
+                        onBlur={ testUserDocument }
+                        value={ setMaskCPF(user.user_document) }
+                        required 
+                      />
+                      <label for="user-document">CPF</label>
+                    </div>
+                    <div className="invalid-feedback">
+                     { user.status.document.erro }
+                    </div>
+                  </div>
+                  <div className="input-group has-validation">
+                    <span className="input-group-text"><i className="fas fa-envelope"></i></span>
+                    <div className="form-floating is-invalid">
+                      <input 
+                        type="text" 
+                        className={user.status.email.validate} 
+                        id="user_email" 
+                        name='user_email' 
+                        ref={ referencces.userEmil }
+                        onChange={ ()=>{} }
+                        onBlur={ ()=>{} }
+                        required 
+                      />
+                      <label for="user-document">E-mail</label>
+                    </div>
+                    <div className="invalid-feedback">
+                     { user.status.email.erro }
+                    </div>
+                  </div>
+                  <div className="input-group has-validation">
+                    <span className="input-group-text"><i className="fas fa-phone"></i></span>
+                    <div className="form-floating is-invalid">
+                      <input 
+                        type="text" 
+                        className={user.status.telephone.validate} 
+                        id="user_telephone" 
+                        name='user_telephone' 
+                        ref={ referencces.userTelephone }
+                        onChange={ ()=>{} }
+                        onBlur={ ()=>{} }
+                        required 
+                      />
+                      <label for="user-document">Telefone</label>
+                    </div>
+                    <div className="invalid-feedback">
+                     { user.status.telephone.erro }
+                    </div>
+                  </div>
+                </FormGroup>
+                <Button 
+                type='button' 
+                className='button-cancelar'
+                onClick={ cancel }
+              >
+                Cancelar                               
+              </Button>
+              </> 
+              
+              :
               user.valid_document ? <>
                 <h4>Digite sua senha</h4>                
                 <div><b>CPF: </b> { setMaskCPF(user.user_document)}</div><br/>

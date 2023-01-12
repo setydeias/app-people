@@ -7,6 +7,6 @@ export const login = async (user) => {
 }
 
 export const getUserForDescription = async (user) => {
-    const response = await axios.get(`${Config.default.api_endpoint}usuario/consultar/descricao`, user);
+    const response = await axios.post(`${Config.default.api_endpoint}usuario/consultar/descricao`, user);
     return response;
 }
