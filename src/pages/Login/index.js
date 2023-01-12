@@ -11,7 +11,8 @@ import {
 } from '../../utilities/Masks';
 import { 
   isValidCPF,
-  isValidEMail
+  isValidEMail,
+  clearForm
 } from '../../utilities/Validations';
  
 const Login = (props) => { 
@@ -190,6 +191,7 @@ const Login = (props) => {
 
   const cancel = () => {
     setUser(() => userDefault);
+    clearForm();
   }
 
   return(
