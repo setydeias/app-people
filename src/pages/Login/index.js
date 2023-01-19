@@ -14,6 +14,7 @@ import {
   isValidEMail,
   clearForm
 } from '../../utilities/Validations';
+
  
 const Login = (props) => { 
   
@@ -51,7 +52,8 @@ const Login = (props) => {
   } 
 
   const [user, setUser] = useState(()=> userDefault);
-  
+  const [message, setMessage] = useState(() => '');
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUser({ ...user, [name]: value });
@@ -68,27 +70,16 @@ const Login = (props) => {
 
     try { 
 
-      if (testUserDocument()) {
-
-        const resultGetDescription = await getUserForDescription({ document: user.user_document });
-
-        if(resultGetDescription.status === 200) { 
-          setUser({
-            ...user,
-            valid_document: true,
-          });
-          return;     
-        }
-        if(resultGetDescription.status === 204) {
-          setUser({
-            ...user,
-            notRegistered: true,
-          });
-        }        
-      }
+        if (testUserRegitered()) {
+          
+        }     
     }            
     catch (error) {
-      console.log(error.message);
+      
+      if(error.message === 'Network Error') {
+        setMessage('Não foi possível a conexão com a API. Verifique sua conexão com a internet ou entre em contato: Setydeias (85) 3290-3496');
+        return; 
+      }
     }
   }
 
@@ -96,8 +87,6 @@ const Login = (props) => {
     e.preventDefault();
     setUser({ ...user, statusPassword : !user.statusPassword });
   }
-
-
 
   const testUserDocument = () => {    
     
@@ -192,6 +181,30 @@ const Login = (props) => {
   const cancel = () => {
     setUser(() => userDefault);
     clearForm();
+  }
+
+  const testUserRegitered = async () => {
+
+    if (testUserDocument()) {		
+		
+      const resultGetDescription = await getUserForDescription({ document: user.user_document });
+
+      if(resultGetDescription.status === 200) { 
+        setUser({
+          ...user,
+          valid_document: true,
+        });
+        return true;     
+      }
+      if(resultGetDescription.status === 204) {
+        setUser({
+          ...user,
+          notRegistered: true,
+        });
+      }
+      return false    
+    }
+
   }
 
   return(
@@ -331,7 +344,7 @@ const Login = (props) => {
               type='submit' 
               className='button-continuar'
             >
-              { user.valid_document ? 'Entrar' : 'Continuar' }                               
+              { user.valid_document ? 'Entrar' : 'Continuar' }                                             
             </Button>
             {
               user.valid_document ?
@@ -342,6 +355,11 @@ const Login = (props) => {
               >
                 Cancelar                               
               </Button> : ''
+            }
+            {    
+              message ? (
+                <Alert color='danger'>{ message }</Alert>
+              ) : ''
             }           
           </Form>
         </div>
