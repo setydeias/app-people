@@ -4,6 +4,7 @@ import PrivateRoute from './auth';
 import Login from './pages/Login';
 import Menu from './components/Menu';
 import Dashboard from "./pages/Dashboard";
+import LogOut from './pages/LogOut';
 
 const AppRoutes = () => {
 
@@ -16,6 +17,11 @@ const AppRoutes = () => {
               <Menu />
               <Dashboard /> 
             </PrivateRoute>
+          } />
+        <Route exact path="/logout" element={ 
+             <PrivateRoute>
+               <LogOut /> 
+             </PrivateRoute>
           } />
       </Routes>
     </Router>
