@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import './style.css';
 import { Form, FormGroup, Button, Alert } from 'reactstrap';
 import Img from "../../assets/imgs/Login01.jpg"
@@ -14,10 +14,12 @@ import {
   isValidEMail,
   clearForm
 } from '../../utilities/Validations';
-
+import { useNavigate } from 'react-router-dom';
  
 const Login = (props) => { 
   
+  const navigate = useNavigate();
+
   var referencces = {
     userDocument: useRef(null),
     userDocumentRegistration: useRef(null),
@@ -38,7 +40,7 @@ const Login = (props) => {
 
   const userDefault = {
     user_document: '',
-    user_password: '123456',
+    user_password: '',
     user_email: '',
     valid_document: false,
     statusSpinner: false,
@@ -67,15 +69,29 @@ const Login = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setMessage('');
     try { 
 
         if (testUserRegitered()) {
-          
+
+          if (testUserPassword()) {
+
+            const resp = await login({ document: user.user_document, password_user: user.user_password }); 
+            if (resp.status === 200) {              
+              console.log(resp.data);              
+              localStorage.setItem('token', resp.data.access_token);
+              localStorage.setItem('document', resp.data.people.document)
+              navigate("/dashboard");
+              return;
+            }
+          }
         }     
     }            
     catch (error) {
-      
+      if (error.message === 'Request failed with status code 401') {
+        setMessage('Usuário ou senha inválidos.');
+        return; 
+      }
       if(error.message === 'Network Error') {
         setMessage('Não foi possível a conexão com a API. Verifique sua conexão com a internet ou entre em contato: Setydeias (85) 3290-3496');
         return; 
