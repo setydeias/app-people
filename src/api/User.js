@@ -10,3 +10,8 @@ export const getUserForDescription = async (user) => {
     const response = await axios.post(`${Config.default.api_endpoint}usuario/consultar/descricao`, user);
     return response;
 }
+
+export const registerUser = async (pessoa) => {
+    const response = await axios.post(`${Config.default.api_endpoint}pessoa/cadastrar`, pessoa);
+    return response;
+}

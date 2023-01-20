@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import './style.css';
 import { Form, FormGroup, Button, Alert } from 'reactstrap';
 import Img from "../../assets/imgs/Login01.jpg"
-import { login, getUserForDescription } from '../../api/User';
+import { login, getUserForDescription, registerUser } from '../../api/User';
 import Spinner from '../../components/Spinner';
 import { 
   noMask, 
@@ -59,12 +59,14 @@ const Login = (props) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUser({ ...user, [name]: value });
+    setMessage('');
 };
 
   const handleChangeMaskCPF = (e) => { 
     e.preventDefault();
     maskCPF(e);
     setUser({ ...user, [e.target.name]: noMask(e.target.value) });
+    setMessage('');
   }
 
   const handleSubmit = async (e) => {
@@ -72,8 +74,17 @@ const Login = (props) => {
     setMessage('');
     try { 
 
-        if (testUserRegitered()) {
-
+      if (testUserDocument()) {		
+		
+        const resultGetDescription = await getUserForDescription({ document: user.user_document }).then();
+  
+        if(resultGetDescription.status === 200) { 
+          
+          setUser({
+            ...user,
+            valid_document: true,
+          });
+          
           if (testUserPassword()) {
 
             const resp = await login({ document: user.user_document, password_user: user.user_password }); 
@@ -85,7 +96,56 @@ const Login = (props) => {
               return;
             }
           }
-        }     
+        }
+
+        if(resultGetDescription.status === 204) {
+          setUser({
+            ...user,
+            notRegistered: true,
+          });
+
+         if (testUserEmail()) {
+            const response = await registerUser({
+              "id_status": 1,
+              "id_document_type": 1,
+              "document": user.user_document,
+              "name": null,
+              "usual_name": null,
+              "birth_date": null,
+              "sexo": 1,
+              "id_treatment": 4,
+              "date_registration": "2023-01-19 14:20:44",
+              "last_change": null,
+              "id_adress_type" : 35, 
+              "adress": null, 
+              "address_number": null, 
+              "city": null, 
+              "uf": "CE", 
+              "address_complement": null, 
+              "district":null, 
+              "cep": null, 
+              "contacts": [
+                {
+                  "id_contact_type": 2,
+                  "contact": user.user_email,
+                  "whatsapp": 0,
+                  "main": 1
+                }
+              ]		
+            });
+
+            if (response.status === 201) {
+              console.log(response);
+              alert('Cadastrado com suscesso!');
+              setUser(() => userDefault)
+            }
+          } 
+
+        }      
+      }
+
+          
+
     }            
     catch (error) {
       if (error.message === 'Request failed with status code 401') {
@@ -199,28 +259,9 @@ const Login = (props) => {
     clearForm();
   }
 
-  const testUserRegitered = async () => {
+  const testUserRegitered =  () => {
 
-    if (testUserDocument()) {		
-		
-      const resultGetDescription = await getUserForDescription({ document: user.user_document });
-
-      if(resultGetDescription.status === 200) { 
-        setUser({
-          ...user,
-          valid_document: true,
-        });
-        return true;     
-      }
-      if(resultGetDescription.status === 204) {
-        setUser({
-          ...user,
-          notRegistered: true,
-        });
-      }
-      return false    
-    }
-
+   
   }
 
   return(
@@ -277,6 +318,7 @@ const Login = (props) => {
                         ref={ referencces.userEmil }
                         onChange={ handleChange }
                         onBlur={ testUserEmail }
+                        autoFocus
                         required 
                       />
                       <label for="user-document">E-mail</label>
