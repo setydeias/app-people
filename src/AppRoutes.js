@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import Menu from './components/Menu';
 import Dashboard from "./pages/Dashboard";
 import LogOut from './pages/LogOut';
+import ChangePassword from "./pages/ChangePassword";
 
 const AppRoutes = () => {
 
@@ -12,6 +13,7 @@ const AppRoutes = () => {
     <Router>        
       <Routes>
         <Route exact path="/" element={ <Login /> } />
+        <Route exact path="/app/pessoa/usuario/senha/alterar/:user?/:password?/:iv?/:key?" element={ <ChangePassword /> } />
         <Route exact path="/dashboard" element={ 
             <PrivateRoute>
               <Menu />
