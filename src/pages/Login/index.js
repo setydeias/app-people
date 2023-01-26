@@ -15,6 +15,7 @@ import {
   clearForm
 } from '../../utilities/Validations';
 import { useNavigate } from 'react-router-dom';
+import ModalAlert from '../../components/Modal/Alert';
  
 const Login = (props) => { 
   
@@ -37,6 +38,15 @@ const Login = (props) => {
     erro: '',
     validate: validateStatus.default
   } 
+
+  const modalDefault = { 
+    modal: false, 
+    title: '', 
+    text: '', 
+  }
+
+  const [modal, setModal] = useState(modalDefault);
+  const toggle = () => setModal(!modal);
 
   const userDefault = {
     user_document: '',
@@ -135,16 +145,11 @@ const Login = (props) => {
             });
 
             if (response.status === 201) {
-              console.log(response);
-              alert('Cadastrado com suscesso!');
-              setUser(() => userDefault)
+              
             }
           } 
-
         }      
       }
-
-          
 
     }            
     catch (error) {
@@ -420,6 +425,10 @@ const Login = (props) => {
               ) : ''
             }           
           </Form>
+          <ModalAlert 
+            modal={ modal} 
+            toggle={ toggle }
+          /> 
         </div>
       </div>
     </div>
