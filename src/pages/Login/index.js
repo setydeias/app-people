@@ -63,8 +63,18 @@ const Login = (props) => {
     }
   } 
 
+  const dataEmailDefault = {
+    email: '',
+    password: '',
+    iv: '',
+    key: '',
+    encryptedData: '',
+    endpoint: ''
+  }
+
   const [user, setUser] = useState(()=> userDefault);
   const [message, setMessage] = useState(() => '');
+  const [dataEmail, setDataEmail] = useState(() => dataEmailDefault);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
