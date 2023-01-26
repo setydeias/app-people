@@ -1,9 +1,9 @@
 import axios from "axios";
-import PeopleSettings from '../../globals/PeopleSettings';
+import ApiEmail from "../../globals/Endpoint/api_email";
 
 export const sendUserRegistrationConfirmation = async (data) => {
   const response = await axios.get(
-    `${PeopleSettings.default.api_email_endpoint}/cadastro/confirmacao/send`, data
+    `${ApiEmail.settings.endpoint}/cadastro/confirmacao/send`, data
   );
   return response;
 }

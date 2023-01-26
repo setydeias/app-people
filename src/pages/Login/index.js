@@ -16,6 +16,9 @@ import {
 } from '../../utilities/Validations';
 import { useNavigate } from 'react-router-dom';
 import ModalAlert from '../../components/Modal/Alert';
+import { encrypt } from '../../utilities/Cryptography';
+import AppPeople from '../../globals/Endpoint/app_people';
+import { sendUserRegistrationConfirmation } from '../../api/notification/email';
  
 const Login = (props) => { 
   
@@ -119,13 +122,13 @@ const Login = (props) => {
         }
 
         if(resultGetDescription.status === 204) {
-          setUser({
-            ...user,
+          setUser((prevent) => ({
+            ...prevent,
             notRegistered: true,
-          });
+          }));
 
          if (testUserEmail()) {
-            const response = await registerUser({
+            const responseRegister = await registerUser({
               "id_status": 1,
               "id_document_type": 1,
               "document": user.user_document,
@@ -134,7 +137,7 @@ const Login = (props) => {
               "birth_date": null,
               "sexo": 1,
               "id_treatment": 4,
-              "date_registration": "2023-01-19 14:20:44",
+              "date_registration": "2023-01-26 14:20:44",
               "last_change": null,
               "id_adress_type" : 35, 
               "adress": null, 
@@ -154,13 +157,33 @@ const Login = (props) => {
               ]		
             });
 
-            if (response.status === 201) {
+            if (responseRegister.status === 201) {
+
+              const dataCrypto = encrypt(user.user_document);
               
+              const responseSendEmail = await sendUserRegistrationConfirmation({
+                email: user.user_email,
+                password: responseRegister.data.pessoaCadastrada.password_user,
+                iv: dataCrypto.iv,
+                key: dataCrypto.key,
+                encryptedData: dataCrypto.encryptedData,
+                endpoint: AppPeople.settings.endpoint_change_password
+              });
+              
+              if (responseSendEmail.status === 200) {
+                setModal((prevent) => ({
+                  ...prevent,
+                  modal: true,
+                  title: responseRegister.data.message,
+                  text: `E-mail de confirmação enviado para: ${user.user_email}. Favor vericicar sua caixa de entrada ou span.`
+                }));
+                setUser(()=> userDefault);
+                clearForm();
+              }              
             }
           } 
         }      
       }
-
     }            
     catch (error) {
       if (error.message === 'Request failed with status code 401') {

@@ -7,8 +7,6 @@ export default class UserSettings {
         password_user: '',
         access_token: '',
         token_type: '',
-        expires_in: '',
-        api_endpoint:'http://localhost:3702/api/',
-        api_email_endpoint: 'http://localhost:3177/api/email/pessoa'
+        expires_in: ''
     };
 }
