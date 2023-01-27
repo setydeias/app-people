@@ -106,7 +106,8 @@ const Login = (props) => {
           password: {
             erro: 'Senha inválida!',
             validate: validateStatus.invalide
-          }
+          },
+          passwordConfirm: formStatusDefault
         }
       });
       return false;
@@ -117,7 +118,8 @@ const Login = (props) => {
         password: {
           erro: '',
           validate: validateStatus.valide
-        }
+        },
+        passwordConfirm: formStatusDefault
       }
     });
     return true;
