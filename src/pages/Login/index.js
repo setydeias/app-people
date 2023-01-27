@@ -297,10 +297,6 @@ const Login = (props) => {
     clearForm();
   }
 
-  const testUserRegitered =  () => {
-
-   
-  }
 
   return(
     <div className="body">
