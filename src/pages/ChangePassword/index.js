@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useParams } from 'react-router-dom';
 import './styles.css';
 import { Form, FormGroup, Button, Alert, Container } from 'reactstrap';
 import Img from "../../assets/imgs/Login01.jpg";
@@ -11,6 +12,13 @@ import { decrypt } from '../../utilities/Cryptography';
 const Login = (props) => { 
   
   const navigate = useNavigate();
+  const { user, password, iv, key } = useParams();
+  
+  const dataParamsLink = {
+    iv: iv,
+    key: new Uint8Array(Buffer.from(key,'hex')),
+    encryptedData: user
+  }
 
   var referencces = {
     userPassword: useRef(null),
@@ -43,13 +51,14 @@ const Login = (props) => {
     }
   } 
 
+  const [forcePassword, setFrcePassword] = useState(() => false);
 
-  const [user, setUser] = useState(()=> userDefault);
+  const [userLogin, setUser] = useState(()=> userDefault);
   const [message, setMessage] = useState(() => '');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUser({ ...user, [name]: value });
+    setUser({ ...userLogin, [name]: value });
     setMessage('');
   };
 
@@ -58,25 +67,22 @@ const Login = (props) => {
     setMessage('');
     try { 
 
-      console.log(`Senha: ${user.user_password_new} Confirme: ${user.user_password_confirm}`);
-
-      if(validPassword()){
-        alert('Senha validada!');
-        return;
+      if(forcePassword){
+        
+        console.log('passou aqui!');
+        const cpf = decrypt(dataParamsLink);
+        console.log(`CPF: ${cpf}`);
+        
+        const resp = await login({ document: cpf, password_user: password }); 
+        if (resp.status === 200) {              
+          console.log(resp.data);              
+          localStorage.setItem('token', resp.data.access_token);
+          localStorage.setItem('document', resp.data.people.document)
+          navigate("/dashboard");
+          return;
+        }
       }
-      alert('Erro ao validar senha!');
-
-      /*
-         const resp = await login({ document: user.user_document, password_user: user.user_password }); 
-            if (resp.status === 200) {              
-              console.log(resp.data);              
-              localStorage.setItem('token', resp.data.access_token);
-              localStorage.setItem('document', resp.data.people.document)
-              navigate("/dashboard");
-              return;
-            }
-      */
-      
+     
     }            
     catch (error) {
       if (error.message === 'Request failed with status code 401') {
@@ -92,37 +98,32 @@ const Login = (props) => {
 
   const handleShowPassword = (e) => {
     e.preventDefault();
-    setUser({ ...user, showPassword : !user.showPassword });
+    setUser({ ...userLogin, showPassword : !userLogin.showPassword });
   }
 
   const handleShowPasswordComfirm = (e) => {
     e.preventDefault();
-    setUser({ ...user, showPasswordConfirm : !user.showPasswordConfirm });
+    setUser({ ...userLogin, showPasswordConfirm : !userLogin.showPasswordConfirm });
   }
 
   const testForcePassword = () => {
 
     var force = 0;
 	  
-	  if((user.user_password_new.length >= 4) && (user.user_password_new <= 7)){
-	  	force += 10;
-	  }else if(user.user_password_new.length > 7){
-	  	force += 25;
-	  }
-
-	  if((user.user_password_new.length >= 5) && (user.user_password_new.match(/[a-z]+/))){
+    
+	  if((userLogin.user_password_new.length >= 6) && (userLogin.user_password_new.match(/[a-z]+/))){
 	  	force += 10;
 	  }
 
-	  if((user.user_password_new.length >= 6) && (user.user_password_new.match(/[A-Z]+/))){
+	  if((userLogin.user_password_new.length >= 6) && (userLogin.user_password_new.match(/[A-Z]+/))){
 	  	force += 20;
 	  }
 
-	  if((user.user_password_new.length >= 7) && (user.user_password_new.match(/[@#$%&;*]/))){
+	  if((userLogin.user_password_new.length >= 8) && (userLogin.user_password_new.match(/[@#$%&!;*]/))){
 	  	force += 25;
 	  }
 
-	  if(user.user_password_new.match(/([1-9]+)\1{1,}/)){
+	  if(userLogin.user_password_new.match(/([1-9]+)\1{1,}/)){
 	  	force += -25;
 	  }
 
@@ -134,13 +135,14 @@ const Login = (props) => {
     referencces.userForcePassword.current.innerHTML = "";
     
     if(force < 30 ){
-      referencces.userForcePassword.current.innerHTML = "<span style='color: #790505'>Senha Fraca!</span>";
+      referencces.userForcePassword.current.innerHTML = "<span style='color: #ac1515'>Senha Fraca!</span>";
+      setFrcePassword(false);
     }else if((force >= 30) && (force < 50)){
+      setFrcePassword(false);
       referencces.userForcePassword.current.innerHTML = "<span style='color: #fab027'>Senha Média</span>";
     }else if((force >= 50) && (force < 70)){
+      setFrcePassword(true);
       referencces.userForcePassword.current.innerHTML = "<span style='color: #105510'>Senha Forte</span>";
-    }else if((force >= 70) && (force < 100)){
-      referencces.userForcePassword.current.innerHTML = "<span style='color: #0c270c'>Senha Excelente</span>";
     }
   }
  
@@ -148,10 +150,11 @@ const Login = (props) => {
 
     testForcePassword();
     
-    if (testLengthPassword() && user.user_password_new === '') {
+    if (testLengthPassword() && userLogin.user_password_new === '') {
+      referencces.userForcePassword.current.innerHTML = "";
       referencces.userPassword.current.focus(); 
       setUser({
-        ...user,
+        ...userLogin,
         status: {
           password: {
             erro: 'Senha inválida!',
@@ -163,7 +166,7 @@ const Login = (props) => {
       return false;
     }
     setUser({
-      ...user,
+      ...userLogin,
       status: {
         password: {
           erro: '',
@@ -176,9 +179,10 @@ const Login = (props) => {
   }
 
   const testPasswordConfirm = () => {
-    if(user.user_password_confirm != user.user_password_new){
+    if(userLogin.user_password_confirm != userLogin.user_password_new){
+      setFrcePassword(false);
       setUser({
-        ...user,
+        ...userLogin,
         status: {
           passwordConfirm: {
             erro: 'Senhas divergentes!',
@@ -192,8 +196,9 @@ const Login = (props) => {
       });
       return false;
     }
+    setFrcePassword(true);
     setUser({
-      ...user,
+      ...userLogin,
       status: {
         passwordConfirm: {
           erro: '',
@@ -209,13 +214,14 @@ const Login = (props) => {
   }
 
   const testLengthPassword = () => {
-    if (user.user_password_new.length < 6) {
+    if (userLogin.user_password_new.length != '' && userLogin.user_password_new.length < 6) {
       referencces.userForcePassword.current.innerHTML = "";
+      setFrcePassword(false);
       setUser({
-        ...user,
+        ...userLogin,
         status: {
           password: {
-            erro: 'A Senhas não pode ser menor que 6 caracteres.',
+            erro: 'A Senha não pode ser menor que 6 caracteres.',
             validate: validateStatus.invalide
           },
           passwordConfirm: formStatusDefault
@@ -224,7 +230,7 @@ const Login = (props) => {
       return false;
     }
     setUser({
-      ...user,
+      ...userLogin,
       status: {
         password: {
           erro: '',
@@ -255,61 +261,72 @@ const Login = (props) => {
         <div className="card-login">
           <Form className="login-form" onSubmit={ handleSubmit }>
             <h3>Cadastrar senha</h3>
-            <p className='caption'>Crie uma senha de acesso a sua conta Setydeias contendo no mínimo 6 caracteres.</p>
+            <p className='caption'>Crie uma senha de acesso a sua conta Setydeias.</p>
             <FormGroup>
               <div className="input-group has-validation">
-                <span className="input-group-text"><i className="fas fa-id-card"></i></span>
+                <span className="input-group-text"><i className="fas fa-lock caption"></i></span>
                 <div className="form-floating is-invalid">
                   <input 
-                    type={ user.showPassword ? 'text' : 'password' }
-                    className={user.status.password.validate} 
+                    type={ userLogin.showPassword ? 'text' : 'password' }
+                    className={userLogin.status.password.validate} 
                     id="user_password_new" 
                     name='user_password_new' 
                     ref={ referencces.userPassword }
                     onChange={ handleChange }
                     onBlur={ validPassword }
-                    placeholder="" 
+                    autoFocus={true}
+                    placeholder="user_password_new" 
                     required 
                   />
-                  <label for="user-document">Senha</label>
+                  <label for="user_password_new_label">Senha {userLogin.user_password_new.length >0 ? userLogin.user_password_new.length : ''}</label>
                 </div>
                 <span 
                   type="button"
                   className="input-group-text"
                   onClick={(e) => handleShowPassword(e)}
                 >
-                  <i className="fas fa-eye"></i>
+                  <i className="fas fa-eye caption"></i>
                 </span>
                 <div className="invalid-feedback">
-                 { user.status.password.erro }
+                 { userLogin.status.password.erro }
                 </div>
                 <div ref={referencces.userForcePassword}></div>
               </div>
               <div className="input-group has-validation">
-                <span className="input-group-text"><i className="fas fa-id-card"></i></span>
+                <span className="input-group-text"><i className="fas fa-key caption"></i></span>
                 <div className="form-floating is-invalid">
                   <input 
-                    type={ user.showPasswordConfirm ? 'text' : 'password' } 
-                    className={user.status.passwordConfirm.validate} 
+                    type={ userLogin.showPasswordConfirm ? 'text' : 'password' } 
+                    className={userLogin.status.passwordConfirm.validate} 
                     id="user_password_confirm" 
                     name='user_password_confirm' 
                     ref={ referencces.userPasswordConfirm }
                     onChange={ handleChange }
                     onBlur={ validPassword }
-                    placeholder="" 
+                    placeholder="user_password_confirm" 
                     required 
                   />
-                  <label for="user-document">Confirmar</label>
+                  <label for="user_password_confirm_label">Confirmar {userLogin.user_password_confirm.length >0 ? userLogin.user_password_confirm.length : ''}</label>
                 </div>
                 <span 
                   type="button"
                   className="input-group-text"
                   onClick={(e) => handleShowPasswordComfirm(e)}
                 >
-                  <i className="fas fa-eye"></i>
+                  <i className="fas fa-eye caption"></i>
                 </span>
                 <div className="invalid-feedback">
-                 { user.status.passwordConfirm.erro }
+                 { userLogin.status.passwordConfirm.erro }
+                </div>
+              </div>
+              <div className="card border-none mb-3" style={{'max-width': '18rem;'}}>
+                <div className="card-header"><i className="fa fa-check" aria-hidden="true"></i> Dica de senha FORTE</div>
+                <div className="card-body text-secondary shadow-lg">
+                  <p className="card-text" style={{'margin': '0'}}>01. Conter no mínimo 8 caracteres.</p>
+                  <p className="card-text" style={{'margin': '0'}}>02. Conter letra maiúscula.</p>
+                  <p className="card-text" style={{'margin': '0'}}>03. Conter letra minúscula.</p>
+                  <p className="card-text" style={{'margin': '0'}}>03. Conter dígito.</p>
+                  <p className="card-text" style={{'margin': '0'}}>04. Conter caractere especial. Ex.: @#$%&!;*</p>
                 </div>
               </div>
             </FormGroup>                

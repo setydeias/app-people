@@ -99,7 +99,7 @@ const Login = (props) => {
 
       if (testUserDocument()) {		
 		
-        const resultGetDescription = await getUserForDescription({ document: user.user_document }).then();
+        const resultGetDescription = await getUserForDescription({ document: user.user_document });
   
         if(resultGetDescription.status === 200) { 
           
@@ -420,6 +420,7 @@ const Login = (props) => {
                         ref={ referencces.userDocument }
                         onChange={ handleChangeMaskCPF }
                         onBlur={ testUserDocument }
+                        autoFocus={true}
                         placeholder="UserDocument" 
                         required 
                       />
