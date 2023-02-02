@@ -187,7 +187,7 @@ const Login = (props) => {
     }            
     catch (error) {
       if (error.message === 'Request failed with status code 401') {
-        setMessage('Usuário ou senha inválidos.');
+        setMessage('Senha inválida.');
         return; 
       }
       if(error.message === 'Network Error') {
@@ -388,6 +388,7 @@ const Login = (props) => {
                         onChange={ handleChange }
                         onBlur={ testUserPassword }
                         placeholder="UserPassword" 
+                        autoFocus={true}
                         required 
                       />
                       <label for="user-document">Senha</label>                  
@@ -403,6 +404,7 @@ const Login = (props) => {
                       {  user.status.password.erro }
                     </div>
                   </div>
+                  <a href='#'>Esqueci minha senha</a>
                 </FormGroup>
               </> 
               : <>

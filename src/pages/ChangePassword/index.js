@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import './styles.css';
 import { Form, FormGroup, Button, Alert, Container } from 'reactstrap';
 import Img from "../../assets/imgs/Login01.jpg";
-import { login } from '../../api/User';
+import { login, passwordValidation, passwordUpdate } from '../../api/User';
 import Spinner from '../../components/Spinner';
 import { clearForm } from '../../utilities/Validations';
 import { useNavigate } from 'react-router-dom';
@@ -38,7 +38,7 @@ const Login = (props) => {
   } 
 
   const userDefault = {
-    user_document: '',
+    user_document: user,
     user_password: '',
     user_password_new: '',
     user_password_confirm: '',
@@ -73,20 +73,41 @@ const Login = (props) => {
         const cpf = decrypt(dataParamsLink);
         console.log(`CPF: ${cpf}`);
         
-        /*const resp = await login({ document: cpf, password_user: password }); 
-        if (resp.status === 200) {              
-          console.log(resp.data);              
-          localStorage.setItem('token', resp.data.access_token);
-          localStorage.setItem('document', resp.data.people.document)
-          navigate("/dashboard");
-          return;
-        }*/
+        const validationPassword = await passwordValidation({
+          document: cpf,
+          password: password
+        });
+
+        console.log(`
+          document: ${userLogin.user_document},
+          password: ${userLogin.user_password_new}
+        `);
+
+        if (validationPassword.status === 200) {
+          
+          const updatePasswor = await passwordUpdate({
+            document: cpf,
+            password: userLogin.user_password_new
+          });
+
+         if (updatePasswor.status === 200) {
+            const resp = await login({ document: cpf, password_user: userLogin.user_password_new }); 
+            if (resp.status === 200) {              
+              console.log(resp.data);              
+              localStorage.setItem('token', resp.data.access_token);
+              localStorage.setItem('document', resp.data.people.document)
+              navigate("/dashboard");
+              return;
+            }
+          }
+          setMessage('Não foi possível validar a senha.');
+        }
       }
      
     }            
     catch (error) {
       if (error.message === 'Request failed with status code 401') {
-        setMessage('Usuário ou senha inválidos.');
+        setMessage(error);
         return; 
       }
       if(error.message === 'Network Error') {

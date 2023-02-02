@@ -16,7 +16,12 @@ export const registerUser = async (pessoa) => {
     return response;
 }
 
-export const testPassword = async (data) => {
+export const passwordValidation = async (data) => {
     const response = await axios.post(`${ApiPeople.settings.endpoint}/usuario/validacao/senha`, data);
+    return response;
+}
+
+export const passwordUpdate = async (data) => {
+    const response = await axios.post(`${ApiPeople.settings.endpoint}/usuario/alterar/senha`, data);
     return response;
 }
