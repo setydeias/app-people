@@ -73,14 +73,14 @@ const Login = (props) => {
         const cpf = decrypt(dataParamsLink);
         console.log(`CPF: ${cpf}`);
         
-        const resp = await login({ document: cpf, password_user: password }); 
+        /*const resp = await login({ document: cpf, password_user: password }); 
         if (resp.status === 200) {              
           console.log(resp.data);              
           localStorage.setItem('token', resp.data.access_token);
           localStorage.setItem('document', resp.data.people.document)
           navigate("/dashboard");
           return;
-        }
+        }*/
       }
      
     }            

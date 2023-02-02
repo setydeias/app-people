@@ -15,3 +15,8 @@ export const registerUser = async (pessoa) => {
     const response = await axios.post(`${ApiPeople.settings.endpoint}/pessoa/cadastrar`, pessoa);
     return response;
 }
+
+export const testPassword = async (data) => {
+    const response = await axios.post(`${ApiPeople.settings.endpoint}/usuario/validacao/senha`, data);
+    return response;
+}
