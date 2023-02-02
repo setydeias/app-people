@@ -202,6 +202,13 @@ const Login = (props) => {
     setUser({ ...user, statusPassword : !user.statusPassword });
   }
 
+  const handleForgotMyPassword = (e) => {
+    e.preventDefault();
+
+    const dataCrypto = encrypt(user.user_document);
+    navigate(`/app/pessoa/usuario/senha/recuperar/${dataCrypto.encryptedData}/${dataCrypto.iv}/${dataCrypto.key}`);         
+  }
+
   const testUserDocument = () => {    
     
     if ((user.user_document === '') || (!isValidCPF(user.user_document))) {
@@ -404,7 +411,7 @@ const Login = (props) => {
                       {  user.status.password.erro }
                     </div>
                   </div>
-                  <a href='#'>Esqueci minha senha</a>
+                  <button type="button" class="btn btn-link" onClick={ handleForgotMyPassword }>Esqueci minha senha</button>
                 </FormGroup>
               </> 
               : <>
