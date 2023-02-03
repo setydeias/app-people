@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Form, Button, FormGroup } from "reactstrap";
 import './styles.css';
 import { decrypt } from "../../utilities/Cryptography";
 import { omitEmail } from '../../utilities/Masks';
+import { getContactsbyIdPeople } from "../../api/People";
 
 const RecoverPassword = () => {
 
-  const { document, iv, key } = useParams();
+  const { id_people, document, iv, key } = useParams();
    
   const dataParamsLink = {
     iv: iv,
@@ -15,8 +16,18 @@ const RecoverPassword = () => {
     encryptedData: document
   }
 
+  const [contacts, setContacts] = useState(()=>[]);
+  
   const documentDecrypt = decrypt(dataParamsLink);   
-  const email = omitEmail("neto.marcal.ce@gmail.com");
+
+  const getContactsbyId = async () => {
+    const result = await getContactsbyIdPeople(id_people);
+    console.log(result);
+  }
+
+  useEffect(()=> {
+    getContactsbyId();    
+  }, [])
 
   return(
     <div className="body">
@@ -28,7 +39,7 @@ const RecoverPassword = () => {
       <div className="card-login">
         <Form className="login-form" onSubmit={ ()=>{} }>
           <h3>Recuperação de senha</h3>
-          <p className='caption'>Para proteger sua conta, será enviado um e-mail de confirmação para <b>{ email }</b></p>
+          <p className='caption'>Para proteger sua conta, será enviado um e-mail de confirmação para <b>{  }</b></p>
           <FormGroup>
             
           </FormGroup>                

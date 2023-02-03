@@ -52,6 +52,7 @@ const Login = (props) => {
   const toggle = () => setModal(!modal);
 
   const userDefault = {
+    id_people: '',
     user_document: '',
     user_password: '',
     user_email: '',
@@ -106,6 +107,7 @@ const Login = (props) => {
           setUser({
             ...user,
             valid_document: true,
+            id_people: resultGetDescription.data.usuario.id_people
           });
           
           if (testUserPassword()) {
@@ -206,7 +208,7 @@ const Login = (props) => {
     e.preventDefault();
 
     const dataCrypto = encrypt(user.user_document);
-    navigate(`/app/pessoa/usuario/senha/recuperar/${dataCrypto.encryptedData}/${dataCrypto.iv}/${dataCrypto.key}`);         
+    navigate(`/app/pessoa/usuario/senha/recuperar/${user.id_people}/${dataCrypto.encryptedData}/${dataCrypto.iv}/${dataCrypto.key}`);         
   }
 
   const testUserDocument = () => {    
