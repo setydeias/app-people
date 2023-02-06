@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import './styles.css';
 import { Form, FormGroup, Button, Alert, Container } from 'reactstrap';
@@ -13,7 +13,8 @@ const Login = (props) => {
   
   const navigate = useNavigate();
   const { user, password, iv, key } = useParams();
-  
+  const [title, setTitle] = useState('Cadastrar senha');
+
   const dataParamsLink = {
     iv: iv,
     key: new Uint8Array(Buffer.from(key,'hex')),
@@ -71,17 +72,11 @@ const Login = (props) => {
         
         console.log('passou aqui!');
         const cpf = decrypt(dataParamsLink);
-        console.log(`CPF: ${cpf}`);
         
         const validationPassword = await passwordValidation({
           document: cpf,
           password: password
         });
-
-        console.log(`
-          document: ${userLogin.user_document},
-          password: ${userLogin.user_password_new}
-        `);
 
         if (validationPassword.status === 200) {
           
@@ -126,6 +121,7 @@ const Login = (props) => {
     e.preventDefault();
     setUser({ ...userLogin, showPasswordConfirm : !userLogin.showPasswordConfirm });
   }
+
 
   const testForcePassword = () => {
 
@@ -281,7 +277,7 @@ const Login = (props) => {
       <div className="right-login">
         <div className="card-login">
           <Form className="login-form" onSubmit={ handleSubmit }>
-            <h3>Cadastrar senha</h3>
+            <h3>{ title }</h3>
             <p className='caption'>Crie uma senha de acesso a sua conta Setydeias.</p>
             <FormGroup>
               <div className="input-group has-validation">
