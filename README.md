@@ -1,4 +1,4 @@
-# APP de gerenciamento de dados da pessoa como cadastro único no ecossistema da Setydeias (DADU - Cadastro único).
+# APP de gerenciamento de dados da pessoa como cadastro único no ecossistema da Setydeias (CADU - Cadastro único).
 Obs: Todos os comandos devem ser executados no `Node.js command prompt`.
 ## Dependências
 
