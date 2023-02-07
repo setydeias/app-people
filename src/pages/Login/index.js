@@ -346,7 +346,7 @@ const Login = (props) => {
                         ref={ referencces.userDocumentRegistration }
                         onChange={ handleChangeMaskCPF }
                         onBlur={ testUserDocument }
-                        //value={ setMaskCPF(user.user_document) }
+                        autoFocus={true}
                         required 
                       />
                       <label for="user-document">CPF</label>
