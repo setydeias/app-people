@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Form, Button, FormGroup } from "reactstrap";
 import './styles.css';
 import { decrypt } from "../../utilities/Cryptography";
@@ -12,7 +12,7 @@ import AppPeople from "../../globals/Endpoint/app_people";
 const RecoverPassword = () => {
 
   const { id_people, document, iv, key } = useParams();
-   
+  const navigate = useNavigate();
   const dataParamsLink = {
     iv: iv,
     key: new Uint8Array(Buffer.from(key,'hex')),
@@ -49,6 +49,12 @@ const RecoverPassword = () => {
   const sendEmail = async (e) => {
     e.preventDefault();
 
+    if (statusButton.text === 'OK') {
+      navigate('/');
+      return;
+    }
+    
+
     setStatusButton({ 
       ...statusButton,
       status: !statusButton,
@@ -77,10 +83,10 @@ const RecoverPassword = () => {
       if (sendEmail.status === 200) {
         setStatusButton({
           ...statusButton,
-          status: statusButton,
-          text: 'Enviado'
+          status: !statusButton,
+          text: 'OK'
         });
-        setInformation(`Enviado com sucesso. Para confirmar, verifique sua caixa de entrada ou span e clique no botão Confirmar. No e-mail `);
+        setInformation(`Enviado com sucesso. Para confirmar, verifique sua caixa de entrada ou Spam e clique no botão Confirmar. No e-mail `);
         return;
       }
 
