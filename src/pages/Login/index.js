@@ -113,8 +113,7 @@ const Login = (props) => {
           if (testUserPassword()) {
 
             const resp = await login({ document: user.user_document, password_user: user.user_password }); 
-            if (resp.status === 200) {              
-              console.log(resp.data);              
+            if (resp.status === 200) {                           
               localStorage.setItem('token', resp.data.access_token);
               localStorage.setItem('document', resp.data.people.document)
               navigate("/dashboard");

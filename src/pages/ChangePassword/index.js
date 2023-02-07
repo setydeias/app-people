@@ -70,7 +70,6 @@ const Login = (props) => {
 
       if(forcePassword){
         
-        console.log('passou aqui!');
         const cpf = decrypt(dataParamsLink);
         
         const validationPassword = await passwordValidation({
@@ -87,8 +86,7 @@ const Login = (props) => {
 
          if (updatePasswor.status === 200) {
             const resp = await login({ document: cpf, password_user: userLogin.user_password_new }); 
-            if (resp.status === 200) {              
-              console.log(resp.data);              
+            if (resp.status === 200) {                          
               localStorage.setItem('token', resp.data.access_token);
               localStorage.setItem('document', resp.data.people.document)
               navigate("/dashboard");
