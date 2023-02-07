@@ -302,7 +302,8 @@ const Login = (props) => {
   }
 
   const cancel = () => {
-    setUser(() => userDefault);
+    setUser(userDefault);
+    setMessage('');
     clearForm();
   }
 
