@@ -19,9 +19,8 @@ const RecoverPassword = () => {
     encryptedData: document
   }
 
-  
   const statusButtonDefault = {
-    text: 'Recuperar',
+    text: 'Redefinir',
     status: false
   }
   
@@ -64,22 +63,22 @@ const RecoverPassword = () => {
     });
 
     if (result.status === 200) {
-      setStatusButton({
-        ...statusButton,
-        status: statusButton,
-        text: 'Enviado'
-      });
 
       const sendEmail = await sendUserRecoverPassword({
         email: email.noOmit,
         password: temporary_password,
         iv: dataParamsLink.iv,
-        key: dataParamsLink.key,
+        key: key,
         encryptedData: dataParamsLink.encryptedData,
         endpoint: AppPeople.settings.endpoint_change_password
       });
 
       if (sendEmail.status === 200) {
+        setStatusButton({
+          ...statusButton,
+          status: statusButton,
+          text: 'Enviado'
+        });
         setInformation(`Enviado com sucesso. Para confirmar, verifique sua caixa de entrada ou span e clique no botão Confirmar. No e-mail `);
         return;
       }
@@ -104,7 +103,7 @@ const RecoverPassword = () => {
     <div className="right-login">
       <div className="card-login">
         <Form className="login-form" onSubmit={ sendEmail }>
-          <h3>Recuperar o acesso</h3>
+          <h3>Redefinir senha</h3>
           <p className='caption'> { information } <b>{ email.omit }</b>.</p>
           <FormGroup>
             

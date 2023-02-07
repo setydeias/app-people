@@ -208,7 +208,7 @@ const Login = (props) => {
     e.preventDefault();
 
     const dataCrypto = encrypt(user.user_document);
-    navigate(`/app/pessoa/usuario/senha/recuperar/${user.id_people}/${dataCrypto.encryptedData}/${dataCrypto.iv}/${dataCrypto.key}`);         
+    navigate(`/app/pessoa/usuario/senha/redefinir/${user.id_people}/${dataCrypto.encryptedData}/${dataCrypto.iv}/${dataCrypto.key}`);         
   }
 
   const testUserDocument = () => {    

@@ -9,6 +9,6 @@ export const sendUserRegistrationConfirmation = async (data) => {
 
 export const sendUserRecoverPassword = async (data) => {
   const response = await axios.post(`
-    ${ApiEmail.settings.endpoint}/pessoa/usuario/senha/recuperar`, data);
+    ${ApiEmail.settings.endpoint}/pessoa/usuario/senha/redefinir`, data);
   return response;
 }
