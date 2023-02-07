@@ -86,7 +86,7 @@ const RecoverPassword = () => {
           status: !statusButton,
           text: 'OK'
         });
-        setInformation(`Enviado com sucesso. Para confirmar, verifique sua caixa de entrada ou Spam e clique no botão Confirmar. No e-mail `);
+        setInformation(`E-mail enviado com sucesso. Para confirmar, verifique sua caixa de entrada ou Spam e clique no botão Confirmar. Em: `);
         return;
       }
 
