@@ -97,9 +97,15 @@ const RecoverPassword = () => {
 
   }
 
+  const cancel = (e) => {
+    e.preventDefault();
+    navigate('/');
+    return;
+  }
+
   useEffect(()=> {
     getContactsbyId();    
-  }, [])
+  }, []);
 
   return(
     <div className="body">
@@ -113,15 +119,21 @@ const RecoverPassword = () => {
           <h3>Redefinir senha</h3>
           <p className='caption'> { information } <b>{ email.omit }</b>.</p>
           <FormGroup>
-            
-          </FormGroup>                
           <Button 
-            type='submit' 
-            className='button-continuar'
-            disabled={ statusButton.status }
-          >
-            { statusButton.status ? statusButton.text : statusButton.text }                                           
-          </Button>  
+              type='button' 
+              className='button-cancelar'
+              onClick={ cancel }
+            >
+              Cancelar                                           
+            </Button>
+            <Button 
+              type='submit' 
+              className='button-continuar'
+              disabled={ statusButton.status }
+            >
+              { statusButton.status ? statusButton.text : statusButton.text }                                           
+            </Button>  
+          </FormGroup>  
         </Form>
       </div>
     </div>
