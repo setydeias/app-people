@@ -76,11 +76,14 @@ const Login = (props) => {
     endpoint: ''
   }
 
-  const [user, setUser] = useState(()=> userDefault);
+  const [user, setUser] = useState(userDefault);
   const [message, setMessage] = useState(() => '');
   const [dataEmail, setDataEmail] = useState(() => dataEmailDefault);
 
   const handleChange = (e) => {
+    if (e.target.value === 'user_email') {
+      e.target.value = e.target.value.toLowerCase();
+    }
     const { name, value } = e.target;
     setUser({ ...user, [name]: value });
     setMessage('');
@@ -179,7 +182,7 @@ const Login = (props) => {
                   title: responseRegister.data.message,
                   text: `E-mail de confirmação enviado para: ${user.user_email}. Favor vericicar sua caixa de entrada ou span.`
                 }));
-                setUser(()=> userDefault);
+                setUser(userDefault);
                 clearForm();
               }              
             }
@@ -301,10 +304,11 @@ const Login = (props) => {
     return true;
   }
 
-  const cancel = () => {
+  const cancel = (e) => {
+    e.preventDefault();
+    clearForm();
     setUser(userDefault);
     setMessage('');
-    clearForm();
   }
 
 
@@ -342,7 +346,7 @@ const Login = (props) => {
                         ref={ referencces.userDocumentRegistration }
                         onChange={ handleChangeMaskCPF }
                         onBlur={ testUserDocument }
-                        value={ setMaskCPF(user.user_document) }
+                        //value={ setMaskCPF(user.user_document) }
                         required 
                       />
                       <label for="user-document">CPF</label>
@@ -433,7 +437,6 @@ const Login = (props) => {
                         onChange={ handleChangeMaskCPF }
                         onBlur={ testUserDocument }
                         autoFocus={true}
-                        placeholder="UserDocument" 
                         required 
                       />
                       <label for="user-document">CPF</label>
