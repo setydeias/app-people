@@ -14,7 +14,7 @@ const AppRoutes = () => {
     <Router>        
       <Routes>
         <Route exact path="/" element={ <Login /> } />
-        <Route exact path="/app/pessoa/usuario/senha/alterar/:user?/:password?/:iv?/:key?" element={ <ChangePassword /> } />
+        <Route exact path="/app/pessoa/usuario/senha/alterar/:user?/:password?/:iv?/:key?/:action?" element={ <ChangePassword /> } />
         <Route exact path="/app/pessoa/usuario/senha/redefinir/:id_people?/:document?/:iv?/:key?" element={ <RecoverPassword /> } />
         <Route exact path="/dashboard" element={ 
             <PrivateRoute>

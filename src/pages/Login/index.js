@@ -163,6 +163,7 @@ const Login = (props) => {
               const dataCrypto = encrypt(user.user_document);
               
               const responseSendEmail = await sendUserRegistrationConfirmation({
+                action: '0',
                 email: user.user_email,
                 password: responseRegister.data.pessoaCadastrada.password_user,
                 iv: dataCrypto.iv,

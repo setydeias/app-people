@@ -65,6 +65,7 @@ const RecoverPassword = () => {
     if (result.status === 200) {
 
       const sendEmail = await sendUserRecoverPassword({
+        action: '1',
         email: email.noOmit,
         password: temporary_password,
         iv: dataParamsLink.iv,

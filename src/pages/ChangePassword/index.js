@@ -12,7 +12,7 @@ import { decrypt } from '../../utilities/Cryptography';
 const Login = (props) => { 
   
   const navigate = useNavigate();
-  const { user, password, iv, key } = useParams();
+  const { action, user, password, iv, key } = useParams();
   const [title, setTitle] = useState('Cadastrar senha');
 
   const dataParamsLink = {
