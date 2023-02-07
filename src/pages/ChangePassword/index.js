@@ -13,7 +13,7 @@ const Login = (props) => {
   
   const navigate = useNavigate();
   const { action, user, password, iv, key } = useParams();
-  const [title, setTitle] = useState('Cadastrar senha');
+  const [title, setTitle] = useState('');
 
   const dataParamsLink = {
     iv: iv,
@@ -120,6 +120,10 @@ const Login = (props) => {
     setUser({ ...userLogin, showPasswordConfirm : !userLogin.showPasswordConfirm });
   }
 
+  useEffect(()=> {
+    if (action === '0') setTitle('Cadastrar senha');
+    else setTitle('Redefirnir senha');
+  },[]);
 
   const testForcePassword = () => {
 
