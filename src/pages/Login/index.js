@@ -53,6 +53,13 @@ const Login = (props) => {
   const [modal, setModal] = useState(modalDefault);
   const toggle = () => setModal(!modal);
 
+  const statusButtonDefault = {
+    text: 'Continuar',
+    status: false
+  }
+
+  const [statusButton, setStatusButton] = useState(statusButtonDefault);
+
   const userDefault = {
     id_people: '',
     user_document: '',
@@ -101,6 +108,13 @@ const Login = (props) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage('');
+
+    setStatusButton({ 
+      ...statusButton,
+      status: !statusButton,
+      text: 'Continuar'
+    });
+
     try { 
 
       if (testUserDocument()) {		
@@ -200,10 +214,20 @@ const Login = (props) => {
     catch (error) {
       if (error.message === 'Request failed with status code 401') {
         setMessage('Senha inválida.');
+        setStatusButton({ 
+          ...statusButton,
+          status: !statusButton,
+          text: 'Continuar'
+        });
         return; 
       }
       if(error.message === 'Network Error') {
         setMessage('Não foi possível a conexão com a API. Verifique sua conexão com a internet ou entre em contato: Setydeias (85) 3290-3496');
+        setStatusButton({ 
+          ...statusButton,
+          status: !statusButton,
+          text: 'Continuar'
+        });
         return; 
       }
     }
@@ -318,15 +342,6 @@ const Login = (props) => {
     setMessage('');
   }
 
-  const testEmailRegistrationStatus = async () => {
-    const result = await emailRegistrationStatus({email: user.user_email});
-    if (result.status === 200) return true;
-    if(result.status === 409) {
-      setMessage(result.data.message);
-      return false;
-    }
-    return false;
-  }
 
   return(
     <div className="body">
@@ -467,8 +482,9 @@ const Login = (props) => {
             <Button 
               type='submit' 
               className='button-continuar'
+              disabled={statusButton.status}
             >
-              { user.valid_document ? 'Entrar' : 'Continuar' }                                             
+              {  statusButton.status ? statusButton.text : user.valid_document ? 'Entrar' : 'Continuar' }                                          
             </Button>
             {
               user.valid_document ?
