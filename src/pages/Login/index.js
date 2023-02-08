@@ -19,6 +19,8 @@ import ModalAlert from '../../components/Modal/Alert';
 import { encrypt } from '../../utilities/Cryptography';
 import AppPeople from '../../globals/Endpoint/app_people';
 import { sendUserRegistrationConfirmation } from '../../api/notification/email';
+import { emailRegistrationStatus } from '../../api/People';
+
  
 const Login = (props) => { 
   
@@ -132,6 +134,11 @@ const Login = (props) => {
           }));
 
          if (testUserEmail()) {
+            const result = await emailRegistrationStatus({email: user.user_email});
+            if(result.status === 208) {
+              setMessage(result.data.message);
+              return;
+            }
             const responseRegister = await registerUser({
               "id_status": 1,
               "id_document_type": 1,
@@ -311,6 +318,15 @@ const Login = (props) => {
     setMessage('');
   }
 
+  const testEmailRegistrationStatus = async () => {
+    const result = await emailRegistrationStatus({email: user.user_email});
+    if (result.status === 200) return true;
+    if(result.status === 409) {
+      setMessage(result.data.message);
+      return false;
+    }
+    return false;
+  }
 
   return(
     <div className="body">
