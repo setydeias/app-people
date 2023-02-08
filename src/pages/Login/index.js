@@ -466,7 +466,7 @@ const Login = (props) => {
             }
             {    
               message ? (
-                <Alert color='danger'>{ message }</Alert>
+                <Alert className='alert-message' color='danger'>{ message }</Alert>
               ) : ''
             }           
           </Form>

@@ -78,6 +78,10 @@
     margin: 0.5em;
   }
   
+  .alert-message {
+    margin-top: 0.5em;
+  }
+
   .caption {
     color: dimgray;
   }
