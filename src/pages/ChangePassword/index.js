@@ -53,12 +53,14 @@ const Login = (props) => {
   } 
 
   const [forcePassword, setFrcePassword] = useState(() => false);
+  const [forcePasswordText, setFrcePasswordText] = useState('Senha Fraca!');
 
   const [userLogin, setUser] = useState(()=> userDefault);
   const [message, setMessage] = useState(() => '');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setUser({ ...userLogin, [name]: value });
     setMessage('');
   };
@@ -68,8 +70,8 @@ const Login = (props) => {
     setMessage('');
     try { 
 
-      if(forcePassword){
-        
+      if(forcePasswordText === 'Senha Forte'){
+       
         const cpf = decrypt(dataParamsLink);
         
         const validationPassword = await passwordValidation({
@@ -96,7 +98,7 @@ const Login = (props) => {
           setMessage('Não foi possível validar a senha.');
         }
       }
-     
+      setMessage('A senha deve ser forte.');     
     }            
     catch (error) {
       if (error.message === 'Request failed with status code 401') {
@@ -127,23 +129,23 @@ const Login = (props) => {
 
   const testForcePassword = () => {
 
-    var force = 0;
-	  
-    
-	  if((userLogin.user_password_new.length >= 6) && (userLogin.user_password_new.match(/[a-z]+/))){
+    var force = 0;	  
+    const regex = /[0-9]/;
+
+    if((userLogin.user_password_new.length >= 6) && (userLogin.user_password_new.match(/[a-z]+/))){
 	  	force += 10;
 	  }
 
-	  if((userLogin.user_password_new.length >= 6) && (userLogin.user_password_new.match(/[A-Z]+/))){
+	  if((userLogin.user_password_new.length >= 7) && (userLogin.user_password_new.match(/[A-Z]+/))){
 	  	force += 20;
 	  }
 
 	  if((userLogin.user_password_new.length >= 8) && (userLogin.user_password_new.match(/[@#$%&!;*]/))){
-	  	force += 25;
+	  	force += 20;
 	  }
 
-	  if(userLogin.user_password_new.match(/([1-9]+)\1{1,}/)){
-	  	force += -25;
+	  if(regex.test(userLogin.user_password_new)){
+	  	force += 15;
 	  }
 
     showForcePassword(force);
@@ -156,19 +158,20 @@ const Login = (props) => {
     if(force < 30 ){
       referencces.userForcePassword.current.innerHTML = "<span style='color: #ac1515'>Senha Fraca!</span>";
       setFrcePassword(false);
-    }else if((force >= 30) && (force < 50)){
+      setFrcePasswordText('Senha Fraca!');
+    }else if((force >= 30) && (force < 60)){
       setFrcePassword(false);
+      setFrcePasswordText('Senha Média');
       referencces.userForcePassword.current.innerHTML = "<span style='color: #fab027'>Senha Média</span>";
     }else if((force >= 50) && (force < 70)){
       setFrcePassword(true);
+      setFrcePasswordText('Senha Forte');
       referencces.userForcePassword.current.innerHTML = "<span style='color: #105510'>Senha Forte</span>";
     }
   }
  
   const testPassword = () => {
 
-    testForcePassword();
-    
     if (testLengthPassword() && userLogin.user_password_new === '') {
       referencces.userForcePassword.current.innerHTML = "";
       referencces.userPassword.current.focus(); 
@@ -233,14 +236,13 @@ const Login = (props) => {
   }
 
   const testLengthPassword = () => {
-    if (userLogin.user_password_new.length != '' && userLogin.user_password_new.length < 6) {
+    if (userLogin.user_password_new.length != '' && userLogin.user_password_new.length < 8) {
       referencces.userForcePassword.current.innerHTML = "";
-      setFrcePassword(false);
       setUser({
         ...userLogin,
         status: {
           password: {
-            erro: 'A Senha não pode ser menor que 6 caracteres.',
+            erro: 'A Senha não pode ser menor que 8 caracteres.',
             validate: validateStatus.invalide
           },
           passwordConfirm: formStatusDefault
@@ -262,9 +264,10 @@ const Login = (props) => {
   }
   
   const validPassword = () => {
-    if(testLengthPassword()){
-      if (testPassword() && testPasswordConfirm()) {
-        return true
+    testForcePassword();
+    if(testLengthPassword() &&testPassword()){      
+      if (forcePassword) {
+        return true;
       }
     }    
     return false;
@@ -321,7 +324,7 @@ const Login = (props) => {
                     name='user_password_confirm' 
                     ref={ referencces.userPasswordConfirm }
                     onChange={ handleChange }
-                    onBlur={ validPassword }
+                    onBlur={ testPasswordConfirm }
                     placeholder="user_password_confirm" 
                     required 
                   />
@@ -357,7 +360,7 @@ const Login = (props) => {
             </Button> 
             {    
               message ? (
-                <Alert color='danger'>{ message }</Alert>
+                <Alert color='danger' style={{"marginTop": "0.5em"}}>{ message }</Alert>
               ) : ''
             }           
           </Form>
