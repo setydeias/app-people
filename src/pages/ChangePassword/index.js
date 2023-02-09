@@ -124,7 +124,7 @@ const Login = (props) => {
 
   useEffect(()=> {
     if (action === '0') setTitle('Cadastrar senha');
-    else setTitle('Redefirnir senha');
+    else setTitle('Redefinir senha');
   },[]);
 
   const testForcePassword = () => {

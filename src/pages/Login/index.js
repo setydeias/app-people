@@ -201,7 +201,7 @@ const Login = (props) => {
                   ...prevent,
                   modal: true,
                   title: responseRegister.data.message,
-                  text: `E-mail de confirmação enviado para: ${user.user_email}. Favor vericicar sua caixa de entrada ou span.`
+                  text: `E-mail de confirmação enviado para: ${user.user_email}. Favor vericicar sua caixa de entrada ou spam.`
                 }));
                 setUser(userDefault);
                 clearForm();
