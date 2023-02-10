@@ -242,7 +242,14 @@ const Login = (props) => {
     e.preventDefault();
 
     const dataCrypto = encrypt(user.user_document);
-    navigate(`/app/pessoa/usuario/senha/redefinir/${user.id_people}/${dataCrypto.encryptedData}/${dataCrypto.iv}/${dataCrypto.key}`);         
+    navigate(`/app/pessoa/usuario/senha/redefinir/${user.id_people}/${dataCrypto.encryptedData}/${dataCrypto.iv}/${dataCrypto.key}/1`);         
+  }
+
+  const handleResendRegistrationEmail = (e) => {
+    e.preventDefault();
+
+    const dataCrypto = encrypt(user.user_document);
+    navigate(`/app/pessoa/usuario/senha/redefinir/${user.id_people}/${dataCrypto.encryptedData}/${dataCrypto.iv}/${dataCrypto.key}/0`);         
   }
 
   const testUserDocument = () => {    
@@ -450,6 +457,7 @@ const Login = (props) => {
                     </div>
                   </div>
                   <button type="button" class="btn btn-link" onClick={ handleForgotMyPassword }>Esqueci minha senha</button>
+                  <button type="button" class="btn btn-link" style={{"marginLeft":"-0.2em"}} onClick={ handleResendRegistrationEmail }>Reenviar e-mail de cadastro</button>
                 </FormGroup>
               </> 
               : <>
@@ -500,7 +508,7 @@ const Login = (props) => {
               message ? (
                 <Alert className='alert-message' color='danger'>{ message }</Alert>
               ) : ''
-            }           
+            }                      
           </Form>
           <ModalAlert 
             modal={ modal} 

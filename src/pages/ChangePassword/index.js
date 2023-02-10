@@ -70,35 +70,36 @@ const Login = (props) => {
     setMessage('');
     try { 
 
-      if(forcePasswordText === 'Senha Forte'){
-       
-        const cpf = decrypt(dataParamsLink);
-        
-        const validationPassword = await passwordValidation({
-          document: cpf,
-          password: password
-        });
-
-        if (validationPassword.status === 200) {
+      if(forcePassword){
+        if(forcePasswordText === 'Senha Forte'){
+          const cpf = decrypt(dataParamsLink);
           
-          const updatePasswor = await passwordUpdate({
+          const validationPassword = await passwordValidation({
             document: cpf,
-            password: userLogin.user_password_new
+            password: password
           });
-
-         if (updatePasswor.status === 200) {
-            const resp = await login({ document: cpf, password_user: userLogin.user_password_new }); 
-            if (resp.status === 200) {                          
-              localStorage.setItem('token', resp.data.access_token);
-              localStorage.setItem('document', resp.data.people.document)
-              navigate("/dashboard");
-              return;
+  
+          if (validationPassword.status === 200) {
+            
+            const updatePasswor = await passwordUpdate({
+              document: cpf,
+              password: userLogin.user_password_new
+            });
+  
+           if (updatePasswor.status === 200) {
+              const resp = await login({ document: cpf, password_user: userLogin.user_password_new }); 
+              if (resp.status === 200) {                          
+                localStorage.setItem('token', resp.data.access_token);
+                localStorage.setItem('document', resp.data.people.document)
+                navigate("/dashboard");
+                return;
+              }
             }
-          }
-          setMessage('Não foi possível validar a senha.');
-        }
+            setMessage('Não foi possível validar a senha.');
+          }         
+        }        
+        setMessage('A senha deve ser forte.');           
       }
-      setMessage('A senha deve ser forte.');     
     }            
     catch (error) {
       if (error.message === 'Request failed with status code 401') {

@@ -6,12 +6,12 @@ import { decrypt } from "../../utilities/Cryptography";
 import { omitEmail } from '../../utilities/Masks';
 import { passwordUpdate } from '../../api/User';
 import { getContactsbyIdPeople } from "../../api/People";
-import { sendUserRecoverPassword } from "../../api/notification/email";
+import { sendUserRecoverPassword, sendUserRegistrationConfirmation } from "../../api/notification/email";
 import AppPeople from "../../globals/Endpoint/app_people";
 
 const RecoverPassword = () => {
 
-  const { id_people, document, iv, key } = useParams();
+  const { action, id_people, document, iv, key } = useParams();
   const navigate = useNavigate();
   const dataParamsLink = {
     iv: iv,
@@ -29,6 +29,7 @@ const RecoverPassword = () => {
     noOmit: ''
   }
 
+  const [title, setTitle] = useState('');
   const [statusButton, setStatusButton] = useState(statusButtonDefault);
   const [information, setInformation] = useState('Para proteger sua conta Setydeias, será enviado um e-mail de confirmação para');
   const [contact, setContact] = useState([]);
@@ -48,7 +49,7 @@ const RecoverPassword = () => {
 
   const sendEmail = async (e) => {
     e.preventDefault();
-
+   
     if (statusButton.text === 'OK') {
       navigate('/');
       return;
@@ -70,17 +71,31 @@ const RecoverPassword = () => {
 
     if (result.status === 200) {
 
-      const sendEmail = await sendUserRecoverPassword({
-        action: '1',
+      const data = {
+        action: action,
         email: email.noOmit,
         password: temporary_password,
         iv: dataParamsLink.iv,
         key: key,
         encryptedData: dataParamsLink.encryptedData,
-        endpoint: AppPeople.settings.endpoint_change_password
-      });
+        endpoint: AppPeople.settings.endpoint_change_password 
+      }
 
-      if (sendEmail.status === 200) {
+      if (action === '0') {
+        const result = await sendUserRegistrationConfirmation(data);
+        if (result.status === 200) {
+          setStatusButton({
+            ...statusButton,
+            status: !statusButton,
+            text: 'OK'
+          });
+          setInformation(`E-mail enviado com sucesso. Para confirmar, verifique sua caixa de entrada ou spam e clique no botão Confirmar. Em: `);
+          return;
+        }
+      }
+
+      const sendEmailResult = await sendUserRecoverPassword(data);
+      if (sendEmailResult.status === 200) {
         setStatusButton({
           ...statusButton,
           status: !statusButton,
@@ -89,7 +104,6 @@ const RecoverPassword = () => {
         setInformation(`E-mail enviado com sucesso. Para confirmar, verifique sua caixa de entrada ou spam e clique no botão Confirmar. Em: `);
         return;
       }
-
       return;
     }
   }
@@ -101,7 +115,23 @@ const RecoverPassword = () => {
   }
 
   useEffect(()=> {
-    getContactsbyId();    
+    getContactsbyId();
+    if (action === '0') {
+      setTitle('Reenviar e-mail de cadastro');
+      setStatusButton({ 
+        ...statusButton,
+        status: false,
+        text: 'Redeenviar'
+      });
+    }
+    else{ 
+      setTitle('Redefinir');
+      setStatusButton({ 
+        ...statusButton,
+        status: false,
+        text: 'Redefinir'
+      });
+    };
   }, []);
 
   return(
@@ -113,7 +143,7 @@ const RecoverPassword = () => {
     <div className="right-login">
       <div className="card-login">
         <Form className="login-form" onSubmit={ sendEmail }>
-          <h3>Redefinir senha</h3>
+          <h3>{title}</h3>
           <p className='caption'> { information } <b>{ email.omit }</b>.</p>
           <FormGroup>
           <Button 
