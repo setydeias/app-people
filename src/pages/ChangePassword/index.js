@@ -8,6 +8,7 @@ import Spinner from '../../components/Spinner';
 import { clearForm } from '../../utilities/Validations';
 import { useNavigate } from 'react-router-dom';
 import { decrypt } from '../../utilities/Cryptography';
+import SupporContatc from '../../components/SupportContact';
 
 const Login = (props) => { 
   
@@ -56,18 +57,21 @@ const Login = (props) => {
   const [forcePasswordText, setFrcePasswordText] = useState('Senha fraca!');
 
   const [userLogin, setUser] = useState(()=> userDefault);
-  const [message, setMessage] = useState(() => '');
+  
+  const messageDefault = { text: '', supportContact: false }
+
+  const [message, setMessage] = useState(messageDefault);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
     setUser({ ...userLogin, [name]: value });
-    setMessage('');
+    setMessage(messageDefault);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage('');
+    setMessage(messageDefault);
     try { 
 
       if(forcePassword){
@@ -95,19 +99,19 @@ const Login = (props) => {
                 return;
               }
             }
-            setMessage('Não foi possível validar a senha.');
+            setMessage({...message, text: 'Não foi possível validar a senha.'});
           }         
         }        
-        setMessage('A senha informada não atende ao padrão. Favor verificar as regras de composição de senha acima.');           
+        setMessage({...message, text:'A senha informada não atende ao padrão. Favor verificar as regras de composição de senha acima.', supportContact: true});           
       }
     }            
     catch (error) {
-      if (error.message === 'Request failed with status code 401') {
-        setMessage(error);
+      if (error.response.data.message === 'Informações inválidas') {
+        setMessage({...message, text:'Código de confirmação inválido ou expeirado. Redefina em Esqueci minha senha. Dúvidas, favor entrar em contato: ', supportContact: true});
         return; 
       }
       if(error.message === 'Network Error') {
-        setMessage('Não foi possível a conexão com a API. Verifique sua conexão com a internet ou entre em contato: Setydeias (85) 3290-3496');
+        setMessage({...message, text: 'Não foi possível a conexão com a API. Verifique sua conexão com a internet ou entre em contato: Setydeias (85) 3290-3496', supportContact: true});
         return; 
       }
     }
@@ -360,8 +364,11 @@ const Login = (props) => {
               Continuar                                             
             </Button> 
             {    
-              message ? (
-                <Alert color='danger' style={{"marginTop": "0.5em"}}>{ message }</Alert>
+              message.text ? (
+                <SupporContatc 
+                  text={message.text}
+                  supportContact={message.supportContact} 
+                />
               ) : ''
             }           
           </Form>
