@@ -201,7 +201,7 @@ const Login = (props) => {
                   ...prevent,
                   modal: true,
                   title: responseRegister.data.message,
-                  text: `E-mail de confirmação enviado para: ${user.user_email}. Favor vericicar sua caixa de entrada ou spam.`
+                  text: `E-mail de confirmação enviado para: ${user.user_email}. Favor verificar sua caixa de entrada ou spam.`
                 }));
                 setUser(userDefault);
                 clearForm();
@@ -384,7 +384,7 @@ const Login = (props) => {
                         ref={ referencces.userDocumentRegistration }
                         onChange={ handleChangeMaskCPF }
                         onBlur={ testUserDocument }
-                        autoFocus={true}
+                        disabled={true}
                         required 
                       />
                       <label for="user-document">CPF</label>

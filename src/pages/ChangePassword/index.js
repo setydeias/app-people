@@ -343,7 +343,7 @@ const Login = (props) => {
                 </div>
               </div>
               <div className="card border-none mb-3" style={{'max-width': '18rem;'}}>
-                <div className="card-header"><i className="fa fa-check" aria-hidden="true"></i> Dica de senha FORTE</div>
+                <div className="card-header"><i className="fa fa-check" aria-hidden="true"></i> Regras de composição da senha</div>
                 <div className="card-body text-secondary shadow-lg">
                   <p className="card-text" style={{'margin': '0'}}>01. Conter no mínimo 8 caracteres.</p>
                   <p className="card-text" style={{'margin': '0'}}>02. Conter letra maiúscula.</p>
