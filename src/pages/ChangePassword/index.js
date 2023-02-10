@@ -53,7 +53,7 @@ const Login = (props) => {
   } 
 
   const [forcePassword, setFrcePassword] = useState(() => false);
-  const [forcePasswordText, setFrcePasswordText] = useState('Senha Fraca!');
+  const [forcePasswordText, setFrcePasswordText] = useState('Senha fraca!');
 
   const [userLogin, setUser] = useState(()=> userDefault);
   const [message, setMessage] = useState(() => '');
@@ -71,7 +71,7 @@ const Login = (props) => {
     try { 
 
       if(forcePassword){
-        if(forcePasswordText === 'Senha Forte'){
+        if(forcePasswordText === 'Senha forte'){
           const cpf = decrypt(dataParamsLink);
           
           const validationPassword = await passwordValidation({
@@ -98,7 +98,7 @@ const Login = (props) => {
             setMessage('Não foi possível validar a senha.');
           }         
         }        
-        setMessage('A senha deve ser forte.');           
+        setMessage('A senha informada não atende ao padrão. Favor verificar as regras de composição de senha acima.');           
       }
     }            
     catch (error) {
@@ -157,17 +157,17 @@ const Login = (props) => {
     referencces.userForcePassword.current.innerHTML = "";
     
     if(force < 30 ){
-      referencces.userForcePassword.current.innerHTML = "<span style='color: #ac1515'>Senha Fraca!</span>";
+      referencces.userForcePassword.current.innerHTML = "<span style='color: #ac1515'>Senha fraca!</span>";
       setFrcePassword(false);
-      setFrcePasswordText('Senha Fraca!');
+      setFrcePasswordText('Senha fraca!');
     }else if((force >= 30) && (force < 60)){
       setFrcePassword(false);
-      setFrcePasswordText('Senha Média');
-      referencces.userForcePassword.current.innerHTML = "<span style='color: #fab027'>Senha Média</span>";
+      setFrcePasswordText('Senha média');
+      referencces.userForcePassword.current.innerHTML = "<span style='color: #fab027'>Senha média</span>";
     }else if((force >= 50) && (force < 70)){
       setFrcePassword(true);
-      setFrcePasswordText('Senha Forte');
-      referencces.userForcePassword.current.innerHTML = "<span style='color: #105510'>Senha Forte</span>";
+      setFrcePasswordText('Senha forte');
+      referencces.userForcePassword.current.innerHTML = "<span style='color: #105510'>Senha forte</span>";
     }
   }
  
@@ -243,7 +243,7 @@ const Login = (props) => {
         ...userLogin,
         status: {
           password: {
-            erro: 'A Senha não pode ser menor que 8 caracteres.',
+            erro: 'A senha não pode ser menor que 8 caracteres.',
             validate: validateStatus.invalide
           },
           passwordConfirm: formStatusDefault
