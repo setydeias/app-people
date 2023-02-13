@@ -8,7 +8,7 @@ import {
   noMask, 
   maskCep, 
   setMaskCep
-} from '../../../utilities/masks';
+} from '../../../utilities/Masks';
 import { getCep } from '../../../api/Correios/Services';
 import { PersonContext } from '../../../Contexts/Person/PersonContext';
 
