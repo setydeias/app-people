@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { setAddress } from '../../../data/address_typr_variations'; 
+import { setAddress } from '../../../data/address_type_variations'; 
 import { 
     isValibCep, 
     totalCaracters,
