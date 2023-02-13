@@ -33,7 +33,7 @@ li {
 /* Navbar */
 
 .nav__wrapper {
-  background: #008080;
+  background: #fff;
 }
 
 .nav {
@@ -68,7 +68,7 @@ li {
 .toggler__icon div {
   width: 25px;
   height: 2px;
-  background: #ddd;
+  background: #5c5c5c;
   margin: 5px 0px;
   transition: 0.3s ease;
 }
@@ -79,9 +79,9 @@ li {
   }
   .nav__menu {
     position: fixed;
-    background: #008080;
+    background: #fff;
     flex-direction: column;
-    top: 10vh;
+    top: 16vh;
     width: 50%;
     height: 90vh;
     right: 0;
