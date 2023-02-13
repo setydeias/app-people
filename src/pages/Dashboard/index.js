@@ -1,4 +1,5 @@
 import React from "react";
+import PersonAddress from "../../components/People/PersonAddress";
 
 
 const Dashboard = () => {
@@ -17,7 +18,7 @@ const Dashboard = () => {
      <form className='row' onSubmit={ ()=>{} }> 
      <div className="tab-content" id="nav-tabContent">
         <div className="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
-          <>Dados</>
+          <PersonAddress />
         </div>
         <div className="tab-pane fade" id="nav-api-1" role="tabpanel" aria-labelledby="nav-api-1" tabindex="0">
           <>Endereço</>

@@ -10,11 +10,11 @@ import {
   setMaskCep
 } from '../../../utilities/masks';
 import { getCep } from '../../../api/Correios/Services';
-import { CustomerContext } from '../../../Contexts/Customer/CustomerContext';
+import { PersonContext } from '../../../Contexts/Person/PersonContext';
 
 const PersonAddress = (props) => { 
 
-    const { formStatus, setFormStatus } = useContext(CustomerContext);
+    const { formStatus, setFormStatus } = useContext(PersonContext);
 
     var references = {
         cep: document.getElementById('cep'),
