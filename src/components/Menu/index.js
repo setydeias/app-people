@@ -34,7 +34,7 @@ const Menu = () => {
           </Link>
           <ul className={collapse}>             
             <li className="nav__item">
-              <Link to={"/logout"} className="nav__link"  id="link_logout" style={{ color: '#000', textDecoration: 'none'}}><i className="fas fa-sign-out-alt fa-1x"></i> Sair<span className="sr-only">(current)</span></Link>
+              <Link to={"/logout"} className="nav__link"  id="link_logout" style={{ color: '#5c5c5c', textDecoration: 'none'}}><i className="fas fa-sign-out-alt fa-1x"></i> Sair<span className="sr-only">(current)</span></Link>
             </li>
           </ul>
           <div className={toggleIcon} onClick={onToggle}>
