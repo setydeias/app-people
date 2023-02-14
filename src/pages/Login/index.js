@@ -20,6 +20,7 @@ import { encrypt } from '../../utilities/Cryptography';
 import AppPeople from '../../globals/Endpoint/app_people';
 import { sendUserRegistrationConfirmation } from '../../api/notification/email';
 import { emailRegistrationStatus } from '../../api/People';
+import UserSettings from '../../globals/PeopleSettings';
 
  
 const Login = (props) => { 
@@ -134,8 +135,8 @@ const Login = (props) => {
             const resp = await login({ document: user.user_document, password_user: user.user_password }); 
             if (resp.status === 200) {                           
               localStorage.setItem('token', resp.data.access_token);
-              localStorage.setItem('document', resp.data.people.document)
-              navigate("/dashboard");
+              localStorage.setItem('document', resp.data.people.document);             
+              navigate(`/dashboard/${resp.data.people.id_people}/${resp.data.people.id_user}`);
               return;
             }
           }

@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { PersonContextProvider } from '../../Contexts/Person/PersonContext';
 import PersonAddress from "../../components/People/PersonAddress";
+import UserSettings from "../../globals/PeopleSettings";
 
 
 const Dashboard = (props) => {
 
-  const customerDefault = {
+  const personDefault = {
     id: '',        
     document_type: 1,
     document: '',
@@ -27,13 +28,13 @@ const Dashboard = (props) => {
     contacts: []
 }
 
-const [clientForDocumentExists, setclientForDocumentExists] = useState(customerDefault);
-const [customer, setCustomer] = useState(customerDefault);
+const [person, setPerson] = useState(personDefault);
 
   return(
     <PersonContextProvider>
       <div className='container-sm'>
         <h4 className='title-page'>Cadastro único</h4>
+        <p>Olá, { UserSettings.default.name }</p>
         <nav>
           <div className="nav nav-tabs d-flex justify-content-start" id="nav-tab" role="tablist">
             <button className="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true"><i class="fas fa-user"></i> Dados Pessoal</button>
@@ -46,7 +47,7 @@ const [customer, setCustomer] = useState(customerDefault);
        <div className="tab-content" id="nav-tabContent">
           <div className="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
             <PersonAddress 
-              customer={ customer }
+              person={ person }
             />
           </div>
           <div className="tab-pane fade" id="nav-api-1" role="tabpanel" aria-labelledby="nav-api-1" tabindex="0">

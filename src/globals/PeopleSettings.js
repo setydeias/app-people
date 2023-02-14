@@ -5,8 +5,7 @@ export default class UserSettings {
         id_user: '',
         status: '',
         document: '',
-        description_user: '',
-        password_user: '',
+        name: '',
         access_token: '',
         token_type: '',
         expires_in: ''

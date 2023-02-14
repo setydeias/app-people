@@ -31,38 +31,38 @@ const PersonAddress = (props) => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        props.setCustomer({ ...props.customer, [name]: value });
+        props.setCustomer({ ...props.person, [name]: value });
     };
     
     const handleChangeMaskCep = (e) => { 
         e.preventDefault();
         
         maskCep(e);
-        props.setCustomer({ ...props.customer, [e.target.name]: e.target.value });
+        props.setCustomer({ ...props.person, [e.target.name]: e.target.value });
     }
 
     const handleChangeMaskUf = (e) => { 
         e.preventDefault();
     
-        props.setCustomer({ ...props.customer, [e.target.name]: e.target.value });
+        props.setCustomer({ ...props.person, [e.target.name]: e.target.value });
     }
 
     useEffect(() => {
 
         setTotalCaractersAdress(
-          parseInt(props.customer.address_type.length) + 
-          parseInt(props.customer.address.length) +
-          parseInt(props.customer.address_number.length) +
-          parseInt(props.customer.address_complement.length) + 
-          parseInt(props.customer.district.length)
+          parseInt(props.person.address_type.length) + 
+          parseInt(props.person.address.length) +
+          parseInt(props.person.address_number.length) +
+          parseInt(props.person.address_complement.length) + 
+          parseInt(props.person.district.length)
         ) 
     
       }, [
-        props.customer.address_type, 
-        props.customer.address, 
-        props.customer.address_number, 
-        props.customer.address_complement,
-        props.customer.district
+        props.person.address_type, 
+        props.person.address, 
+        props.person.address_number, 
+        props.person.address_complement,
+        props.person.district
     ])
 
 
@@ -145,9 +145,9 @@ const PersonAddress = (props) => {
 
     const testCep = () => {
 
-      if (props.customer.cep) {   
+      if (props.person.cep) {   
 
-        if (!isValibCep(props.customer.cep)) {
+        if (!isValibCep(props.person.cep)) {
           setFormStatus({...formStatus, 
             cep: {
               erro: 'CEP inválido!',
@@ -177,11 +177,11 @@ const PersonAddress = (props) => {
     const testAddressCaracters = () => {
             
         if (!totalCaracters(
-          props.customer.address_type.trim() +
-          props.customer.address.trim() +
-          props.customer.address_number.trim() +
-          props.customer.address_complement.trim() +
-          props.customer.district.trim(), 
+          props.person.address_type.trim() +
+          props.person.address.trim() +
+          props.person.address_number.trim() +
+          props.person.address_complement.trim() +
+          props.person.district.trim(), 
           56      
         )) {
           setFormStatus({...formStatus, 
@@ -243,7 +243,7 @@ const PersonAddress = (props) => {
 
     const testCity = () => {      
 
-      if (props.customer.city) {
+      if (props.person.city) {
         setFormStatus({...formStatus, 
           city: {
             erro: '',
@@ -262,7 +262,7 @@ const PersonAddress = (props) => {
     }
     
       const testUf = () => {
-        if (!props.customer.uf) {
+        if (!props.person.uf) {
           setFormStatus({...formStatus, 
             uf: {
               erro: 'Campo obrigatório!',
@@ -281,7 +281,7 @@ const PersonAddress = (props) => {
       }
     
       const testDistrict = () => {
-        if (!props.customer.district) {
+        if (!props.person.district) {
           setFormStatus({...formStatus, 
             district: {
               erro: 'Campo obrigatório!',
@@ -300,7 +300,7 @@ const PersonAddress = (props) => {
       }
     
       const testTypeAddress = () => {
-        if (!props.customer.address_type) {
+        if (!props.person.address_type) {
           setFormStatus({...formStatus, 
             address_type: {
               erro: 'Campo obrigatório!',
@@ -320,7 +320,7 @@ const PersonAddress = (props) => {
     
       const testAddress = () => {
         
-        if (!props.customer.address) {
+        if (!props.person.address) {
           setFormStatus({...formStatus, 
             address: {
               erro: 'Campo obrigatório!',
@@ -331,7 +331,7 @@ const PersonAddress = (props) => {
         }
     
         references.address.value = setAddress(references.address.value);
-        props.setCustomer({ ...props.customer, address: references.address.value });
+        props.setCustomer({ ...props.person, address: references.address.value });
        
         setFormStatus({...formStatus, 
           address: {
@@ -343,7 +343,7 @@ const PersonAddress = (props) => {
       }
     
       const testNumberAddress = () => {
-        if (!props.customer.address_number) {
+        if (!props.person.address_number) {
           setFormStatus({...formStatus, 
             address_number: {
               erro: 'Campo obrigatório!',
@@ -372,7 +372,7 @@ const PersonAddress = (props) => {
                 className={formStatus.cep.validate} 
                 id="cep"
                 name="cep" 
-                value={ setMaskCep(props.customer.cep) }
+                value={ setMaskCep(props.person.cep) }
                 onChange={handleChangeMaskCep}
                 onBlur={searchCep}
                 required  
@@ -389,7 +389,7 @@ const PersonAddress = (props) => {
                 className={formStatus.city.validate} 
                 name="city" 
                 id='city'   
-                value={ props.customer.city  }            
+                value={ props.person.city  }            
                 onChange={handleChange}
                 onBlur={testCity}
                 required  
@@ -406,7 +406,7 @@ const PersonAddress = (props) => {
                 className={formStatus.uf.validate}  
                 name="uf" 
                 id='uf'
-                value={ props.customer.uf }
+                value={ props.person.uf }
                 onChange={handleChangeMaskUf} 
                 onBlur={testUf}
                 required  
@@ -467,7 +467,7 @@ const PersonAddress = (props) => {
                   <span className='required_field'> * </span>
                   <span className='total_characters_label'></span>
                   <span className='total_characters_label'>
-                    {props.customer.address_type.length > 0 ? props.customer.address_type.length : ''}
+                    {props.person.address_type.length > 0 ? props.person.address_type.length : ''}
                   </span>
               </label>
               <select 
@@ -475,7 +475,7 @@ const PersonAddress = (props) => {
                 className={formStatus.address_type.validate} 
                 name="address_type" 
                 id='address_type'
-                value={ props.customer.address_type }
+                value={ props.person.address_type }
                 onChange={handleChange}
                 onBlur={testTypeAddress}
                 required  
@@ -535,7 +535,7 @@ const PersonAddress = (props) => {
               <label>Logradouro
                   <span className='required_field'> * </span>
                   <span className='total_characters_label'> 
-                    { props.customer.address.length > 0 ?  props.customer.address.length : ''}
+                    { props.person.address.length > 0 ?  props.person.address.length : ''}
                   </span> 
               </label>{formStatus.address.complement ? <a href='https://buscacepinter.correios.com.br/app/localidade_logradouro/index.php'  target="blank">: Buscar CEP</a> : ''}
               <input 
@@ -543,7 +543,7 @@ const PersonAddress = (props) => {
                 className={formStatus.address.validate}
                 name="address"
                 id='address'
-                value={ props.customer.address }
+                value={ props.person.address }
                 onChange={handleChange}
                 onBlur={testAddress}
                 required  
@@ -557,7 +557,7 @@ const PersonAddress = (props) => {
               <label>
                 Nº<span className='required_field'> * </span>
                 <span className='total_characters_label'>
-                  {props.customer.address_number.length > 0 ?  props.customer.address_number.length : ''}
+                  {props.person.address_number.length > 0 ?  props.person.address_number.length : ''}
                 </span>
               </label>
               <input 
@@ -565,7 +565,7 @@ const PersonAddress = (props) => {
                 className={formStatus.address_number.validate} 
                 name="address_number" 
                 id='address_number'
-                value={ props.customer.address_number }
+                value={ props.person.address_number }
                 onChange={handleChange}
                 onBlur={testNumberAddress}
                 required  
@@ -579,13 +579,13 @@ const PersonAddress = (props) => {
             <div className="col-md-6 mb-3">
               <label>Complemento</label> 
               <span className='total_characters_label'>  
-                { props.customer.address_complement.length > 0 ? ' ' + props.customer.address_complement.length : ''} 
+                { props.person.address_complement.length > 0 ? ' ' + props.person.address_complement.length : ''} 
               </span>
               <input  
                 className= { formStatus.address_complement.validate } 
                 name="address_complement"
                 id="address_complement" 
-                value={ props.customer.address_complement }
+                value={ props.person.address_complement }
                 onChange={handleChange}
                 placeholder='Bloco, Apto, Condomínio, Ponto de referência ...'
               />
@@ -598,7 +598,7 @@ const PersonAddress = (props) => {
                 Bairro 
                 <span className='required_field'> * </span>
                 <span className='total_characters_label'>  
-                  { props.customer.district.length > 0 ? props.customer.district.length : ''} 
+                  { props.person.district.length > 0 ? props.person.district.length : ''} 
                 </span>
               </label>
               <input 
@@ -606,7 +606,7 @@ const PersonAddress = (props) => {
                 className={formStatus.district.validate} 
                 name="district" 
                 id='district'
-                value={ props.customer.district }
+                value={ props.person.district }
                 onChange={handleChange}
                 onBlur={testDistrict}
                 required  
