@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { PersonContextProvider } from '../../Contexts/Person/PersonContext';
 import PersonAddress from "../../components/People/PersonAddress";
 import UserSettings from "../../globals/PeopleSettings";
+import PersonData from "../../components/People/PersonData";
 
 
 const Dashboard = (props) => {
@@ -28,6 +29,35 @@ const Dashboard = (props) => {
     contacts: []
 }
 
+const testDcumentExists =  async () => { 
+  try {
+
+    /*let resp = await getCustomerForDocument(person.document);
+      
+      if (resp.status === 200) {      
+        
+        setclientForDocumentExists(...resp.data.clients)
+        setModalAlert({ 
+          modal: true, 
+          title: 'Atenção!', 
+          text: 'Ducumento já cadastro. Deseja visualizar?', 
+        })
+      }*/
+
+  } catch (error) {
+
+    /*if(!error.response.data.message === 'Documento informado não cadastrado.') {
+      setModal({
+        ...modal,
+        modal: true,
+        titulo: 'Atenção!',
+        texto: error.response.data.message,
+        acao1: 'OK',
+      })
+    }*/
+  }
+}
+
 const [person, setPerson] = useState(personDefault);
 
   return(
@@ -46,12 +76,19 @@ const [person, setPerson] = useState(personDefault);
        <form className='row' onSubmit={ ()=>{} }> 
        <div className="tab-content" id="nav-tabContent">
           <div className="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
-            <PersonAddress 
+            <PersonData 
               person={ person }
+              setPerson={ setPerson }
+              testDcumentExists={ testDcumentExists }
+              action={ props.action }
+              document={ props.document}
             />
           </div>
           <div className="tab-pane fade" id="nav-api-1" role="tabpanel" aria-labelledby="nav-api-1" tabindex="0">
-            <>Endereço</>
+            <PersonAddress 
+              person={ person }
+              setPerson={ setPerson }
+            />
           </div>
           <div className="tab-pane fade" id="nav-api-2" role="tabpanel" aria-labelledby="nav-api-2" tabindex="0">
             <>Contato</>

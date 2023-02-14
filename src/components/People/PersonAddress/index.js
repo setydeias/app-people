@@ -31,20 +31,20 @@ const PersonAddress = (props) => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        props.setCustomer({ ...props.person, [name]: value });
+        props.setPerson({ ...props.person, [name]: value });
     };
     
     const handleChangeMaskCep = (e) => { 
         e.preventDefault();
         
         maskCep(e);
-        props.setCustomer({ ...props.person, [e.target.name]: e.target.value });
+        props.setPerson({ ...props.person, [e.target.name]: e.target.value });
     }
 
     const handleChangeMaskUf = (e) => { 
         e.preventDefault();
     
-        props.setCustomer({ ...props.person, [e.target.name]: e.target.value });
+        props.setPerson({ ...props.person, [e.target.name]: e.target.value });
     }
 
     useEffect(() => {
@@ -82,7 +82,7 @@ const PersonAddress = (props) => {
 
             const logradouro_split = resp.data.logradouro.split(' ', 1);  
 
-            props.setCustomer((prevState) => ({ ...prevState,
+            props.setPerson((prevState) => ({ ...prevState,
               ...{ 
                   city: resp.data.localidade, 
                   uf: resp.data.uf,
@@ -331,7 +331,7 @@ const PersonAddress = (props) => {
         }
     
         references.address.value = setAddress(references.address.value);
-        props.setCustomer({ ...props.person, address: references.address.value });
+        props.setPerson({ ...props.person, address: references.address.value });
        
         setFormStatus({...formStatus, 
           address: {
@@ -364,8 +364,8 @@ const PersonAddress = (props) => {
 
     return(
         <>
-            <div className="row">
-            <div className="col-md-2 mb-3">
+          <div className="row">
+            <div className="col-md-2">
               <label>CEP<span className='required_field'> *</span></label>
               <input 
                 type="text" 
@@ -382,7 +382,7 @@ const PersonAddress = (props) => {
                 { formStatus.cep.erro } 
               </div>
             </div> 
-            <div className="col-md-6 mb-3">
+            <div className="col-md-2">
               <label>Cidade<span className='required_field'> *</span></label>
               <input 
                 type="text" 
@@ -399,7 +399,7 @@ const PersonAddress = (props) => {
                 { formStatus.city.erro  } 
               </div>
             </div>  
-            <div className="col-md-2 mb-3">
+            <div className="col-md-1">
               <label>UF<span className='required_field'> *</span></label>
               <select 
                 type="text" 
@@ -445,23 +445,10 @@ const PersonAddress = (props) => {
               <div className="invalid-feedback">
                 { formStatus.uf.erro  }
               </div>
-            </div>  
-            <div className="col-md-2 mb-3">
-              <label>Total Caracteres</label>
-              <input 
-                type="text" 
-                className={formStatus.address_caracters.validate} 
-                name="total_characters" 
-                id='total_characters'
-                value={
-                  total_characters_adress + '/56'                  
-                }
-                disabled
-              />
-            </div>                                        
+            </div>                                  
           </div>
-          <div className='row'>
-          <div className="col-md-2 mb-3">
+          <div className='row'>            
+            <div className="col-md-2 mb-3">
               <label>
                   Tipo
                   <span className='required_field'> * </span>
@@ -531,7 +518,7 @@ const PersonAddress = (props) => {
                 { formStatus.address_type.erro  } 
               </div>
             </div>    
-          <div className="col-md-8 mb-3">
+            <div className="col-md-3">
               <label>Logradouro
                   <span className='required_field'> * </span>
                   <span className='total_characters_label'> 
@@ -552,7 +539,9 @@ const PersonAddress = (props) => {
               <div className={formStatus.address.complement ? 'valid-feedback' : 'invalid-feedback'}>
                 { formStatus.address.complement ? formStatus.address.complement : formStatus.address.erro }
               </div>
-            </div>
+            </div>            
+          </div>
+          <div className="row">
             <div className="col-md-2 mb-3">
               <label>
                 Nº<span className='required_field'> * </span>
@@ -573,27 +562,8 @@ const PersonAddress = (props) => {
               <div className="invalid-feedback">
                 { formStatus.address_number.erro  } 
               </div>
-            </div>               
-          </div>
-          <div className="row">
-            <div className="col-md-6 mb-3">
-              <label>Complemento</label> 
-              <span className='total_characters_label'>  
-                { props.person.address_complement.length > 0 ? ' ' + props.person.address_complement.length : ''} 
-              </span>
-              <input  
-                className= { formStatus.address_complement.validate } 
-                name="address_complement"
-                id="address_complement" 
-                value={ props.person.address_complement }
-                onChange={handleChange}
-                placeholder='Bloco, Apto, Condomínio, Ponto de referência ...'
-              />
-              <div className="invalid-feedback">
-                { formStatus.address_complement.erro }
-              </div>
             </div>
-            <div className="col-md-6 mb-3">
+            <div className="col-md-3 mb-3">
               <label>
                 Bairro 
                 <span className='required_field'> * </span>
@@ -615,6 +585,38 @@ const PersonAddress = (props) => {
                 { formStatus.district.erro  } 
               </div>
             </div>      
+          </div>
+          <div className='row'>
+            <div className="col-md-3">
+              <label>Complemento</label> 
+              <span className='total_characters_label'>  
+                { props.person.address_complement.length > 0 ? ' ' + props.person.address_complement.length : ''} 
+              </span>
+              <input  
+                className= { formStatus.address_complement.validate } 
+                name="address_complement"
+                id="address_complement" 
+                value={ props.person.address_complement }
+                onChange={handleChange}
+                placeholder='Bloco, Apto, Condomínio, Ponto de referência ...'
+              />
+              <div className="invalid-feedback">
+                { formStatus.address_complement.erro }
+              </div>
+            </div>
+            <div className="col-md-2">
+              <label>Total Caracteres</label>
+              <input 
+                type="text" 
+                className={formStatus.address_caracters.validate} 
+                name="total_characters" 
+                id='total_characters'
+                value={
+                  total_characters_adress + '/56'                  
+                }
+                disabled
+              />
+            </div>
           </div>  
         </>
     )
