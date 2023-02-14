@@ -1,14 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { PersonContextProvider } from '../../Contexts/Person/PersonContext';
 import PersonAddress from "../../components/People/PersonAddress";
 import UserSettings from "../../globals/PeopleSettings";
 import PersonData from "../../components/People/PersonData";
+import { getPersonById } from "../../api/People";
 
 
 const Dashboard = (props) => {
 
-  const personDefault = {
-    id: '',        
+  const { id_people, id_user } = useParams();
+
+  const personDefault = {      
+    id_people: '',
     document_type: 1,
     document: '',
     description: '',
@@ -27,12 +31,14 @@ const Dashboard = (props) => {
     district: '',
     cep: '',
     contacts: []
-}
+  }
+  
+  const [person, setPerson] = useState(personDefault);
 
-const testDcumentExists =  async () => { 
-  try {
-
-    /*let resp = await getCustomerForDocument(person.document);
+  const testDcumentExists =  async () => { 
+    try {
+      
+      /*let resp = await getCustomerForDocument(person.document);
       
       if (resp.status === 200) {      
         
@@ -44,27 +50,60 @@ const testDcumentExists =  async () => {
         })
       }*/
 
-  } catch (error) {
+    } catch (error) {
 
-    /*if(!error.response.data.message === 'Documento informado não cadastrado.') {
-      setModal({
-        ...modal,
-        modal: true,
-        titulo: 'Atenção!',
-        texto: error.response.data.message,
-        acao1: 'OK',
-      })
-    }*/
+      /*if(!error.response.data.message === 'Documento informado não cadastrado.') {
+        setModal({
+          ...modal,
+          modal: true,
+          titulo: 'Atenção!',
+          texto: error.response.data.message,
+          acao1: 'OK',
+        })
+      }*/
+    }
   }
-}
 
-const [person, setPerson] = useState(personDefault);
+  const getPersonForId = async () => {
+
+    try {
+      const result = await getPersonById(id_people);
+      if(result.status === 200) {
+
+        console.log(result.data.person);
+
+        setPerson({
+          ...person,
+          id_people: result.data.person.id_people,
+          document_type: result.data.person.document_type,
+          document: result.data.person.document,
+          document: result.data.person.document,
+          name: result.data.person.name,
+          usual_name: result.data.person.usual_name,
+          date: result.data.person.date,
+          sexo: result.data.person.sexo,
+          treatment: result.data.person.treatment,
+          birth_date: result.data.person.birth_date,
+          date_registration: result.data.person.date_registration,
+          date_update: result.data.person.date_update,
+          contacts: result.data.person.contacts
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(()=>{
+    getPersonForId();
+  },[]);
+
 
   return(
     <PersonContextProvider>
       <div className='container-sm'>
         <h4 className='title-page'>Cadastro único</h4>
-        <p>Olá, { UserSettings.default.name }</p>
+        <p>Olá, { person.name }</p>
         <nav>
           <div className="nav nav-tabs d-flex justify-content-start" id="nav-tab" role="tablist">
             <button className="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true"><i class="fas fa-user"></i> Dados Pessoal</button>
@@ -80,8 +119,6 @@ const [person, setPerson] = useState(personDefault);
               person={ person }
               setPerson={ setPerson }
               testDcumentExists={ testDcumentExists }
-              action={ props.action }
-              document={ props.document}
             />
           </div>
           <div className="tab-pane fade" id="nav-api-1" role="tabpanel" aria-labelledby="nav-api-1" tabindex="0">

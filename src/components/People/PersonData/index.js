@@ -303,7 +303,7 @@ const PersonData = (props) => {
                     type="date" 
                     className={ formStatus.date.validate }
                     name="date"
-                    value={ props.person.date }
+                    value={ props.person.birth_date }
                     onChange={handleChange}
                     onBlur={testDate}
                     required  
@@ -395,7 +395,7 @@ const PersonData = (props) => {
                       className={formStatus.description.validate} 
                       name="description" 
                       id='description'
-                      value={ props.person.description }
+                      value={ props.person.name }
                       onChange={handleChange}
                       onBlur={testDescription}
                       required  
