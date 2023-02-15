@@ -25,8 +25,8 @@ const PersonData = (props) => {
   const { formStatus, setFormStatus } = useContext(PersonContext);
     
     var references = {
-        document_type: document.getElementById('document_type'),   
-        description: document.getElementById('description'),  
+      document_type: document.getElementById('document_type'),   
+      description: document.getElementById('description'),  
     }
 
     const [treatments, setTreatments] = useState([]);
@@ -35,88 +35,74 @@ const PersonData = (props) => {
     const female_list = getTreatmentFemale();
     
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        console.log(`Nome: ${name} Valor> ${value}`);
-        props.setPerson({ ...props.person, [name]: value });
+      const { name, value } = e.target;
+      console.log(`Nome: ${name} Valor> ${value}`);
+      props.setPerson({ ...props.person, [name]: value });
     };
 
     const handleChangeDocumentType = (e) => {        
-        e.preventDefault();
-        props.setPerson({...props.person, [e.target.name]: parseInt(e.target.value) });
+      e.preventDefault();
+      props.setPerson({...props.person, [e.target.name]: parseInt(e.target.value) });
     };
 
     const handleChangeMaskCPF = (e) => { 
-        e.preventDefault();
-        maskCPF(e);
-        props.setPerson({ ...props.person, [e.target.name]: noMask(e.target.value) });
-    }
-    
-    const handleChangeMaskCNPJ = (e) => { 
       e.preventDefault();
-      
-      maskCNPJ(e);
+      maskCPF(e);
       props.setPerson({ ...props.person, [e.target.name]: noMask(e.target.value) });
     }
-
-    const handleChangeCnae = (e) => {    
     
-        e.preventDefault();
-        maskCnae(e);
-        props.setPerson({ ...props.person, [e.target.name]: noMask(e.target.value) });
-    };
-
+    
     useEffect(() => {
 
-        const timeElapsed = Date.now();
-        const today = new Date(timeElapsed);    
-        props.person.date_registration = formatDate(today, 'aaaa-mm-dd');
-
-               
+      const timeElapsed = Date.now();
+      const today = new Date(timeElapsed);    
+      props.person.date_registration = formatDate(today, 'aaaa-mm-dd');
+                     
     }, []);
 
    
     const testDate = () => {
 
-        if (!props.person.date) {
+      if (!props.person.date) {
+        setFormStatus({...formStatus, 
+          date: {
+            erro: 'Campo obrigatório!',
+            validate: 'form-control is-invalid'
+          }
+        });
+        return false;
+      }
+     
+      if (props.person.document_type === 1) {
+        
+        if (!testAge(1, props.person.date)) {
           setFormStatus({...formStatus, 
             date: {
-              erro: 'Campo obrigatório!',
+              erro: 'Não é permitido o cadastro de menores de idade.',
               validate: 'form-control is-invalid'
             }
           });
           return false;
         }
-     
-        if (props.person.document_type === 1) {
-          
-          if (!testAge(1, props.person.date)) {
-            setFormStatus({...formStatus, 
-              date: {
-                erro: 'Não é permitido o cadastro de menores de idade.',
-                validate: 'form-control is-invalid'
-              }
-            });
-            return false;
-          }
-    
-          if (testAge(2, props.person.date)) {
-            setFormStatus({...formStatus, 
-              date: {
-                erro: 'Idade inválida. Maior de 120 anos.',
-                validate: 'form-control is-invalid'
-              }
-            });
-            return false;
-          }
-        }      
+  
+        if (testAge(2, props.person.date)) {
+          setFormStatus({...formStatus, 
+            date: {
+              erro: 'Idade inválida. Maior de 120 anos.',
+              validate: 'form-control is-invalid'
+            }
+          });
+          return false;
+        }
+      }      
         
-        setFormStatus({...formStatus, 
-          date: {
-            erro: '',
-            validate: 'form-control is-valid'
-          }
-        });
-        return true;
+      setFormStatus({...formStatus, 
+        date: {
+          erro: '',
+          validate: 'form-control is-valid'
+        }
+      });
+      return true;
     }
 
     const testDocument = () => {
@@ -157,41 +143,41 @@ const PersonData = (props) => {
     }
 
     const testSexo = () => {
-        if (!props.person.sexo) {
-          setFormStatus({...formStatus, 
-            sexo: {
-              erro: 'Campo obrigatório!',
-              validate: 'form-control is-invalid'
-            }
-          });
-          return false;
-        }
+      if (!props.person.sexo) {
         setFormStatus({...formStatus, 
           sexo: {
-            erro: '',
-            validate: 'form-control is-valid'
+            erro: 'Campo obrigatório!',
+            validate: 'form-control is-invalid'
           }
         });
-        return true;
+        return false;
+      }
+      setFormStatus({...formStatus, 
+        sexo: {
+          erro: '',
+          validate: 'form-control is-valid'
+        }
+      });
+      return true;
     }
 
     const testTreatment = () => {
-        if (!props.person.treatment) {
-          setFormStatus({...formStatus, 
-            treatment: {
-              erro: 'Campo obrigatório!',
-              validate: 'form-control is-invalid'
-            }
-          });
-          return false;
-        }
+      if (!props.person.treatment) {
         setFormStatus({...formStatus, 
           treatment: {
-            erro: '',
-            validate: 'form-control is-valid'
+            erro: 'Campo obrigatório!',
+            validate: 'form-control is-invalid'
           }
         });
-        return true;
+        return false;
+      }
+      setFormStatus({...formStatus, 
+        treatment: {
+          erro: '',
+          validate: 'form-control is-valid'
+        }
+      });
+      return true;
     }
 
     const testUsualName = () => {
