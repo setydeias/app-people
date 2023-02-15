@@ -40,11 +40,6 @@ const PersonData = (props) => {
       props.setPerson({ ...props.person, [name]: value });
     };
 
-    const handleChangeDocumentType = (e) => {        
-      e.preventDefault();
-      props.setPerson({...props.person, [e.target.name]: parseInt(e.target.value) });
-    };
-
     const handleChangeMaskCPF = (e) => { 
       e.preventDefault();
       maskCPF(e);
