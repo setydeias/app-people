@@ -5,6 +5,7 @@ import PersonAddress from "../../components/People/PersonAddress";
 import UserSettings from "../../globals/PeopleSettings";
 import PersonData from "../../components/People/PersonData";
 import { getPersonById } from "../../api/People";
+import { formatDate } from "../../utilities/Utilities";
 
 
 const Dashboard = (props) => {
@@ -70,7 +71,10 @@ const Dashboard = (props) => {
       const result = await getPersonById(id_people);
       if(result.status === 200) {
 
-        console.log(result.data.person);
+        const timeElapsed = Date.now();
+        const today = new Date(timeElapsed); 
+
+        console.log(`timeElapsed: ${timeElapsed} today: ${today}`)
 
         setPerson({
           ...person,
@@ -83,7 +87,7 @@ const Dashboard = (props) => {
           date: result.data.person.date,
           sexo: result.data.person.sexo,
           treatment: result.data.person.treatment,
-          birth_date: new Date(result.data.person.birth_date),
+          birth_date: result.data.person.birth_date.substring(0, 10),
           date_registration: result.data.person.date_registration,
           date_update: result.data.person.date_update,
           contacts: result.data.person.contacts

@@ -34,6 +34,7 @@ const PersonData = (props) => {
     
     const handleChange = (e) => {
         const { name, value } = e.target;
+        console.log(`Nome: ${name} Valor> ${value}`);
         props.setPerson({ ...props.person, [name]: value });
     };
 
@@ -207,7 +208,7 @@ const PersonData = (props) => {
         }
       });
       return true;
-  }
+    }
 
 
     const testDescription = () => {    
@@ -242,138 +243,138 @@ const PersonData = (props) => {
         return true;
     }    
 
-    return(
-        <>
-            <div className='row'>     
-                <div className="col-md-2">
-                    <label>CPF<span className='required_field'> *</span></label>
-                    <input 
-                      type="text" 
-                      className={formStatus.document.validate} 
-                      name="document" 
-                      id="document"
-                      onChange={handleChangeMaskCPF }
-                      value={ setMaskCPF(props.person.document) }
-                      onBlur={testDocument}                
-                      required 
-                    />
-                    { formStatus.document.validate === 'form-control is-valid' ? <span style={{'color' : 'darkgray'}}>{getRegionCpf(noMask(props.person.document))}</span> : ''}
-                    <div className="invalid-feedback">
-                      { formStatus.document.erro } 
-                    </div>
-                </div>
-                <div className="col-md-2">
-                  <label>Data nascimento<span className='required_field'> *</span></label>
-                  <input 
-                    type="date" 
-                    className={ formStatus.date.validate }
-                    name="date"
-                    value={ props.person.birth_date }
-                    onChange={handleChange}
-                    onBlur={testDate}
-                    required  
-                    maxLength={10}
-                    //disabled
-                  />
-                  <div className="invalid-feedback">
-                    {formStatus.date.erro}
-                  </div>
-                </div>    
-                <div className="col-md-1 mb-3">
-                  <label>Sexo<span className='required_field'> *</span></label>
-                  <select 
-                    className={formStatus.sexo.validate}
-                      name="sexo"
-                      value={ parseInt(props.person.sexo) }
-                      onChange={handleChange}
-                      onBlur={testSexo}
-                      required
-                    >
-                      <option value={1}>M</option>
-                      <option value={2}>F</option>
-                  </select>
-                  <div className="invalid-feedback">
-                    { formStatus.sexo.erro }
-                  </div>                  
-                </div>
+  return(
+    <>
+      <div className='row'>     
+        <div className="col-md-2">
+          <label>CPF<span className='required_field'> *</span></label>
+          <input 
+            type="text" 
+            className={formStatus.document.validate} 
+            name="document" 
+            id="document"
+            onChange={handleChangeMaskCPF }
+            value={ setMaskCPF(props.person.document) }
+            onBlur={testDocument}                
+            required 
+          />
+          { formStatus.document.validate === 'form-control is-valid' ? <span style={{'color' : 'darkgray'}}>{getRegionCpf(noMask(props.person.document))}</span> : ''}
+          <div className="invalid-feedback">
+            { formStatus.document.erro } 
+          </div>
+        </div>
+        <div className="col-md-2">
+          <label>Data nascimento<span className='required_field'> *</span></label>
+          <input 
+            type="date" 
+            className={ formStatus.date.validate }
+            name="birth_date"
+            value={ props.person.birth_date }
+            onChange={handleChange}
+            onBlur={testDate}
+            required  
+            maxLength={10}
+            //disabled
+          />
+          <div className="invalid-feedback">
+            {formStatus.date.erro}
+          </div>
+        </div>    
+        <div className="col-md-1 mb-3">
+          <label>Sexo<span className='required_field'> *</span></label>
+          <select 
+            className={formStatus.sexo.validate}
+              name="sexo"
+              value={ parseInt(props.person.sexo) }
+              onChange={handleChange}
+              onBlur={testSexo}
+              required
+            >
+              <option value={1}>M</option>
+              <option value={2}>F</option>
+          </select>
+          <div className="invalid-feedback">
+            { formStatus.sexo.erro }
+          </div>                  
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-md-2">
+          <label>Tratamento<span className='required_field'> *</span></label>
+          <select 
+            className={ formStatus.treatment.validate }
+            name="treatment"
+            value={ props.person.treatment }
+            onChange={handleChange}
+            onBlur={testTreatment}
+            required
+            >
+            { 
+              props.person.sexo === '2' ?
+              female_list.map((treatment_f, index) => 
+              <option key={index = index+1} value={ treatment_f }>
+                    { treatment_f }
+                  </option>)
+              : masculine_list.map((treatment_m, index) => 
+              <option key={index = index+1} value={ treatment_m }>
+                    { treatment_m }
+                  </option>)             
+            }
+          </select>
+          <div className="invalid-feedback">
+            { formStatus.treatment.erro }
+          </div>
+        </div>  
+          <div className="col-md-3">
+            <label >Nome usual
+               <span className='required_field'> *</span> 
+               <span className='total_characters_label'>
+                 { ` ${props.person.usual_name.length} /20`}
+               </span>
+            </label>
+            <input 
+              type="text" 
+              className={formStatus.usual_name.validate} 
+              name="usual_name" 
+              id='usual_name'
+              value={ props.person.usual_name }
+              onChange={handleChange} 
+              onBlur={testUsualName}
+              maxLength={20}
+              required
+            />
+            <div className="invalid-feedback">
+               { formStatus.usual_name.erro }
             </div>
-            <div className="row">
-                <div className="col-md-2">
-                    <label>Tratamento<span className='required_field'> *</span></label>
-                    <select 
-                      className={ formStatus.treatment.validate }
-                      name="treatment"
-                      value={ props.person.treatment }
-                      onChange={handleChange}
-                      onBlur={testTreatment}
-                      required
-                      >
-                      { 
-                        props.person.sexo === '2' ?
-                        female_list.map((treatment_f, index) => 
-                        <option key={index = index+1} value={ treatment_f }>
-                              { treatment_f }
-                            </option>)
-                        : masculine_list.map((treatment_m, index) => 
-                        <option key={index = index+1} value={ treatment_m }>
-                              { treatment_m }
-                            </option>)             
-                      }
-                    </select>
-                    <div className="invalid-feedback">
-                      { formStatus.treatment.erro }
-                    </div>
-                </div>  
-                <div className="col-md-3">
-                   <label >Nome usual
-                      <span className='required_field'> *</span> 
-                      <span className='total_characters_label'>
-                        { ` ${props.person.usual_name.length} /20`}
-                      </span>
-                   </label>
-                   <input 
-                     type="text" 
-                     className={formStatus.usual_name.validate} 
-                     name="usual_name" 
-                     id='usual_name'
-                     value={ props.person.usual_name }
-                     onChange={handleChange} 
-                     onBlur={testUsualName}
-                     maxLength={20}
-                     required
-                   />
-                   <div className="invalid-feedback">
-                      { formStatus.usual_name.erro }
-                   </div>
-                </div> 
-            </div>
-            <div className='row'>
-                <div className="col-md-5">
-                    <label > Nome
-                        <span className='required_field'> *</span> 
-                        <span className='total_characters_label'>
-                            { ` ${props.person.description.length} /60` }
-                        </span>
-                    </label>
-                    <input 
-                      type="text" 
-                      className={formStatus.description.validate} 
-                      name="description" 
-                      id='description'
-                      value={ props.person.name }
-                      onChange={handleChange}
-                      onBlur={testDescription}
-                      required  
-                      placeholder='Nome do Cliente'
-                      maxLength={60}
-                    />
-                    <div className="invalid-feedback">
-                        { formStatus.description.erro }
-                    </div>
-                </div>      
-            </div>
-        </>
-    )
+          </div> 
+      </div>
+      <div className='row'>
+        <div className="col-md-5">
+          <label > Nome
+              <span className='required_field'> *</span> 
+              <span className='total_characters_label'>
+                  { ` ${props.person.description.length} /60` }
+              </span>
+          </label>
+          <input 
+            type="text" 
+            className={formStatus.description.validate} 
+            name="description" 
+            id='description'
+            value={ props.person.name }
+            onChange={handleChange}
+            onBlur={testDescription}
+            required  
+            placeholder='Nome do Cliente'
+            maxLength={60}
+          />
+          <div className="invalid-feedback">
+              { formStatus.description.erro }
+          </div>
+        </div>      
+      </div>
+    </>
+  )
 }
 
 export default PersonData;
