@@ -86,7 +86,7 @@ const Dashboard = (props) => {
           usual_name: result.data.person.usual_name,
           date: result.data.person.date,
           sexo: result.data.person.sexo,
-          treatment: result.data.person.treatment,
+          id_treatment: result.data.person.treatment,
           birth_date: result.data.person.birth_date.substring(0, 10),
           date_registration: result.data.person.date_registration,
           date_update: result.data.person.date_update,

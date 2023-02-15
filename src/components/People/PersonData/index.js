@@ -303,9 +303,9 @@ const PersonData = (props) => {
           <label>Tratamento<span className='required_field'> *</span></label>
           <select 
             className={ formStatus.treatment.validate }
-            name="treatment"
-            value={ props.person.treatment }
-            onChange={handleChange}
+            name="id_treatment"
+            value={ props.person.id_treatment }
+            onChange={ e => props.setPerson({ ...props.person, id_treatment: e.value })}
             onBlur={testTreatment}
             required
             >
