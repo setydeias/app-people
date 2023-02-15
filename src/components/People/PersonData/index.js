@@ -26,7 +26,6 @@ const PersonData = (props) => {
     
     var references = {
         document_type: document.getElementById('document_type'),   
-        cnae: document.getElementById('cnae'),   
         description: document.getElementById('description'),  
     }
 
@@ -170,40 +169,6 @@ const PersonData = (props) => {
           }
         });
         return true;
-    }
-    
-    const testCnae = () => {
-
-        if(props.person.document_type === 2){
-          if(props.person.cnae) {
-            if(!isValibCnae(references.cnae.value)){
-              setFormStatus({...formStatus, 
-                cnae: {
-                  erro: 'CNAE inválido!',
-                  validate: 'form-control is-invalid'
-                }
-              });
-              return false; 
-            }
-            setFormStatus({...formStatus, 
-              cnae: {
-                erro: '',
-                validate: 'form-control is-valid'
-              }
-            });
-            return true;
-          }
-          setFormStatus({...formStatus, 
-            cnae: {
-              erro: 'Campo obrigatório!',
-              validate: 'form-control is-invalid'
-            }
-          });
-          return false;
-        }
-    
-        return true;
-                
     }
 
     const testTreatment = () => {
