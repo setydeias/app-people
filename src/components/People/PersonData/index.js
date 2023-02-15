@@ -1,4 +1,4 @@
-import React, { useEffect, useContext }from 'react';
+import React, { useEffect, useContext, useState }from 'react';
 import { 
     formatDate,
     testAge,
@@ -28,6 +28,8 @@ const PersonData = (props) => {
         document_type: document.getElementById('document_type'),   
         description: document.getElementById('description'),  
     }
+
+    const [treatments, setTreatments] = useState([]);
 
     const masculine_list = getTreatmentMasculine();
     const female_list = getTreatmentFemale();
@@ -68,6 +70,7 @@ const PersonData = (props) => {
         const timeElapsed = Date.now();
         const today = new Date(timeElapsed);    
         props.person.date_registration = formatDate(today, 'aaaa-mm-dd');
+
                
     }, []);
 

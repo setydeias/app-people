@@ -16,3 +16,8 @@ export const emailRegistrationStatus = async (email) => {
     const response = await axios.post(`${ApiPeople.settings.endpoint}/pessoa/consultar/contatos/email`, email);
     return response;
 }
+
+export const getTreatment = async () => {
+    const response = await axios.get(`${ApiPeople.settings.endpoint}/tratamento/consultar/todos`);
+    return response;
+}
