@@ -16,7 +16,6 @@ import {
     setMaskCPF,
     setMaskCNPJ
 } from '../../../utilities/Masks';
-import {getTreatmentMasculine, getTreatmentFemale  } from '../../../data/treatment';
 import { getRegionCpf } from '../../../data/cpf_fiscal_region';
 import { PersonContext } from '../../../Contexts/Person/PersonContext';
 
@@ -31,9 +30,6 @@ const PersonData = (props) => {
 
     const [treatments, setTreatments] = useState([]);
 
-    const masculine_list = getTreatmentMasculine();
-    const female_list = getTreatmentFemale();
-    
     const handleChange = (e) => {
       const { name, value } = e.target;
       console.log(`Nome: ${name} Valor> ${value}`);
@@ -45,7 +41,6 @@ const PersonData = (props) => {
       maskCPF(e);
       props.setPerson({ ...props.person, [e.target.name]: noMask(e.target.value) });
     }
-    
     
     useEffect(() => {
 
