@@ -18,6 +18,7 @@ import {
 } from '../../../utilities/Masks';
 import { getRegionCpf } from '../../../data/cpf_fiscal_region';
 import { PersonContext } from '../../../Contexts/Person/PersonContext';
+import { getTreatments } from '../../../api/People';
 
 const PersonData = (props) => { 
     
@@ -41,12 +42,27 @@ const PersonData = (props) => {
       maskCPF(e);
       props.setPerson({ ...props.person, [e.target.name]: noMask(e.target.value) });
     }
+
+    const setTreatmentsPerson = async () => {
+      try {
+        
+        const result = await getTreatments();
+        if (result.status === 200) {
+          setTreatments(result.data.treatments);
+        }
+
+      } catch (error) {
+        
+      }
+    }
     
     useEffect(() => {
 
       const timeElapsed = Date.now();
       const today = new Date(timeElapsed);    
       props.person.date_registration = formatDate(today, 'aaaa-mm-dd');
+
+      setTreatmentsPerson();
                      
     }, []);
 
@@ -289,15 +305,10 @@ const PersonData = (props) => {
             required
             >
             { 
-              props.person.sexo === '2' ?
-              female_list.map((treatment_f, index) => 
-              <option key={index = index+1} value={ treatment_f }>
-                    { treatment_f }
-                  </option>)
-              : masculine_list.map((treatment_m, index) => 
-              <option key={index = index+1} value={ treatment_m }>
-                    { treatment_m }
-                  </option>)             
+              treatments.map((treatment, index) => 
+                <option key={index = index+1} value={ treatment.id_treatment }>
+                  { treatment.description }
+                </option>)
             }
           </select>
           <div className="invalid-feedback">
