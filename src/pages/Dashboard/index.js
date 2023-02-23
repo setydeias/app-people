@@ -12,18 +12,22 @@ const Dashboard = (props) => {
 
   const { id_people, id_user } = useParams();
 
-  const personDefault = {      
-    id_people: '',
-    document_type: 1,
-    document: '',
-    description: '',
-    usual_name: '',
-    date: null,
-    sexo: '1',
-    treatment: null,
-    date_registration: '',
-    date_update: null,
+  const personDefault = {  
     address_type: '',
+    description: '',    
+    id_people: '',
+    id_status: '',
+    id_document_type: '',
+    document: '',
+    name: '',
+    usual_name: '',
+    birth_date: '',
+    sexo: '',
+    id_treatment: '',
+    date_registration: '',
+    last_change: '',
+    id_adress: '',
+    id_address_type: '',
     address: '',
     address_number: '',
     city: '',
@@ -31,8 +35,10 @@ const Dashboard = (props) => {
     address_complement: '',
     district: '',
     cep: '',
+    document_type: 1,
     contacts: []
   }
+  
   
   const [person, setPerson] = useState(personDefault);
 
@@ -70,27 +76,31 @@ const Dashboard = (props) => {
     try {
       const result = await getPersonById(id_people);
       if(result.status === 200) {
-
-        const timeElapsed = Date.now();
-        const today = new Date(timeElapsed); 
-
-        console.log(`timeElapsed: ${timeElapsed} today: ${today}`)
-
         setPerson({
           ...person,
+          description: result.data.person.name,
           id_people: result.data.person.id_people,
-          document_type: result.data.person.document_type,
-          document: result.data.person.document,
+          id_status: result.data.person.id_status,
+          id_document_type: result.data.person.id_document_type,
           document: result.data.person.document,
           name: result.data.person.name,
           usual_name: result.data.person.usual_name,
-          date: result.data.person.date,
-          sexo: result.data.person.sexo,
-          id_treatment: result.data.person.treatment,
           birth_date: result.data.person.birth_date.substring(0, 10),
+          sexo: result.data.person.sexo,
+          id_treatment: result.data.person.id_treatment,
           date_registration: result.data.person.date_registration,
-          date_update: result.data.person.date_update,
-          contacts: result.data.person.contacts
+          last_change: result.data.person.last_change,
+          id_address: result.data.person.id_address,
+          id_address_type: result.data.person.id_adress_type,
+          address: result.data.person.adress,
+          address_number: result.data.person.address_number,
+          city: result.data.person.city,
+          uf: result.data.person.uf,
+          address_complement: result.data.person.address_complement,
+          district: result.data.person.district,
+          cep: result.data.person.cep,
+          document_type: result.data.person.document_type,
+          contacts: result.data.person.contacts,
         });
       }
     } catch (error) {

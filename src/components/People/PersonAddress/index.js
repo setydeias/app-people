@@ -10,6 +10,7 @@ import {
   setMaskCep
 } from '../../../utilities/Masks';
 import { getCep } from '../../../api/Correios/Services';
+import { getAdressType } from '../../../api/People';
 import { PersonContext } from '../../../Contexts/Person/PersonContext';
 
 const PersonAddress = (props) => { 
@@ -28,6 +29,7 @@ const PersonAddress = (props) => {
     
     
     const [total_characters_adress, setTotalCaractersAdress] = useState(0)
+    const [listAdressType, setListAdressType] = useState([]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -67,12 +69,26 @@ const PersonAddress = (props) => {
 
 
     useEffect(() => {
+      
+      loadListAdressType();
+
       if (total_characters_adress > 0) {
         testAddressCaracters();
       }
     }, [total_characters_adress])
-
     
+
+    const loadListAdressType = async () => {
+      try {
+        const result = await getAdressType();
+        if (result.status === 200) {
+          setListAdressType(result.data.addressTypelist);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
     const searchCep = async (e) => { 
 
         if(testCep()) {    
@@ -462,56 +478,20 @@ const PersonAddress = (props) => {
                 className={formStatus.address_type.validate} 
                 name="address_type" 
                 id='address_type'
-                value={ props.person.address_type }
+                value={ props.person.id_address_type }
                 onChange={handleChange}
                 onBlur={testTypeAddress}
                 required  
               >
-                 <optgroup label="Tipos de Logradouro">
-                    <option value=""></option>
-                    <option value="Aeroporto"> Aeroporto </option>
-                    <option value="Alameda"> Alameda </option>
-                    <option value="Área"> Área </option>
-                    <option value="Avenida"> Avenida </option>
-                    <option value="Bêco"> Bêco </option>
-                    <option value="Chácara"> Chácara </option>
-                    <option value="Colônia"> Colônia </option>
-                    <option value="Condomínio"> Condomínio </option>
-                    <option value="Conjunto"> Conjunto </option>
-                    <option value="Distrito"> Distrito </option>
-                    <option value="Esplanada"> Esplanada </option>
-                    <option value="Estação"> Estação </option>
-                    <option value="Estrada"> Estrada </option>
-                    <option value="Favela"> Favela </option>
-                    <option value="Fazenda"> Fazenda </option>
-                    <option value="Feira"> Feira </option>
-                    <option value="Jardim"> Jardim </option>
-                    <option value="Ladeira"> Ladeira </option>
-                    <option value="Lago"> Lago </option>
-                    <option value="Lagoa"> Lagoa </option>
-                    <option value="Largo"> Largo </option>
-                    <option value="Loteamento"> Loteamento </option>
-                    <option value="Morro"> Morro </option>
-                    <option value="Núcleo"> Núcleo </option>
-                    <option value="Parque"> Parque </option>
-                    <option value="Passarela"> Passarela </option>
-                    <option value="Pátio"> Pátio </option>
-                    <option value="Praça"> Praça </option>
-                    <option value="Quadra"> Quadra </option>
-                    <option value="Recanto"> Recanto </option>
-                    <option value="Residencial"> Residencial </option>
-                    <option value="Rodovia"> Rodovia </option>
-                    <option value="Rua"> Rua </option>
-                    <option value="Setor"> Setor </option>
-                    <option value="Sítio"> Sítio </option>
-                    <option value="Travessa"> Travessa </option>
-                    <option value="Trecho"> Trecho </option>
-                    <option value="Trevo"> Trevo </option>
-                    <option value="Via"> Via </option>
-                    <option value="Viaduto"> Viaduto </option>
-                    <option value="Viela"> Viela </option>
-                    <option value="Vila"> Vila </option>                                         
-                  </optgroup>
+                <optgroup label="Tipos de Logradouro">
+                  {
+                    listAdressType.map((addressType, index) => 
+                      <option key={index = index+1} value={ addressType.id_address_type }> 
+                        { addressType.description }
+                      </option>
+                    )
+                  }                                   
+                </optgroup>
               </select>
 
               <div className="invalid-feedback">

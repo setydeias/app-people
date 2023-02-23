@@ -2,19 +2,12 @@ import React, { useEffect, useContext, useState }from 'react';
 import { 
     formatDate,
     testAge,
-    isValibCnae,
-    isValidCPF,
-    isValidCNPJ
-
+    isValidCPF
 } from '../../../utilities/Utilities';
 import { 
     noMask,
     maskCPF, 
-    maskCNPJ,
-    maskCnae,
-    setMaskCnae,
-    setMaskCPF,
-    setMaskCNPJ
+    setMaskCPF
 } from '../../../utilities/Masks';
 import { getRegionCpf } from '../../../data/cpf_fiscal_region';
 import { PersonContext } from '../../../Contexts/Person/PersonContext';
@@ -23,18 +16,28 @@ import { getTreatments } from '../../../api/People';
 const PersonData = (props) => { 
     
   const { formStatus, setFormStatus } = useContext(PersonContext);
-    
+  
+  const cbTreatmentDefault = { label: 'Prezado', value: 4 };
+  const [cbTreatment, setCbTreatment] = useState(cbTreatmentDefault);
+
     var references = {
       document_type: document.getElementById('document_type'),   
       description: document.getElementById('description'),  
     }
 
     const [treatments, setTreatments] = useState([]);
+    const [treatmentsTypeList, setTreatmentsTypeList] = useState([]);
+
 
     const handleChange = (e) => {
       const { name, value } = e.target;
-      console.log(`Nome: ${name} Valor> ${value}`);
       props.setPerson({ ...props.person, [name]: value });
+    };
+    
+    const handleChangeSexo = (e) => {
+      const { name, value } = e.target;
+      props.setPerson({ ...props.person, [name]: value });
+      setTypeTreatment(value);
     };
 
     const handleChangeMaskCPF = (e) => { 
@@ -52,8 +55,20 @@ const PersonData = (props) => {
         }
 
       } catch (error) {
-        
+        console.log(error);
       }
+    }
+
+    const setTypeTreatment = (valor) => {
+      const list = [];
+      setTreatmentsTypeList([]);      
+      treatments.map((treatment) => {
+        if (treatment.id_treatment_type == valor) {
+            list.push(treatment);
+          }
+        }
+      )      
+      setTreatmentsTypeList(list);
     }
     
     useEffect(() => {
@@ -61,15 +76,13 @@ const PersonData = (props) => {
       const timeElapsed = Date.now();
       const today = new Date(timeElapsed);    
       props.person.date_registration = formatDate(today, 'aaaa-mm-dd');
-
-      setTreatmentsPerson();
-                     
+      setTreatmentsPerson();  
     }, []);
+       
 
-   
     const testDate = () => {
 
-      if (!props.person.date) {
+      if (!props.person.birth_date) {
         setFormStatus({...formStatus, 
           date: {
             erro: 'Campo obrigatório!',
@@ -91,7 +104,7 @@ const PersonData = (props) => {
           return false;
         }
   
-        if (testAge(2, props.person.date)) {
+        if (testAge(2, props.person.birth_date)) {
           setFormStatus({...formStatus, 
             date: {
               erro: 'Idade inválida. Maior de 120 anos.',
@@ -168,7 +181,7 @@ const PersonData = (props) => {
     }
 
     const testTreatment = () => {
-      if (!props.person.treatment) {
+      if (!props.person.id_treatment) {
         setFormStatus({...formStatus, 
           treatment: {
             erro: 'Campo obrigatório!',
@@ -280,8 +293,8 @@ const PersonData = (props) => {
           <select 
             className={formStatus.sexo.validate}
               name="sexo"
-              value={ parseInt(props.person.sexo) }
-              onChange={handleChange}
+              value={ props.person.sexo }
+              onChange={handleChangeSexo}
               onBlur={testSexo}
               required
             >
@@ -300,15 +313,17 @@ const PersonData = (props) => {
             className={ formStatus.treatment.validate }
             name="id_treatment"
             value={ props.person.id_treatment }
-            onChange={ e => props.setPerson({ ...props.person, id_treatment: e.value })}
+            onChange={ e => props.setPerson({ ...props.person, id_treatment: e.target.value })}
             onBlur={testTreatment}
             required
             >
             { 
-              treatments.map((treatment, index) => 
-                <option key={index = index+1} value={ treatment.id_treatment }>
-                  { treatment.description }
-                </option>)
+              treatments.map((treatment, index) =>     
+                treatment.id_treatment_type == props.person.sexo ?            
+                <option key={index = index+1} value={ treatment.id_treatment } >
+                  {  treatment.description }
+                </option> : ''            
+              ) 
             }
           </select>
           <div className="invalid-feedback">

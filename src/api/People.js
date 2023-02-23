@@ -21,3 +21,8 @@ export const getTreatments = async () => {
     const response = await axios.get(`${ApiPeople.settings.endpoint}/tratamento/consultar/todos`);
     return response;
 }
+
+export const getAdressType = async () => {
+    const response = await axios.get(`${ApiPeople.settings.endpoint}/endereco/tipo/consultar/todos`);
+    return response;
+}
