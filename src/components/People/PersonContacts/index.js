@@ -1,6 +1,9 @@
 import React from "react";
+import './styles.css';
+import { setMaskTelefone } from "../../../utilities/Masks";
 
 const Contacts = (props) => {
+
   return(
     <div className="row">
       <div className="col-6 col-sm-3">
@@ -17,10 +20,14 @@ const Contacts = (props) => {
             {
               props.contacts.map((contact) => 
                 <tr>
-                  <td>{ contact.contact }</td>
-                  <td>{ contact.contact_type }</td>
-                  <td>Edit</td>
-                  <td>Exc</td>
+                  <td>{ contact.id_contact_type == 1 ? setMaskTelefone(contact.contact) : contact.contact }</td>
+                  <td>
+                    { 
+                      contact.contact_type === 1
+                    }
+                  </td>
+                  <td><i className="fas fa-edit"></i></td>
+                  <td><i className="fas fa-trash"></i></td>
                 </tr>
               )
             }
