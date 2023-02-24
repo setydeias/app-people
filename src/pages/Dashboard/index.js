@@ -6,7 +6,7 @@ import UserSettings from "../../globals/PeopleSettings";
 import PersonData from "../../components/People/PersonData";
 import { getPersonById } from "../../api/People";
 import { formatDate } from "../../utilities/Utilities";
-
+import PersonContacts from '../../components/People/PersonContacts';
 
 const Dashboard = (props) => {
 
@@ -100,7 +100,7 @@ const Dashboard = (props) => {
           district: result.data.person.district,
           cep: result.data.person.cep,
           document_type: result.data.person.document_type,
-          contacts: result.data.person.contacts,
+          contacts: result.data.contacts,
         });
       }
     } catch (error) {
@@ -117,7 +117,7 @@ const Dashboard = (props) => {
     <PersonContextProvider>
       <div className='container-sm'>
         <h4 className='title-page'>Cadastro único</h4>
-        <p>Olá, { person.name }</p>
+        <p>Olá, <b className='title-page'>{ person.name.toUpperCase() }</b></p>
         <nav>
           <div className="nav nav-tabs d-flex justify-content-start" id="nav-tab" role="tablist">
             <button className="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true"><i class="fas fa-user"></i> Dados Pessoal</button>
@@ -142,7 +142,10 @@ const Dashboard = (props) => {
             />
           </div>
           <div className="tab-pane fade" id="nav-api-2" role="tabpanel" aria-labelledby="nav-api-2" tabindex="0">
-            <>Contato</>
+            <PersonContacts 
+              contacts={ person.contacts }
+              setPerson={ setPerson }
+            />
           </div>
           <div className="tab-pane fade" id="nav-api-3" role="tabpanel" aria-labelledby="nav-api-3" tabindex="0">
             <>Nível da conta</>
