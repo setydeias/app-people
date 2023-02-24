@@ -50,7 +50,7 @@ const PersonAddress = (props) => {
     }
 
     useEffect(() => {
-
+      
         setTotalCaractersAdress(
           parseInt(props.person.address_type.length) + 
           parseInt(props.person.address.length) +
@@ -100,6 +100,7 @@ const PersonAddress = (props) => {
 
             props.setPerson((prevState) => ({ ...prevState,
               ...{ 
+                  cep: resp.data.cep,
                   city: resp.data.localidade, 
                   uf: resp.data.uf,
                   district: resp.data.bairro,
@@ -163,7 +164,7 @@ const PersonAddress = (props) => {
 
       if (props.person.cep) {   
 
-        if (!isValibCep(props.person.cep)) {
+        if (!isValibCep(setMaskCep(props.person.cep))) {
           setFormStatus({...formStatus, 
             cep: {
               erro: 'CEP inválido!',
@@ -316,7 +317,7 @@ const PersonAddress = (props) => {
       }
     
       const testTypeAddress = () => {
-        if (!props.person.address_type) {
+        if (!props.person.id_address_type) {
           setFormStatus({...formStatus, 
             address_type: {
               erro: 'Campo obrigatório!',
