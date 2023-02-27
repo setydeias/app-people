@@ -7,8 +7,12 @@ import PersonData from "../../components/People/PersonData";
 import { getPersonById } from "../../api/People";
 import { formatDate } from "../../utilities/Utilities";
 import PersonContacts from '../../components/People/PersonContacts';
+import { Tooltip } from 'bootstrap';
 
 const Dashboard = (props) => {
+
+  const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+  const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new Tooltip(tooltipTriggerEl));
 
   const { id_people, id_user } = useParams();
 

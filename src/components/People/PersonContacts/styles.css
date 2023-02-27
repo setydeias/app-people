@@ -9,3 +9,7 @@
     cursor: pointer;
     text-align: end;
 }
+
+.custom-tooltip {
+  --bs-tooltip-bg: var(--bs-primary);
+}

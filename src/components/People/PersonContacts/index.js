@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import './styles.css';
 import { setMaskTelefone } from "../../../utilities/Masks";
+import ModalConfirm from "../../Modal/Confirme";
+
 
 const Contacts = (props) => {
+
+  const modalConfirmDataDefalt = { title: '', text: '', emphasis: ''};
+  const [modalConfirmData, setModalConfirmData] = useState(modalConfirmDataDefalt);
 
   return(
     <div className="row">
@@ -21,25 +26,40 @@ const Contacts = (props) => {
             {
               props.contacts.map((contact) => 
                 <tr>
-                  <td className="icon-type">{contact.main === 1 ? <i class="fas fa-check"></i> : '' }</td>
-                  <td>{ contact.id_contact_type == 1 ? setMaskTelefone(contact.contact) : contact.contact }{ contact.whatsapp === 1 ? <i class="fab fa-whatsapp" style={{"color":"green", "marginLeft": "0.3em"}}></i> : '' }</td>
+                  <td className="icon-type">{contact.main === 1 ? <i class="fas fa-check"  data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-title="Principal"></i> : '' }</td>
+                  <td>{ contact.id_contact_type == 1 ? setMaskTelefone(contact.contact) : contact.contact }{ contact.whatsapp === 1 ? <i class="fab fa-whatsapp" style={{"color":"green", "marginLeft": "0.3em"}} data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-title="WhatsApp"></i> : '' }</td>
                   <td className="icon-type">
                     { 
-                      contact.id_contact_type === 1 ? <i class="fas fa-phone"></i> : 
-                      contact.id_contact_type === 2 ? <i class="fas fa-envelope"></i> : 
-                      contact.id_contact_type === 3 ? <i class="fab fa-facebook-square"></i> :
-                      contact.id_contact_type === 4 ? <i class="fab fa-instagram"></i> : 
-                      contact.id_contact_type === 5 ? <i class="fas fa-globe"></i> : ''
+                      contact.id_contact_type === 1 ? <i class="fas fa-phone" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-title={ contact.contact_type }></i> : 
+                      contact.id_contact_type === 2 ? <i class="fas fa-envelope" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-title={ contact.contact_type }></i> : 
+                      contact.id_contact_type === 3 ? <i class="fab fa-facebook-square" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-title={ contact.contact_type }></i> :
+                      contact.id_contact_type === 4 ? <i class="fab fa-instagram" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-title={ contact.contact_type }></i> : 
+                      contact.id_contact_type === 5 ? <i class="fas fa-globe" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-title={ contact.contact_type }></i> : ''
                     }
                   </td>
-                  <td><button type="button" class="btn btn-outline-dark btn-sm"><i className="fas fa-edit"></i></button></td>
-                  <td><button type="button" class="btn btn-outline-danger btn-sm"><i className="fas fa-trash"></i></button></td>
+                  <td data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-title="Editar"><button type="button" class="btn btn-outline-dark btn-sm"><i className="fas fa-edit"></i></button></td>
+                  <td data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-title="Excluir">
+                    <button 
+                      type="button" 
+                      class="btn btn-outline-danger btn-sm" 
+                      data-bs-toggle="modal" 
+                      data-bs-target="#exampleModal" 
+                      onClick={(e) => { 
+                          e.preventDefault()
+                          setModalConfirmData({ ...modalConfirmData, title: 'Ateção!', text: 'Deseja excluir o contato: ', emphasis: contact.id_contact_type == 1 ? setMaskTelefone(contact.contact) : contact.contact }); 
+                        }}><i className="fas fa-trash"></i>
+                    </button>
+                  </td>
                 </tr>
               )
             }
           </tbody>
         </table>
       </div>
+      <ModalConfirm 
+        modalConfirmData={ modalConfirmData }
+        action={ props.delete }
+      />
     </div>    
   )
 }
