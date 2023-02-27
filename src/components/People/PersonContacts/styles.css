@@ -1,4 +1,11 @@
-.color-icon {
+.icon-type {
     margin: 1em 0em 1em;
-    color: dimgray;
+    color: #969696;
+    text-align: center;
+}
+
+.icon-action {
+    margin: 1em 0em 1em;
+    cursor: pointer;
+    text-align: end;
 }
