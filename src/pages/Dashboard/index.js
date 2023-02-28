@@ -14,7 +14,13 @@ const Dashboard = (props) => {
   const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
   const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new Tooltip(tooltipTriggerEl));
   
-  const modalConfirmDataDefalt = { title: '', text: '', emphasis: ''};
+  const modalConfirmDataDefalt = { 
+    title: '', 
+    text: '', 
+    emphasis: '',
+    textAction1: '',
+    textAction2: ''    
+  };
   const [modalConfirmData, setModalConfirmData] = useState(modalConfirmDataDefalt);
 
   const toastLiveExample = document.getElementById('liveToast');
@@ -252,6 +258,7 @@ const Dashboard = (props) => {
               setPerson={ setPerson }
               contactSelected={ contactSelected }
               setContactSelected={ setContactSelected }
+              modalConfirmDataDefalt={ modalConfirmDataDefalt }
               modalConfirmData={ modalConfirmData }
               setModalConfirmData={ setModalConfirmData }
             />
@@ -261,10 +268,11 @@ const Dashboard = (props) => {
           </div>
         </div>
        </form>
-       <ModalConfirm 
+       <ModalConfirm
+        id="modalConfirmeDelete" 
         modalConfirmData={ modalConfirmData }        
         action={ removeContact }
-      />
+      />      
       <InfoToast data={ infoToastData } />
     </div>
     </PersonContextProvider>

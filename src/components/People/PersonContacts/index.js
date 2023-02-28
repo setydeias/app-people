@@ -1,13 +1,32 @@
 import React, { useState } from "react";
 import './styles.css';
 import { setMaskTelefone } from "../../../utilities/Masks";
+import ModalConfirm from "../../Modal/Confirme";
+import PersonContactEdit from "../PersonContactEdit";
 
 const Contacts = (props) => {
 
   return(
     <div className="row">
       <div className="col-6 col-sm-3">
-        <button type="button" class="btn btn-outline-dark btn-sm" style={{"marginTop": "1em", "marginBottom": "0.5em"}}>ADICIONAR <i class="fa fa-plus-circle"></i></button>
+        <button 
+          type="button" 
+          class="btn btn-outline-dark btn-sm" 
+          data-bs-toggle="modal" 
+          data-bs-target="#modalConfirmeContactAdd" 
+          style={{"marginTop": "1em", "marginBottom": "0.5em"}}
+          onClick={ () => {
+            props.setModalConfirmData({ 
+              ...props.modalConfirmData, 
+              title: 'Adicionar Contato', 
+              text: '',                            
+              emphasis: '',
+            textAction1: 'Cancelar',
+            textAction2: 'Confirmar', 
+          }); } }
+        >
+          ADICIONAR <i class="fa fa-plus-circle"></i>
+        </button>
         <table className="table align-middle table-hover">
           <thead>
             <tr>
@@ -45,15 +64,17 @@ const Contacts = (props) => {
                       type="button" 
                       class="btn btn-outline-danger btn-sm" 
                       data-bs-toggle="modal" 
-                      data-bs-target="#exampleModal" 
+                      data-bs-target="#modalConfirmeDelete" 
                       onClick={(e) => { 
                           e.preventDefault()
                           props.setModalConfirmData({ 
                             ...props.modalConfirmData, 
                             title: 'Ateção!', 
-                            text: 'Deseja excluir o contato: ', 
+                            text: 'Deseja excluir o contato: ',                            
                             emphasis: contact.id_contact_type == 1 ? 
-                              setMaskTelefone(contact.contact) : contact.contact
+                              setMaskTelefone(contact.contact) : contact.contact,
+                            textAction1: 'Não',
+                            textAction2: 'Sim', 
                           });
                           props.setContactSelected({
                             ...props.contactSelected, 
@@ -68,7 +89,14 @@ const Contacts = (props) => {
             }
           </tbody>
         </table>
-      </div>      
+      </div>
+      <ModalConfirm
+        id="modalConfirmeContactAdd"
+        modalConfirmData={ props.modalConfirmData }        
+        action={ () => {  } }
+      >
+        <input type="text"></input>
+      </ModalConfirm>      
     </div>    
   )
 }
