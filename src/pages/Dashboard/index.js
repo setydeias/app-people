@@ -7,14 +7,30 @@ import PersonData from "../../components/People/PersonData";
 import { getPersonById } from "../../api/People";
 import { formatDate } from "../../utilities/Utilities";
 import PersonContacts from '../../components/People/PersonContacts';
-import { Tooltip } from 'bootstrap';
+import { Tooltip, Toast } from 'bootstrap';
+import ModalConfirm from '../../components/Modal/Confirme';
+import InfoToast from "../../components/InfoToast";
 
 const Dashboard = (props) => {
 
   const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
   const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new Tooltip(tooltipTriggerEl));
+  
+  const modalConfirmDataDefalt = { title: '', text: '', emphasis: ''};
+  const [modalConfirmData, setModalConfirmData] = useState(modalConfirmDataDefalt);
+
+  const toastLiveExample = document.getElementById('liveToast');
 
   const { id_people, id_user } = useParams();
+
+  const infoToastDataDefault = {
+    icon: '',
+    icon_color: '',
+    title: '',
+    text: ''
+  }
+
+  const [infoToastData, setInfoToastData] = useState(infoToastDataDefault);
 
   const personDefault = {  
     address_type: '',
@@ -43,7 +59,19 @@ const Dashboard = (props) => {
     contacts: []
   }
   
+  const contactSelectedDefault = {
+    index: '',
+    id_contact: '',
+    id_people: '',
+    id_contact_type: '',
+    contact: '',
+    whatsapp: '',
+    main: '',
+    contact_type: ''
+  }
   
+  const [contactSelected, setContactSelected] = useState(contactSelectedDefault);
+
   const [person, setPerson] = useState(personDefault);
 
   const testDcumentExists =  async () => { 
@@ -112,6 +140,38 @@ const Dashboard = (props) => {
     }
   }
 
+  const removeContact = (e) => {
+
+    e.preventDefault();
+    const toast = new Toast(toastLiveExample);
+    setInfoToastData(infoToastDataDefault);   
+    
+    try {
+      
+      if (contactSelected.index > -1) {
+        person.contacts.splice(contactSelected.index, 1);
+      }
+      
+      setPerson({ ...person, contacts: person.contacts });
+      
+      setInfoToastData({
+        icon: 'fa fa-info-circle',
+        icon_color: 'green',
+        title: 'Info',
+        text: 'Contato removido com sucesso.'
+      });     
+      toast.show();
+    } catch (error) {
+      setInfoToastData({
+        icon: 'fa fa-exclamation-triangle',
+        icon_color: 'orange',
+        title: 'Atenção',
+        text: 'Não foi possível remover o contato.'
+      });     
+      toast.show();
+    }
+  }
+
   useEffect(()=>{
     getPersonForId();
   },[]);
@@ -124,14 +184,57 @@ const Dashboard = (props) => {
         <p>Olá, <b className='title-page'>{ person.name.toUpperCase() }</b></p>
         <nav>
           <div className="nav nav-tabs d-flex justify-content-start" id="nav-tab" role="tablist">
-            <button className="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true"><i class="fas fa-user"></i> Dados Pessoal</button>
-            <button className="nav-link" id="nav-api-tab-1" data-bs-toggle="tab" data-bs-target="#nav-api-1" type="button" role="tab" aria-controls="nav-api-1" aria-selected="false"><i class="fas fa-map-marker"></i> Endereço</button>
-            <button className="nav-link" id="nav-api-tab-2" data-bs-toggle="tab" data-bs-target="#nav-api-2" type="button" role="tab" aria-controls="nav-api-2" aria-selected="false"><i class="fas fa-phone"></i> Contato</button>
-            <button className="nav-link" id="nav-api-tab-3" data-bs-toggle="tab" data-bs-target="#nav-api-3" type="button" role="tab" aria-controls="nav-api-3" aria-selected="false"><i class="fas  fa-tasks"></i> Nível da conta</button>
+            <button 
+              className="nav-link active" 
+              id="nav-home-tab" 
+              data-bs-toggle="tab" 
+              data-bs-target="#nav-home" 
+              type="button" 
+              role="tab" 
+              aria-controls="nav-home" 
+              aria-selected="true"
+            >
+              <i class="fas fa-user"></i> Dados Pessoal
+            </button>
+            <button 
+              className="nav-link" 
+              id="nav-api-tab-1" 
+              data-bs-toggle="tab" 
+              data-bs-target="#nav-api-1" 
+              type="button" 
+              role="tab" 
+              aria-controls="nav-api-1" 
+              aria-selected="false"
+            >
+              <i class="fas fa-map-marker"></i> Endereço
+            </button>
+            <button 
+              className="nav-link"
+              id="nav-api-tab-2" 
+              data-bs-toggle="tab" 
+              data-bs-target="#nav-api-2" 
+              type="button" 
+              role="tab" 
+              aria-controls="nav-api-2" 
+              aria-selected="false">
+                <i class="fas fa-phone"></i> Contato
+            </button>
+            <button 
+              className="nav-link" 
+              id="nav-api-tab-3" 
+              data-bs-toggle="tab" 
+              data-bs-target="#nav-api-3" 
+              type="button" 
+              role="tab" 
+              aria-controls="nav-api-3" 
+              aria-selected="false" 
+            >
+              <i class="fas  fa-tasks"></i> Nível da conta
+            </button>
           </div>
        </nav>
        <form className='row' onSubmit={ ()=>{} }> 
-       <div className="tab-content" id="nav-tabContent">
+        <div className="tab-content" id="nav-tabContent">
           <div className="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
             <PersonData 
               person={ person }
@@ -149,6 +252,10 @@ const Dashboard = (props) => {
             <PersonContacts 
               contacts={ person.contacts }
               setPerson={ setPerson }
+              contactSelected={ contactSelected }
+              setContactSelected={ setContactSelected }
+              modalConfirmData={ modalConfirmData }
+              setModalConfirmData={ setModalConfirmData }
             />
           </div>
           <div className="tab-pane fade" id="nav-api-3" role="tabpanel" aria-labelledby="nav-api-3" tabindex="0">
@@ -156,7 +263,12 @@ const Dashboard = (props) => {
           </div>
         </div>
        </form>
-      </div>
+       <ModalConfirm 
+        modalConfirmData={ modalConfirmData }        
+        action={ removeContact }
+      />
+      <InfoToast data={ infoToastData } />
+    </div>
     </PersonContextProvider>
   );
 
