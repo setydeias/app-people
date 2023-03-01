@@ -12,6 +12,11 @@ export const getContactsbyIdPeople = async (id_people) => {
     return response;
 }
 
+export const deleteContact = async (id_contatct) => {
+    const response = await axios.delete(`${ApiPeople.settings.endpoint}/pessoa/contato/delete/${id_contatct}`);
+    return response;
+}
+
 export const emailRegistrationStatus = async (email) => {
     const response = await axios.post(`${ApiPeople.settings.endpoint}/pessoa/consultar/contatos/email`, email);
     return response;

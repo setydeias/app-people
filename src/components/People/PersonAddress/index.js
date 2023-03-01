@@ -33,6 +33,7 @@ const PersonAddress = (props) => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        console.log(`Name: ${name} - Value: ${value}`)
         props.setPerson({ ...props.person, [name]: value });
     };
     
@@ -469,7 +470,6 @@ const PersonAddress = (props) => {
               <label>
                   Tipo
                   <span className='required_field'> * </span>
-                  <span className='total_characters_label'></span>
                   <span className='total_characters_label'>
                     {props.person.address_type.length > 0 ? props.person.address_type.length : ''}
                   </span>
@@ -477,8 +477,8 @@ const PersonAddress = (props) => {
               <select 
                 type="text" 
                 className={formStatus.address_type.validate} 
-                name="address_type" 
-                id='address_type'
+                name="id_address_type" 
+                id='id_address_type'
                 value={ props.person.id_address_type }
                 onChange={handleChange}
                 onBlur={testTypeAddress}

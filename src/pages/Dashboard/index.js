@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { PersonContextProvider } from '../../Contexts/Person/PersonContext';
 import PersonAddress from "../../components/People/PersonAddress";
 import PersonData from "../../components/People/PersonData";
-import { getPersonById } from "../../api/People";
+import { deleteContact, getPersonById } from "../../api/People";
 import PersonContacts from '../../components/People/PersonContacts';
 import { Tooltip, Toast } from 'bootstrap';
 import ModalConfirm from '../../components/Modal/Confirme';
@@ -128,6 +128,7 @@ const Dashboard = (props) => {
           last_change: result.data.person.last_change,
           id_address: result.data.person.id_address,
           id_address_type: result.data.person.id_adress_type,
+          address_type: result.data.person.address_type,
           address: result.data.person.adress,
           address_number: result.data.person.address_number,
           city: result.data.person.city,
@@ -144,27 +145,29 @@ const Dashboard = (props) => {
     }
   }
 
-  const removeContact = (e) => {
+  const removeContact = async (e) => {
 
     e.preventDefault();
     const toast = new Toast(toastLiveExample);
     setInfoToastData(infoToastDataDefault);   
     
     try {
-      
-      if (contactSelected.index > -1) {
-        person.contacts.splice(contactSelected.index, 1);
+
+      const response = await deleteContact(contactSelected.id_contact);
+      if (response.status === 200) {
+        
+        if (contactSelected.index > -1) {
+          person.contacts.splice(contactSelected.index, 1);
+        }        
+        setPerson({ ...person, contacts: person.contacts });
+        setInfoToastData({
+          icon: 'fa fa-info-circle',
+          icon_color: 'green',
+          title: 'Informação',
+          text: response.data.message
+        });     
+        toast.show(); 
       }
-      
-      setPerson({ ...person, contacts: person.contacts });
-      
-      setInfoToastData({
-        icon: 'fa fa-info-circle',
-        icon_color: 'green',
-        title: 'Info',
-        text: 'Contato removido com sucesso.'
-      });     
-      toast.show();
     } catch (error) {
       setInfoToastData({
         icon: 'fa fa-exclamation-triangle',

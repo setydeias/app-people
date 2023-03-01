@@ -3,6 +3,7 @@ import './styles.css';
 import { setMaskTelefone } from "../../../utilities/Masks";
 import ModalConfirm from "../../Modal/Confirme";
 import PersonContactEdit from "../PersonContactEdit";
+import PersonContactAction from "../PersonContactAction";
 
 const Contacts = (props) => {
 
@@ -95,7 +96,9 @@ const Contacts = (props) => {
         modalConfirmData={ props.modalConfirmData }        
         action={ () => {  } }
       >
-        <input type="text"></input>
+        <PersonContactAction 
+          action=''
+        />
       </ModalConfirm>      
     </div>    
   )
