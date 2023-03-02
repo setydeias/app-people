@@ -97,7 +97,12 @@ const Contacts = (props) => {
         action={ () => {  } }
       >
         <PersonContactAction 
-          action=''
+          contact= { 
+            {
+              id_contact_type: 2,
+              contact: "85988744823"
+            } 
+          }
         />
       </ModalConfirm>      
     </div>    

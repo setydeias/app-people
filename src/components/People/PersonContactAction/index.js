@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
+import InputContact from "../../Form/Input/Contact";
+import SelectTypeContact from "../../Form/Select/TypeContact";
 
 const PersonContactAction = (props) => {
+
   return(
-    <>Contato ação</>
+    <div className='row'>
+      <SelectTypeContact contact={ props.contact } />
+      <InputContact contact={ props.contact } />
+    </div>
   );
 } 
 
