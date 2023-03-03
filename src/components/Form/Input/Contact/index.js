@@ -6,7 +6,7 @@ const InputContact = (props) => {
       <input 
         type="text" 
         className="form-control"
-        value={props.contact.contact} 
+        value={ props.contact.contact } 
         id="floatingTexContact">
       </input>
       <label for="floatingTextarea">Contato</label>

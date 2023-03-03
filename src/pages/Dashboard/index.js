@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { PersonContextProvider } from '../../Contexts/Person/PersonContext';
 import PersonAddress from "../../components/People/PersonAddress";
 import PersonData from "../../components/People/PersonData";
-import { addContact, deleteContact, getPersonById } from "../../api/People";
+import { addContact, deleteContact, getPersonById, getContactsType } from "../../api/People";
 import PersonContacts from '../../components/People/PersonContacts';
 import { Tooltip, Toast } from 'bootstrap';
 import ModalConfirm from '../../components/Modal/Confirme';
@@ -80,9 +80,11 @@ const Dashboard = (props) => {
   const [modalConfirmData, setModalConfirmData] = useState(modalConfirmDataDefalt);
   const toastLiveExample = document.getElementById('liveToast');
   const [infoToastData, setInfoToastData] = useState(infoToastDataDefault);
+  const [contactTypeList, setContactTypeList] = useState([]);
   const [contact, setContact] = useState(contactDefault);  
   const [contactSelected, setContactSelected] = useState(contactSelectedDefault);
   const [person, setPerson] = useState(personDefault);
+
 
   const testDcumentExists =  async () => { 
     try {
@@ -148,6 +150,28 @@ const Dashboard = (props) => {
       }
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  const setContactsType = async () => {
+    
+    const toast = new Toast(toastLiveExample);
+    setInfoToastData(infoToastDataDefault);
+
+    try {
+
+      const response = await getContactsType();
+      if (response.status === 200) {
+        setContactTypeList(response.data.list);        
+      }
+    } catch (error) {
+      setInfoToastData({
+        icon: 'fa fa-exclamation-triangle',
+        icon_color: 'orange',
+        title: 'Atenção',
+        text: 'Não foi possível adicionar o contato.'
+      });     
+      toast.show();
     }
   }
 
@@ -217,6 +241,7 @@ const Dashboard = (props) => {
 
   useEffect(()=>{
     getPersonForId();
+    setContactsType();
   },[]);
 
 
@@ -296,6 +321,7 @@ const Dashboard = (props) => {
               contacts={ person.contacts }
               person={ person }
               setPerson={ setPerson }
+              contactTypeList={ contactTypeList }
               contact={ contact }
               setContact={setContact }
               contactSelected={ contactSelected }

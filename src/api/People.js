@@ -36,3 +36,8 @@ export const getAdressType = async () => {
     const response = await axios.get(`${ApiPeople.settings.endpoint}/endereco/tipo/consultar/todos`);
     return response;
 }
+
+export const getContactsType = async () => {
+    const response = await axios.get(`${ApiPeople.settings.endpoint}/contato/tipo/consultar/todos`);
+    return response;
+}

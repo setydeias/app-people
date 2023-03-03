@@ -113,10 +113,10 @@ const Contacts = (props) => {
         action={ () => {  } }
       >
         <PersonContactAction 
+          action="add"
           id_person={ props.person.id_person }
-          contact= { 
-            props.contactSelected
-          }
+          contact= { props.contactSelected }
+          contactTypeList= { props.contactTypeList }
         />
       </ModalConfirm>
       <ModalConfirm
@@ -125,9 +125,9 @@ const Contacts = (props) => {
         action={ () => {  } }
       >
         <PersonContactAction 
-          contact= { 
-            props.contactSelected
-          }
+          action="adit"
+          contact= { props.contactSelected }
+          contactTypeList= { props.contactTypeList }
         />
       </ModalConfirm>      
     </div>    

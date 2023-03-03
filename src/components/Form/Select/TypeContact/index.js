@@ -1,6 +1,7 @@
 import React from "react";
 
 const SelectTypeContact = (props) => {
+
   return(    
     <div className="form-floating">
       <select 
@@ -8,13 +9,14 @@ const SelectTypeContact = (props) => {
         id="select-type-contact"
         name="select-type-contact"
         aria-label="Default select example"
-      >
-        <option value=""></option>
-        <option value="1">Telefone</option>
-        <option value="2">E-mail</option>
-        <option value="3">Facebook</option>
-        <option value="4">Instagran</option>
-        <option value="5">Página</option>
+      >        
+        {
+          props.contactTypeList.map((contactType) => 
+            <option value={ contactType.id_contact_type }>
+              { contactType.description }
+            </option>
+          )
+        }       
       </select>
       <label for="floatingSelect">Tipo</label>
     </div>      

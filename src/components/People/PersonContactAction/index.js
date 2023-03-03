@@ -9,7 +9,9 @@ const PersonContactAction = (props) => {
     <div className='row'>
       <div className="col-md-4">
         <label></label>
-        <SelectTypeContact contact={ props.contact } />
+        <SelectTypeContact 
+          contactTypeList={ props.contactTypeList } 
+        />
       </div>
       <div className="col-md-8">      
         <MyCheck 
