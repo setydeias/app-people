@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { PersonContextProvider } from '../../Contexts/Person/PersonContext';
 import PersonAddress from "../../components/People/PersonAddress";
 import PersonData from "../../components/People/PersonData";
-import { deleteContact, getPersonById } from "../../api/People";
+import { addContact, deleteContact, getPersonById } from "../../api/People";
 import PersonContacts from '../../components/People/PersonContacts';
 import { Tooltip, Toast } from 'bootstrap';
 import ModalConfirm from '../../components/Modal/Confirme';
@@ -148,6 +148,36 @@ const Dashboard = (props) => {
       }
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  const contactAdd = async (e) => {
+    
+    e.preventDefault();
+    const toast = new Toast(toastLiveExample);
+    setInfoToastData(infoToastDataDefault);
+
+    try {
+
+      const response = await addContact(contact);
+      if (response.status === 200) {
+
+        setInfoToastData({
+          icon: 'fa fa-info-circle',
+          icon_color: 'green',
+          title: 'Informação',
+          text: response.data.message
+        });     
+        toast.show(); 
+      }
+    } catch (error) {
+      setInfoToastData({
+        icon: 'fa fa-exclamation-triangle',
+        icon_color: 'orange',
+        title: 'Atenção',
+        text: 'Não foi possível adicionar o contato.'
+      });     
+      toast.show();
     }
   }
 

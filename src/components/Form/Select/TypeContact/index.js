@@ -7,13 +7,14 @@ const SelectTypeContact = (props) => {
         className="form-select" 
         id="select-type-contact"
         name="select-type-contact"
-        value={props.contact.id_contact_type}
         aria-label="Default select example"
       >
-        <option selected>Open this select menu</option>
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
+        <option value=""></option>
+        <option value="1">Telefone</option>
+        <option value="2">E-mail</option>
+        <option value="3">Facebook</option>
+        <option value="4">Instagran</option>
+        <option value="5">Página</option>
       </select>
       <label for="floatingSelect">Tipo</label>
     </div>      
