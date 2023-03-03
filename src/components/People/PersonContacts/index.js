@@ -56,8 +56,24 @@ const Contacts = (props) => {
                     <button 
                       type="button" 
                       class="btn btn-outline-dark btn-sm"
-                    >
-                      <i className="fas fa-edit"></i>
+                      data-bs-toggle="modal" 
+                      data-bs-target="#modalContactEdit"
+                      onClick={(e) => { 
+                        e.preventDefault()
+                        props.setModalConfirmData({ 
+                          ...props.modalConfirmData, 
+                          title: 'Editar contato', 
+                          text: '',                            
+                          emphasis: '',
+                          textAction1: 'Cancelar',
+                          textAction2: 'Confirmar', 
+                        });
+                        props.setContactSelected({
+                          ...props.contactSelected, 
+                          ...contact, 
+                          index: index-1
+                        })
+                      }}><i className="fas fa-edit"></i>
                     </button>
                   </td>
                   <td>
@@ -93,15 +109,24 @@ const Contacts = (props) => {
       </div>
       <ModalConfirm
         id="modalConfirmeContactAdd"
-        modalConfirmData={ props.modalConfirmData }        
+        modalConfirmData={ props.modalConfirmData }       
+        action={ () => {  } }
+      >
+        <PersonContactAction 
+          id_person={ props.person.id_person }
+          contact= { 
+            props.contactSelected
+          }
+        />
+      </ModalConfirm>
+      <ModalConfirm
+        id="modalContactEdit"
+        modalConfirmData={ props.modalConfirmData }       
         action={ () => {  } }
       >
         <PersonContactAction 
           contact= { 
-            {
-              id_contact_type: 2,
-              contact: "85988744823"
-            } 
+            props.contactSelected
           }
         />
       </ModalConfirm>      

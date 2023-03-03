@@ -10,9 +10,10 @@ import ModalConfirm from '../../components/Modal/Confirme';
 import InfoToast from "../../components/InfoToast";
 
 const Dashboard = (props) => {
-
+  
   const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
   const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new Tooltip(tooltipTriggerEl));
+  const { id_people, id_user } = useParams();
   
   const modalConfirmDataDefalt = { 
     title: '', 
@@ -21,20 +22,13 @@ const Dashboard = (props) => {
     textAction1: '',
     textAction2: ''    
   };
-  const [modalConfirmData, setModalConfirmData] = useState(modalConfirmDataDefalt);
-
-  const toastLiveExample = document.getElementById('liveToast');
-
-  const { id_people, id_user } = useParams();
-
+  
   const infoToastDataDefault = {
     icon: '',
     icon_color: '',
     title: '',
     text: ''
-  }
-
-  const [infoToastData, setInfoToastData] = useState(infoToastDataDefault);
+  }  
 
   const personDefault = {  
     address_type: '',
@@ -74,8 +68,20 @@ const Dashboard = (props) => {
     contact_type: ''
   }
   
-  const [contactSelected, setContactSelected] = useState(contactSelectedDefault);
+  const contactDefault = {
+    id_people: id_people,
+    id_contact: '',
+    id_contact_type: '',
+    contact: '',
+    whatsapp: '',
+    main: ''
+  }
 
+  const [modalConfirmData, setModalConfirmData] = useState(modalConfirmDataDefalt);
+  const toastLiveExample = document.getElementById('liveToast');
+  const [infoToastData, setInfoToastData] = useState(infoToastDataDefault);
+  const [contact, setContact] = useState(contactDefault);  
+  const [contactSelected, setContactSelected] = useState(contactSelectedDefault);
   const [person, setPerson] = useState(personDefault);
 
   const testDcumentExists =  async () => { 
@@ -258,7 +264,10 @@ const Dashboard = (props) => {
           <div className="tab-pane fade" id="nav-api-2" role="tabpanel" aria-labelledby="nav-api-2" tabindex="0">
             <PersonContacts 
               contacts={ person.contacts }
+              person={ person }
               setPerson={ setPerson }
+              contact={ contact }
+              setContact={setContact }
               contactSelected={ contactSelected }
               setContactSelected={ setContactSelected }
               modalConfirmDataDefalt={ modalConfirmDataDefalt }
