@@ -7,6 +7,8 @@ import PersonContactAction from "../PersonContactAction";
 
 const Contacts = (props) => {
 
+  console.log(props.contactSelected)
+
   return(
     <div className="row">
       <div className="col-6 col-sm-3">

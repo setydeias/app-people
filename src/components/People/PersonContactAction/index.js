@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MyCheck from "../../Form/Check";
 import InputContact from "../../Form/Input/Contact";
 import SelectTypeContact from "../../Form/Select/TypeContact";
@@ -10,7 +10,9 @@ const PersonContactAction = (props) => {
       <div className="col-md-4">
         <label></label>
         <SelectTypeContact 
-          contactTypeList={ props.contactTypeList } 
+          action={ props.action }
+          contactTypeList={ props.contactTypeList }
+          contact={ props.contact } 
         />
       </div>
       <div className="col-md-8">      
@@ -32,7 +34,10 @@ const PersonContactAction = (props) => {
 				  }
 				}
 			  /><span><i className="fab fa-whatsapp" style={{"color":"green", "marginLeft": "-0.6em"}}></i></span>
-        <InputContact contact={ props.contact } />
+        <InputContact
+          action={ props.action } 
+          contact={ props.contact } 
+        />
       </div>      
     </div>
   );
