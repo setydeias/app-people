@@ -1,13 +1,63 @@
 import React, { useState } from "react";
 import './styles.css';
 import { setMaskTelefone } from "../../../utilities/Masks";
-import ModalConfirm from "../../Modal/Confirme";
-import PersonContactEdit from "../PersonContactEdit";
-import PersonContactAction from "../PersonContactAction";
 
-const Contacts = (props) => {
 
-  console.log(props.contactSelected)
+const PersonContacts = (props) => {
+   
+  const btnAdd = (e) => {
+    e.preventDefault();
+    props.setActionType('add');
+    props.setModalConfirmData({ 
+      ...props.modalConfirmData, 
+      title: 'Adicionar Contato', 
+      text: '',                            
+      emphasis: '',
+      textAction1: 'Cancelar',
+      textAction2: 'Confirmar', 
+    });    
+  }
+
+  const btnEdit = (e, data, index) => {
+    e.preventDefault();
+    props.setActionType('edit');
+
+    props.setModalConfirmData({ 
+      ...props.modalConfirmData, 
+      title: 'Editar contato', 
+      text: '',                            
+      emphasis: '',
+      textAction1: 'Cancelar',
+      textAction2: 'Confirmar', 
+    });
+
+    props.setContactSelected({
+      ...props.contactSelected, 
+      ...data, 
+      index: index-1
+    })
+  };
+
+  const btnDelete = (e, data, index) => {
+    e.preventDefault();
+    props.setActionType('delete');
+    
+    props.setModalConfirmData({ 
+      ...props.modalConfirmData, 
+      title: 'Ateção!', 
+      text: 'Deseja excluir o contato: ',                            
+      emphasis: data.id_contact_type == 1 ? 
+        setMaskTelefone(data.contact) : data.contact,
+      textAction1: 'Não',
+      textAction2: 'Sim', 
+    });
+
+    props.setContactSelected({
+      ...props.contactSelected, 
+      ...data, 
+      index: index-1
+    })                        
+  }
 
   return(
     <div className="row">
@@ -18,15 +68,7 @@ const Contacts = (props) => {
           data-bs-toggle="modal" 
           data-bs-target="#modalConfirmeContactAdd" 
           style={{"marginTop": "1em", "marginBottom": "0.5em"}}
-          onClick={ () => {
-            props.setModalConfirmData({ 
-              ...props.modalConfirmData, 
-              title: 'Adicionar Contato', 
-              text: '',                            
-              emphasis: '',
-            textAction1: 'Cancelar',
-            textAction2: 'Confirmar', 
-          }); } }
+          onClick={ btnAdd }
         >
           ADICIONAR <i class="fa fa-plus-circle"></i>
         </button>
@@ -60,22 +102,7 @@ const Contacts = (props) => {
                       class="btn btn-outline-dark btn-sm"
                       data-bs-toggle="modal" 
                       data-bs-target="#modalContactEdit"
-                      onClick={(e) => { 
-                        e.preventDefault()
-                        props.setModalConfirmData({ 
-                          ...props.modalConfirmData, 
-                          title: 'Editar contato', 
-                          text: '',                            
-                          emphasis: '',
-                          textAction1: 'Cancelar',
-                          textAction2: 'Confirmar', 
-                        });
-                        props.setContactSelected({
-                          ...props.contactSelected, 
-                          ...contact, 
-                          index: index-1
-                        })
-                      }}><i className="fas fa-edit"></i>
+                      onClick={(e) => btnEdit(e, contact, index) }><i className="fas fa-edit"></i>
                     </button>
                   </td>
                   <td>
@@ -84,23 +111,7 @@ const Contacts = (props) => {
                       class="btn btn-outline-danger btn-sm" 
                       data-bs-toggle="modal" 
                       data-bs-target="#modalConfirmeDelete" 
-                      onClick={(e) => { 
-                          e.preventDefault()
-                          props.setModalConfirmData({ 
-                            ...props.modalConfirmData, 
-                            title: 'Ateção!', 
-                            text: 'Deseja excluir o contato: ',                            
-                            emphasis: contact.id_contact_type == 1 ? 
-                              setMaskTelefone(contact.contact) : contact.contact,
-                            textAction1: 'Não',
-                            textAction2: 'Sim', 
-                          });
-                          props.setContactSelected({
-                            ...props.contactSelected, 
-                            ...contact, 
-                            index: index-1
-                          })
-                        }}><i className="fas fa-trash"></i>
+                      onClick={(e) => btnDelete(e, contact, index) }><i className="fas fa-trash"></i>
                     </button>
                   </td>
                 </tr>
@@ -108,32 +119,9 @@ const Contacts = (props) => {
             }
           </tbody>
         </table>
-      </div>
-      <ModalConfirm
-        id="modalConfirmeContactAdd"
-        modalConfirmData={ props.modalConfirmData }       
-        action={ () => {  } }
-      >
-        <PersonContactAction 
-          action="add"
-          id_person={ props.person.id_person }
-          contact= { props.contactSelected }
-          contactTypeList= { props.contactTypeList }
-        />
-      </ModalConfirm>
-      <ModalConfirm
-        id="modalContactEdit"
-        modalConfirmData={ props.modalConfirmData }       
-        action={ () => {  } }
-      >
-        <PersonContactAction 
-          action="adit"
-          contact= { props.contactSelected }
-          contactTypeList= { props.contactTypeList }
-        />
-      </ModalConfirm>      
+      </div>      
     </div>    
   )
 }
 
-export default Contacts;
+export default PersonContacts;

@@ -6,9 +6,11 @@ const InputContact = (props) => {
       <input 
         type="text" 
         className="form-control"
-        value={ props.contact.contact } 
-        id="floatingTexContact">
-      </input>
+        id="floatingTexContact" 
+        name="contact"
+        value={ props.contactPerson.contact }
+        onChange={ props.handleChange }
+      />
       <label for="floatingTextarea">Contato</label>
     </div>
   );

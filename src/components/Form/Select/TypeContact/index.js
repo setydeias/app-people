@@ -1,16 +1,12 @@
 import React from "react";
 
 const SelectTypeContact = (props) => {
-
-  console.log(props.conatct)
-
   return(    
     <div className="form-floating">
       <select 
         className="form-select" 
         id="select-type-contact"
         name="select-type-contact"
-        value={ props.action === 'edit' ? props.conatct.id_contact_type : '' }
         aria-label="Default select example"
       >        
         {

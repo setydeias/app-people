@@ -8,6 +8,7 @@ import PersonContacts from '../../components/People/PersonContacts';
 import { Tooltip, Toast } from 'bootstrap';
 import ModalConfirm from '../../components/Modal/Confirme';
 import InfoToast from "../../components/InfoToast";
+import PersonContactAction from "../../components/People/PersonContactAction";
 
 const Dashboard = (props) => {
   
@@ -67,24 +68,31 @@ const Dashboard = (props) => {
     main: '',
     contact_type: ''
   }
-  
-  const contactDefault = {
-    id_people: id_people,
-    id_contact: '',
+
+  const contactPersonDefaut = {
+    id_people: '',
     id_contact_type: '',
     contact: '',
     whatsapp: '',
     main: ''
   }
-
+    
+  const [actionType, setActionType] = useState('add');
   const [modalConfirmData, setModalConfirmData] = useState(modalConfirmDataDefalt);
   const toastLiveExample = document.getElementById('liveToast');
   const [infoToastData, setInfoToastData] = useState(infoToastDataDefault);
   const [contactTypeList, setContactTypeList] = useState([]);
-  const [contact, setContact] = useState(contactDefault);  
+  
   const [contactSelected, setContactSelected] = useState(contactSelectedDefault);
   const [person, setPerson] = useState(personDefault);
+  const [contactPerson, setContactPerson] = useState(contactPersonDefaut); 
 
+
+  const handleChange = (e) => {
+    e.preventDefault();
+    const { name, value } = e.target;
+    setContactPerson({ ...contactPerson, [name]: value });
+  }; 
 
   const testDcumentExists =  async () => { 
     try {
@@ -176,12 +184,13 @@ const Dashboard = (props) => {
   }
 
   const contactAdd = async (e) => {
-    
-    e.preventDefault();
+
     const toast = new Toast(toastLiveExample);
     setInfoToastData(infoToastDataDefault);
 
-    try {
+    console.log(contactPerson);
+
+    /*try {
 
       const response = await addContact(contact);
       if (response.status === 200) {
@@ -192,7 +201,8 @@ const Dashboard = (props) => {
           title: 'Informação',
           text: response.data.message
         });     
-        toast.show(); 
+        toast.show();
+        setContact(contactDefault); 
       }
     } catch (error) {
       setInfoToastData({
@@ -202,7 +212,7 @@ const Dashboard = (props) => {
         text: 'Não foi possível adicionar o contato.'
       });     
       toast.show();
-    }
+    }*/
   }
 
   const removeContact = async (e) => {
@@ -318,17 +328,19 @@ const Dashboard = (props) => {
           </div>
           <div className="tab-pane fade" id="nav-api-2" role="tabpanel" aria-labelledby="nav-api-2" tabindex="0">
             <PersonContacts 
+              setActionType={ setActionType }
               contacts={ person.contacts }
               person={ person }
               setPerson={ setPerson }
               contactTypeList={ contactTypeList }
-              contact={ contact }
-              setContact={setContact }
+              setContactPerson={ setContactPerson }
+              contactPersonDefaut={ contactPersonDefaut }
               contactSelected={ contactSelected }
               setContactSelected={ setContactSelected }
               modalConfirmDataDefalt={ modalConfirmDataDefalt }
               modalConfirmData={ modalConfirmData }
               setModalConfirmData={ setModalConfirmData }
+              handleChange={ handleChange }
             />
           </div>
           <div className="tab-pane fade" id="nav-api-3" role="tabpanel" aria-labelledby="nav-api-3" tabindex="0">
@@ -340,7 +352,34 @@ const Dashboard = (props) => {
         id="modalConfirmeDelete" 
         modalConfirmData={ modalConfirmData }        
         action={ removeContact }
-      />      
+      />
+      <ModalConfirm
+        id="modalConfirmeContactAdd"
+        modalConfirmData={ modalConfirmData }       
+        action={ contactAdd }
+      >
+        <PersonContactAction 
+          actionType={ actionType }
+          setActionType={ setActionType }
+          id_person={ person.id_person }
+          contactTypeList= { contactTypeList }
+          contactPerson={ contactPerson }
+          contactSelected={ contactSelected }
+          handleChange={ handleChange }
+        />
+      </ModalConfirm>
+      <ModalConfirm
+        id="modalContactEdit"
+        modalConfirmData={ modalConfirmData }       
+        action={ () => {  } }
+      >
+        <PersonContactAction 
+          actionType={ actionType }
+          setActionType={ setActionType }
+          contactPerson= { contactSelected }
+          contactTypeList= { contactTypeList }
+        />
+      </ModalConfirm>            
       <InfoToast data={ infoToastData } />
     </div>
     </PersonContextProvider>
