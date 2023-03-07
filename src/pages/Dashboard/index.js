@@ -70,11 +70,14 @@ const Dashboard = (props) => {
   }
 
   const contactPersonDefaut = {
-    id_people: '',
-    id_contact_type: '',
+    index: '',
+    id_people: id_people,
+    id_contact: '',
+    id_contact_type: 1,
     contact: '',
-    whatsapp: '',
-    main: ''
+    whatsapp: 0,
+    main: 0,
+    contact_type: ''
   }
     
   const [actionType, setActionType] = useState('add');
@@ -89,10 +92,29 @@ const Dashboard = (props) => {
 
 
   const handleChange = (e) => {
-    e.preventDefault();
     const { name, value } = e.target;
     setContactPerson({ ...contactPerson, [name]: value });
+    console.log(`Name: ${name} Checked: ${value}`);
   }; 
+
+  const handleChangeContactType = (e) => {
+    const { name, value } = e.target;
+    setContactPerson({ ...contactPerson, [name]: value });
+    console.log(`Name: ${name} Value: ${value}`);
+  }; 
+  
+  const handleChangeContactMain = (e) => {
+    const { name, checked,  } = e.target;
+    setContactPerson({ ...contactPerson, [name]: Number(checked) });
+    console.log(`Name: ${name} Checked: ${checked}`);
+  }; 
+
+  const handleChangeContactWhatsApp = (e) => {
+    const { name, checked } = e.target;
+    setContactPerson({ ...contactPerson, [name]: Number(checked) });
+    console.log(`Name: ${name} Checked: ${checked}`);
+  }; 
+
 
   const testDcumentExists =  async () => { 
     try {
@@ -121,6 +143,26 @@ const Dashboard = (props) => {
         })
       }*/
     }
+  }
+
+  const btnAdd = (e) => {
+    
+    e.preventDefault();
+    setActionType('add');
+    
+    setModalConfirmData({ 
+      ...modalConfirmData, 
+      title: 'Adicionar Contato', 
+      text: '',                            
+      emphasis: '',
+      textAction1: 'Cancelar',
+      textAction2: 'Confirmar', 
+    });
+    
+    setContactPerson({
+      ...contactPerson,
+      ...contactPersonDefaut
+    });
   }
 
   const getPersonForId = async () => {
@@ -185,10 +227,54 @@ const Dashboard = (props) => {
 
   const contactAdd = async (e) => {
 
+    e.preventDefault();
+    const toast = new Toast(toastLiveExample);
+    setInfoToastData(infoToastDataDefault);
+    
+    try {
+
+      const response = await addContact(contactPerson);
+      if (response.status === 200) {
+
+        setInfoToastData({
+          icon: 'fa fa-info-circle',
+          icon_color: 'green',
+          title: 'Informação',
+          text: response.data.message
+        });     
+        person.contacts.push(contactPerson);
+        toast.show();
+      }
+    } catch (error) {
+      setInfoToastData({
+        icon: 'fa fa-exclamation-triangle',
+        icon_color: 'orange',
+        title: 'Atenção',
+        text: 'Não foi possível adicionar o contato.'
+      });     
+      toast.show();
+    }
+  }
+
+  const contactEdit = async (e) => {
+
+    e.preventDefault();
     const toast = new Toast(toastLiveExample);
     setInfoToastData(infoToastDataDefault);
 
     console.log(contactPerson);
+    
+    for (let contact of person.contacts) {
+      if (contact.id_contact === contactPerson.id_contact) {
+        contact = contactPerson.id_contact;
+        contact = contactPerson.id_people;
+        contact = contactPerson.id_contact_type;
+        contact = contactPerson.contact;
+        contact = contactPerson.whatsapp;
+        contact = contactPerson.main;
+        contact = contactPerson.contact_type;
+      }
+    }
 
     /*try {
 
@@ -333,6 +419,7 @@ const Dashboard = (props) => {
               person={ person }
               setPerson={ setPerson }
               contactTypeList={ contactTypeList }
+              contactPerson={ contactPerson }
               setContactPerson={ setContactPerson }
               contactPersonDefaut={ contactPersonDefaut }
               contactSelected={ contactSelected }
@@ -340,7 +427,7 @@ const Dashboard = (props) => {
               modalConfirmDataDefalt={ modalConfirmDataDefalt }
               modalConfirmData={ modalConfirmData }
               setModalConfirmData={ setModalConfirmData }
-              handleChange={ handleChange }
+              btnAdd={ btnAdd }
             />
           </div>
           <div className="tab-pane fade" id="nav-api-3" role="tabpanel" aria-labelledby="nav-api-3" tabindex="0">
@@ -350,34 +437,46 @@ const Dashboard = (props) => {
        </form>
        <ModalConfirm
         id="modalConfirmeDelete" 
-        modalConfirmData={ modalConfirmData }        
-        action={ removeContact }
+        modalConfirmData={ modalConfirmData } 
+        action={ () => { } }       
+        action1={ removeContact }
       />
       <ModalConfirm
         id="modalConfirmeContactAdd"
-        modalConfirmData={ modalConfirmData }       
-        action={ contactAdd }
+        modalConfirmData={ modalConfirmData }    
+        action={ () => { } }   
+        action1={ contactAdd }
       >
         <PersonContactAction 
+          id="ContactActionAdd" 
+          id_person={ person.id_person }
           actionType={ actionType }
           setActionType={ setActionType }
-          id_person={ person.id_person }
           contactTypeList= { contactTypeList }
           contactPerson={ contactPerson }
-          contactSelected={ contactSelected }
           handleChange={ handleChange }
+          handleChangeContactType={ handleChangeContactType }
+          handleChangeContactMain={ handleChangeContactMain }
+          handleChangeContactWhatsApp={ handleChangeContactWhatsApp }
         />
       </ModalConfirm>
       <ModalConfirm
         id="modalContactEdit"
         modalConfirmData={ modalConfirmData }       
-        action={ () => {  } }
+        action={ () => { } }
+        action1={ contactEdit }
       >
-        <PersonContactAction 
+        <PersonContactAction
+          id="ContactActionEdit" 
+          id_person={ person.id_person }
           actionType={ actionType }
           setActionType={ setActionType }
           contactPerson= { contactSelected }
           contactTypeList= { contactTypeList }
+          handleChange={ handleChange }
+          handleChangeContactType={ handleChangeContactType }
+          handleChangeContactMain={ handleChangeContactMain }
+          handleChangeContactWhatsApp={ handleChangeContactWhatsApp }
         />
       </ModalConfirm>            
       <InfoToast data={ infoToastData } />

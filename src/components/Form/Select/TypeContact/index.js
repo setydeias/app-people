@@ -6,8 +6,10 @@ const SelectTypeContact = (props) => {
       <select 
         className="form-select" 
         id="select-type-contact"
-        name="select-type-contact"
+        name="id_contact_type"
         aria-label="Default select example"
+        value={ props.contactPerson.id_contact_type }
+        onChange={ props.handleChangeContactType }
       >        
         {
           props.contactTypeList.map((contactType) => 

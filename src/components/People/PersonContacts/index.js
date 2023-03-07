@@ -5,19 +5,7 @@ import { setMaskTelefone } from "../../../utilities/Masks";
 
 const PersonContacts = (props) => {
    
-  const btnAdd = (e) => {
-    e.preventDefault();
-    props.setActionType('add');
-    props.setModalConfirmData({ 
-      ...props.modalConfirmData, 
-      title: 'Adicionar Contato', 
-      text: '',                            
-      emphasis: '',
-      textAction1: 'Cancelar',
-      textAction2: 'Confirmar', 
-    });    
-  }
-
+  
   const btnEdit = (e, data, index) => {
     e.preventDefault();
     props.setActionType('edit');
@@ -36,6 +24,12 @@ const PersonContacts = (props) => {
       ...data, 
       index: index-1
     })
+
+    props.setContactPerson({
+      ...props.contactPerson,
+      ...data,
+      index: index-1
+    });
   };
 
   const btnDelete = (e, data, index) => {
@@ -68,7 +62,7 @@ const PersonContacts = (props) => {
           data-bs-toggle="modal" 
           data-bs-target="#modalConfirmeContactAdd" 
           style={{"marginTop": "1em", "marginBottom": "0.5em"}}
-          onClick={ btnAdd }
+          onClick={ props.btnAdd }
         >
           ADICIONAR <i class="fa fa-plus-circle"></i>
         </button>

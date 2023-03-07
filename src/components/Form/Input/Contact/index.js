@@ -8,7 +8,7 @@ const InputContact = (props) => {
         className="form-control"
         id="floatingTexContact" 
         name="contact"
-        value={ props.contactPerson.contact }
+        defaultValue={ props.contactPerson.contact }
         onChange={ props.handleChange }
       />
       <label for="floatingTextarea">Contato</label>

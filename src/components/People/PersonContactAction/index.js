@@ -6,35 +6,45 @@ import SelectTypeContact from "../../Form/Select/TypeContact";
 
 const PersonContactAction = (props) => { 
 
+  if (props.actionType === 'edit') {
+    
+  }
+
   return(
-    <div className='row'>
+    <div className='row' id={ props.id }>
       <div className="col-md-4">
         <label></label>
         <SelectTypeContact 
           actionType={ props.actionType }
           action={ props.action }
           contactTypeList={ props.contactTypeList }
-          contact={ props.contact } 
+          contactPerson={ props.contactPerson }
+          handleChangeContactType={ props.handleChangeContactType }          
         />
       </div>
       <div className="col-md-8">      
         <MyCheck 
-				data={
-          { 
-            id: 'contactIsPrincipal',
-            value: 1,
-            labelText: 'Principal'
+				  data={
+            { 
+              id: 'cbxContactIsPrincipal',
+              name: 'main',
+              labelText: 'Principal',
+              action: props.handleChangeContactMain,
+              checked: props.contactPerson.main 
+				    }
 				  }
-				}
 			  />
         <MyCheck 
-				data={
-          { 
-            id: 'contactIsWhatsApp',
-            value: 0,
-            labelText: 'WhatsApp'
+				  data={
+            { 
+              id: 'cbxContactIsWhatsApp',
+              name: 'whatsapp',
+              labelText: 'WhatsApp',
+              action: props.handleChangeContactWhatsApp,
+              checked: props.contactPerson.whatsapp
+				    }
 				  }
-				}
+          action={ ()=>{} }
 			  /><span><i className="fab fa-whatsapp" style={{"color":"green", "marginLeft": "-0.6em"}}></i></span>
         <InputContact
           actionType={ props.actionType }
