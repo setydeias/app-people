@@ -4,55 +4,7 @@ import { setMaskTelefone } from "../../../utilities/Masks";
 
 
 const PersonContacts = (props) => {
-   
   
-  const btnEdit = (e, data, index) => {
-    e.preventDefault();
-    props.setActionType('edit');
-
-    props.setModalConfirmData({ 
-      ...props.modalConfirmData, 
-      title: 'Editar contato', 
-      text: '',                            
-      emphasis: '',
-      textAction1: 'Cancelar',
-      textAction2: 'Confirmar', 
-    });
-
-    props.setContactSelected({
-      ...props.contactSelected, 
-      ...data, 
-      index: index-1
-    })
-
-    props.setContactPerson({
-      ...props.contactPerson,
-      ...data,
-      index: index-1
-    });
-  };
-
-  const btnDelete = (e, data, index) => {
-    e.preventDefault();
-    props.setActionType('delete');
-    
-    props.setModalConfirmData({ 
-      ...props.modalConfirmData, 
-      title: 'Ateção!', 
-      text: 'Deseja excluir o contato: ',                            
-      emphasis: data.id_contact_type == 1 ? 
-        setMaskTelefone(data.contact) : data.contact,
-      textAction1: 'Não',
-      textAction2: 'Sim', 
-    });
-
-    props.setContactSelected({
-      ...props.contactSelected, 
-      ...data, 
-      index: index-1
-    })                        
-  }
-
   return(
     <div className="row">
       <div className="col-6 col-sm-3">
@@ -96,7 +48,7 @@ const PersonContacts = (props) => {
                       className="btn btn-outline-dark btn-sm"
                       data-bs-toggle="modal" 
                       data-bs-target="#modalContactEdit"
-                      onClick={(e) => btnEdit(e, contact, index) }><i className="fas fa-edit"></i>
+                      onClick={(e) => props.btnEdit(e, contact, index) }><i className="fas fa-edit"></i>
                     </button>
                   </td>
                   <td>
@@ -105,7 +57,7 @@ const PersonContacts = (props) => {
                       className="btn btn-outline-danger btn-sm" 
                       data-bs-toggle="modal" 
                       data-bs-target="#modalConfirmeDelete" 
-                      onClick={(e) => btnDelete(e, contact, index) }><i className="fas fa-trash"></i>
+                      onClick={(e) => props.btnDelete(e, contact, index) }><i className="fas fa-trash"></i>
                     </button>
                   </td>
                 </tr>

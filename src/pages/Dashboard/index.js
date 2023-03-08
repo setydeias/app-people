@@ -3,12 +3,19 @@ import { useParams } from "react-router-dom";
 import { PersonContextProvider } from '../../Contexts/Person/PersonContext';
 import PersonAddress from "../../components/People/PersonAddress";
 import PersonData from "../../components/People/PersonData";
-import { addContact, deleteContact, getPersonById, getContactsType } from "../../api/People";
+import { 
+  addContact, 
+  deleteContact, 
+  getPersonById, 
+  getContactsType, 
+  patchContact 
+} from "../../api/People";
 import PersonContacts from '../../components/People/PersonContacts';
 import { Tooltip, Toast } from 'bootstrap';
 import ModalConfirm from '../../components/Modal/Confirme';
 import InfoToast from "../../components/InfoToast";
 import PersonContactAction from "../../components/People/PersonContactAction";
+import { setMaskTelefone } from "../../utilities/Masks";
 
 const Dashboard = (props) => {
   
@@ -55,22 +62,10 @@ const Dashboard = (props) => {
     district: '',
     cep: '',
     document_type: 1,
-    contacts: []
-  }
-  
-  const contactSelectedDefault = {
-    index: '',
-    id_contact: '',
-    id_people: '',
-    id_contact_type: '',
-    contact: '',
-    whatsapp: '',
-    main: '',
-    contact_type: ''
+    contacts: [{}]
   }
 
   const contactPersonDefaut = {
-    index: '',
     id_people: id_people,
     id_contact: '',
     id_contact_type: 1,
@@ -85,11 +80,9 @@ const Dashboard = (props) => {
   const toastLiveExample = document.getElementById('liveToast');
   const [infoToastData, setInfoToastData] = useState(infoToastDataDefault);
   const [contactTypeList, setContactTypeList] = useState([]);
-  
-  const [contactSelected, setContactSelected] = useState(contactSelectedDefault);
   const [person, setPerson] = useState(personDefault);
   const [contactPerson, setContactPerson] = useState(contactPersonDefaut); 
-
+  const [index, setIndex] = useState(-1);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -205,8 +198,8 @@ const Dashboard = (props) => {
 
   const setContactsType = async () => {
     
-    const toast = new Toast(toastLiveExample);
     setInfoToastData(infoToastDataDefault);
+    const toastSetContactType = new Toast(toastLiveExample);
 
     try {
 
@@ -221,15 +214,15 @@ const Dashboard = (props) => {
         title: 'Atenção',
         text: 'Não foi possível adicionar o contato.'
       });     
-      toast.show();
+      toastSetContactType.show();
     }
   }
 
   const contactAdd = async (e) => {
 
     e.preventDefault();
-    const toast = new Toast(toastLiveExample);
     setInfoToastData(infoToastDataDefault);
+    const toastAdd = new Toast(toastLiveExample);
     
     try {
 
@@ -243,7 +236,7 @@ const Dashboard = (props) => {
           text: response.data.message
         });     
         person.contacts.push(contactPerson);
-        toast.show();
+        toastAdd.show();
       }
     } catch (error) {
       setInfoToastData({
@@ -252,33 +245,19 @@ const Dashboard = (props) => {
         title: 'Atenção',
         text: 'Não foi possível adicionar o contato.'
       });     
-      toast.show();
+      toastAdd.show();
     }
   }
 
   const contactEdit = async (e) => {
 
     e.preventDefault();
-    const toast = new Toast(toastLiveExample);
     setInfoToastData(infoToastDataDefault);
+    const toastEdit = new Toast(toastLiveExample);
 
-    console.log(contactPerson);
-    
-    for (let contact of person.contacts) {
-      if (contact.id_contact === contactPerson.id_contact) {
-        contact = contactPerson.id_contact;
-        contact = contactPerson.id_people;
-        contact = contactPerson.id_contact_type;
-        contact = contactPerson.contact;
-        contact = contactPerson.whatsapp;
-        contact = contactPerson.main;
-        contact = contactPerson.contact_type;
-      }
-    }
+    try {
 
-    /*try {
-
-      const response = await addContact(contact);
+      const response = await patchContact(contactPerson);
       if (response.status === 200) {
 
         setInfoToastData({
@@ -287,33 +266,49 @@ const Dashboard = (props) => {
           title: 'Informação',
           text: response.data.message
         });     
-        toast.show();
-        setContact(contactDefault); 
+        toastEdit.show();
+        setContactPerson(contactPersonDefaut);
       }
+
+      for (let index = 0; index < person.contacts.length; index++) {
+        if (person.contacts[index].id_contact === contactPerson.id_contact) {
+        
+          person.contacts[index] = {
+            id_contact: contactPerson.id_contact,
+            id_people: contactPerson.id_people,
+            id_contact_type: contactPerson.id_contact_type,
+            contact: contactPerson.contact,
+            whatsapp: contactPerson.whatsapp,
+            main: contactPerson.main,
+            contact_type: contactPerson.contact_type
+          };
+        }
+      }
+
     } catch (error) {
       setInfoToastData({
         icon: 'fa fa-exclamation-triangle',
         icon_color: 'orange',
         title: 'Atenção',
-        text: 'Não foi possível adicionar o contato.'
+        text: 'Não foi possível Editar o contato.'
       });     
-      toast.show();
-    }*/
+      toastEdit.show();
+    }
   }
 
   const removeContact = async (e) => {
 
     e.preventDefault();
-    const toast = new Toast(toastLiveExample);
     setInfoToastData(infoToastDataDefault);   
+    const toastDelete = new Toast(toastLiveExample);
     
     try {
 
-      const response = await deleteContact(contactSelected.id_contact);
+      const response = await deleteContact(contactPerson.id_contact);
       if (response.status === 200) {
         
-        if (contactSelected.index > -1) {
-          person.contacts.splice(contactSelected.index, 1);
+        if (index > -1) {
+          person.contacts.splice(index, 1);
         }        
         setPerson({ ...person, contacts: person.contacts });
         setInfoToastData({
@@ -321,8 +316,8 @@ const Dashboard = (props) => {
           icon_color: 'green',
           title: 'Informação',
           text: response.data.message
-        });     
-        toast.show(); 
+        }); 
+        toastDelete.show(); 
       }
     } catch (error) {
       setInfoToastData({
@@ -331,8 +326,42 @@ const Dashboard = (props) => {
         title: 'Atenção',
         text: 'Não foi possível remover o contato.'
       });     
-      toast.show();
+      toastDelete.show();
     }
+  }
+
+  const btnEdit = (e, data, index) => {
+    e.preventDefault();
+    setActionType('edit');
+
+    console.log(`Index: ${index} Dados: ${JSON.stringify(data)}`)
+
+    setModalConfirmData({ 
+      ...modalConfirmData, 
+      title: 'Editar contato', 
+      text: '',                            
+      emphasis: '',
+      textAction1: 'Cancelar',
+      textAction2: 'Confirmar', 
+    });
+  };
+
+  const btnDelete = (e, data, index) => {
+    e.preventDefault();
+    setActionType('delete');
+    
+    setModalConfirmData({ 
+      ...modalConfirmData, 
+      title: 'Ateção!', 
+      text: 'Deseja excluir o contato: ',                            
+      emphasis: data.id_contact_type == 1 ? 
+        setMaskTelefone(data.contact) : data.contact,
+      textAction1: 'Não',
+      textAction2: 'Sim', 
+    });
+
+    setContactPerson({ ...contactPerson, ...data });
+    setIndex(index-1);                        
   }
 
   useEffect(()=>{
@@ -422,12 +451,12 @@ const Dashboard = (props) => {
               contactPerson={ contactPerson }
               setContactPerson={ setContactPerson }
               contactPersonDefaut={ contactPersonDefaut }
-              contactSelected={ contactSelected }
-              setContactSelected={ setContactSelected }
               modalConfirmDataDefalt={ modalConfirmDataDefalt }
               modalConfirmData={ modalConfirmData }
               setModalConfirmData={ setModalConfirmData }
               btnAdd={ btnAdd }
+              btnEdit={ btnEdit }
+              btnDelete={ btnDelete }
             />
           </div>
           <div className="tab-pane fade" id="nav-api-3" role="tabpanel" aria-labelledby="nav-api-3"   tabIndex="0">
@@ -471,7 +500,7 @@ const Dashboard = (props) => {
           id_person={ person.id_person }
           actionType={ actionType }
           setActionType={ setActionType }
-          contactPerson= { contactSelected }
+          contactPerson= { contactPerson }
           contactTypeList= { contactTypeList }
           handleChange={ handleChange }
           handleChangeContactType={ handleChangeContactType }

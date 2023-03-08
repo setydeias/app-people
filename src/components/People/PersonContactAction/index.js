@@ -34,18 +34,23 @@ const PersonContactAction = (props) => {
 				    }
 				  }
 			  />
-        <MyCheck 
-				  data={
-            { 
-              id: 'cbxContactIsWhatsApp',
-              name: 'whatsapp',
-              labelText: 'WhatsApp',
-              action: props.handleChangeContactWhatsApp,
-              checked: props.contactPerson.whatsapp
-				    }
-				  }
-          action={ ()=>{} }
-			  /><span><i className="fab fa-whatsapp" style={{"color":"green", "marginLeft": "-0.6em"}}></i></span>
+        { 
+          props.contactPerson.id_contact_type == 1 ? 
+            <>
+              <MyCheck 
+                data={
+                  { 
+                    id: 'cbxContactIsWhatsApp',
+                    name: 'whatsapp',
+                    labelText: 'WhatsApp',
+                    action: props.handleChangeContactWhatsApp,
+                    checked: props.contactPerson.whatsapp
+                  }
+                }
+                action={ ()=>{} }
+              /><span><i className="fab fa-whatsapp" style={{"color":"green", "marginLeft": "-0.6em"}}></i></span>
+            </> : ''         
+        }
         <InputContact
           actionType={ props.actionType }
           handleChange={props.handleChange }

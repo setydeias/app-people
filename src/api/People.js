@@ -17,6 +17,11 @@ export const addContact = async (data) => {
     return response;
 }
 
+export const patchContact = async (data) => {
+    const response = await axios.patch(`${ApiPeople.settings.endpoint}/pessoa/contato/editar`, data);
+    return response;
+}
+
 export const deleteContact = async (id_contatct) => {
     const response = await axios.delete(`${ApiPeople.settings.endpoint}/pessoa/contato/delete/${id_contatct}`);
     return response;
