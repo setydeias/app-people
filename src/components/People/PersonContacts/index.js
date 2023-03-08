@@ -58,13 +58,13 @@ const PersonContacts = (props) => {
       <div className="col-6 col-sm-3">
         <button 
           type="button" 
-          class="btn btn-outline-dark btn-sm" 
+          className="btn btn-outline-dark btn-sm" 
           data-bs-toggle="modal" 
           data-bs-target="#modalConfirmeContactAdd" 
           style={{"marginTop": "1em", "marginBottom": "0.5em"}}
           onClick={ props.btnAdd }
         >
-          ADICIONAR <i class="fa fa-plus-circle"></i>
+          ADICIONAR <i className="fa fa-plus-circle"></i>
         </button>
         <table className="table align-middle table-hover">
           <thead>
@@ -79,21 +79,21 @@ const PersonContacts = (props) => {
             {
               props.contacts.map((contact, index) => 
                 <tr key={index++}>
-                  <td className="icon-type">{contact.main === 1 ? <i class="fas fa-check"  data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-title="Principal"></i> : '' }</td>
-                  <td>{ contact.id_contact_type == 1 ? setMaskTelefone(contact.contact) : contact.contact }{ contact.whatsapp === 1 ? <i class="fab fa-whatsapp" style={{"color":"green", "marginLeft": "0.3em"}} data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-title="WhatsApp"></i> : '' }</td>
+                  <td className="icon-type">{contact.main === 1 ? <i className="fas fa-check"  data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-title="Principal"></i> : '' }</td>
+                  <td>{ contact.id_contact_type == 1 ? setMaskTelefone(contact.contact) : contact.contact }{ contact.whatsapp === 1 ? <i className="fab fa-whatsapp" style={{"color":"green", "marginLeft": "0.3em"}} data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-title="WhatsApp"></i> : '' }</td>
                   <td className="icon-type">
                     { 
-                      contact.id_contact_type === 1 ? <i class="fas fa-phone" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-title={ contact.contact_type }></i> : 
-                      contact.id_contact_type === 2 ? <i class="fas fa-envelope" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-title={ contact.contact_type }></i> : 
-                      contact.id_contact_type === 3 ? <i class="fab fa-facebook-square" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-title={ contact.contact_type }></i> :
-                      contact.id_contact_type === 4 ? <i class="fab fa-instagram" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-title={ contact.contact_type }></i> : 
-                      contact.id_contact_type === 5 ? <i class="fas fa-globe" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-title={ contact.contact_type }></i> : ''
+                      contact.id_contact_type === 1 ? <i className="fas fa-phone" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-title={ contact.contact_type }></i> : 
+                      contact.id_contact_type === 2 ? <i className="fas fa-envelope" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-title={ contact.contact_type }></i> : 
+                      contact.id_contact_type === 3 ? <i className="fab fa-facebook-square" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-title={ contact.contact_type }></i> :
+                      contact.id_contact_type === 4 ? <i className="fab fa-instagram" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-title={ contact.contact_type }></i> : 
+                      contact.id_contact_type === 5 ? <i className="fas fa-globe" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-title={ contact.contact_type }></i> : ''
                     }
                   </td>
                   <td>
                     <button 
                       type="button" 
-                      class="btn btn-outline-dark btn-sm"
+                      className="btn btn-outline-dark btn-sm"
                       data-bs-toggle="modal" 
                       data-bs-target="#modalContactEdit"
                       onClick={(e) => btnEdit(e, contact, index) }><i className="fas fa-edit"></i>
@@ -102,7 +102,7 @@ const PersonContacts = (props) => {
                   <td>
                     <button 
                       type="button" 
-                      class="btn btn-outline-danger btn-sm" 
+                      className="btn btn-outline-danger btn-sm" 
                       data-bs-toggle="modal" 
                       data-bs-target="#modalConfirmeDelete" 
                       onClick={(e) => btnDelete(e, contact, index) }><i className="fas fa-trash"></i>

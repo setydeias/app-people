@@ -305,7 +305,7 @@ const Login = (props) => {
                     placeholder="user_password_new" 
                     required 
                   />
-                  <label for="user_password_new_label">Senha {userLogin.user_password_new.length >0 ? userLogin.user_password_new.length : ''}</label>
+                  <label htmlFor="user_password_new_label">Senha {userLogin.user_password_new.length >0 ? userLogin.user_password_new.length : ''}</label>
                 </div>
                 <span 
                   type="button"
@@ -333,7 +333,7 @@ const Login = (props) => {
                     placeholder="user_password_confirm" 
                     required 
                   />
-                  <label for="user_password_confirm_label">Confirmar {userLogin.user_password_confirm.length >0 ? userLogin.user_password_confirm.length : ''}</label>
+                  <label htmlFor="user_password_confirm_label">Confirmar {userLogin.user_password_confirm.length >0 ? userLogin.user_password_confirm.length : ''}</label>
                 </div>
                 <span 
                   type="button"

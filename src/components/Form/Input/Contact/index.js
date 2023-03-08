@@ -11,7 +11,7 @@ const InputContact = (props) => {
         defaultValue={ props.contactPerson.contact }
         onChange={ props.handleChange }
       />
-      <label for="floatingTextarea">Contato</label>
+      <label htmlFor="floatingTextarea">Contato</label>
     </div>
   );
 } 

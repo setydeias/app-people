@@ -358,7 +358,7 @@ const Dashboard = (props) => {
               aria-controls="nav-home" 
               aria-selected="true"
             >
-              <i class="fas fa-user"></i> Dados Pessoal
+              <i className="fas fa-user"></i> Dados Pessoal
             </button>
             <button 
               className="nav-link" 
@@ -370,7 +370,7 @@ const Dashboard = (props) => {
               aria-controls="nav-api-1" 
               aria-selected="false"
             >
-              <i class="fas fa-map-marker"></i> Endereço
+              <i className="fas fa-map-marker"></i> Endereço
             </button>
             <button 
               className="nav-link"
@@ -381,7 +381,7 @@ const Dashboard = (props) => {
               role="tab" 
               aria-controls="nav-api-2" 
               aria-selected="false">
-                <i class="fas fa-phone"></i> Contato
+                <i className="fas fa-phone"></i> Contato
             </button>
             <button 
               className="nav-link" 
@@ -393,26 +393,26 @@ const Dashboard = (props) => {
               aria-controls="nav-api-3" 
               aria-selected="false" 
             >
-              <i class="fas  fa-tasks"></i> Nível da conta
+              <i className="fas  fa-tasks"></i> Nível da conta
             </button>
           </div>
        </nav>
        <form className='row' onSubmit={ ()=>{} }> 
         <div className="tab-content" id="nav-tabContent">
-          <div className="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
+          <div className="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabIndex="0">
             <PersonData 
               person={ person }
               setPerson={ setPerson }
               testDcumentExists={ testDcumentExists }
             />
           </div>
-          <div className="tab-pane fade" id="nav-api-1" role="tabpanel" aria-labelledby="nav-api-1" tabindex="0">
+          <div className="tab-pane fade" id="nav-api-1" role="tabpanel" aria-labelledby="nav-api-1" tabIndex="0">
             <PersonAddress 
               person={ person }
               setPerson={ setPerson }
             />
           </div>
-          <div className="tab-pane fade" id="nav-api-2" role="tabpanel" aria-labelledby="nav-api-2" tabindex="0">
+          <div className="tab-pane fade" id="nav-api-2" role="tabpanel" aria-labelledby="nav-api-2"  tabIndex="0">
             <PersonContacts 
               setActionType={ setActionType }
               contacts={ person.contacts }
@@ -430,7 +430,7 @@ const Dashboard = (props) => {
               btnAdd={ btnAdd }
             />
           </div>
-          <div className="tab-pane fade" id="nav-api-3" role="tabpanel" aria-labelledby="nav-api-3" tabindex="0">
+          <div className="tab-pane fade" id="nav-api-3" role="tabpanel" aria-labelledby="nav-api-3"   tabIndex="0">
             <>Nível da conta</>
           </div>
         </div>

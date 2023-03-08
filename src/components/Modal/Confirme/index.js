@@ -2,7 +2,7 @@ import React from "react";
 
 const ModalConfirm = (props) => {
   return(
-    <div className="modal fade"  id={ props.id } data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div className="modal fade"  id={ props.id } data-bs-backdrop="static" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div className="modal-content">
           <div className="modal-header">

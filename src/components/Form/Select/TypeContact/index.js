@@ -12,14 +12,14 @@ const SelectTypeContact = (props) => {
         onChange={ props.handleChangeContactType }
       >        
         {
-          props.contactTypeList.map((contactType) => 
-            <option value={ contactType.id_contact_type }>
+          props.contactTypeList.map((contactType, index) => 
+            <option value={ contactType.id_contact_type } key={ index++ }>
               { contactType.description }
             </option>
           )
         }       
       </select>
-      <label for="floatingSelect">Tipo</label>
+      <label htmlFor="floatingSelect">Tipo</label>
     </div>      
   );
 }

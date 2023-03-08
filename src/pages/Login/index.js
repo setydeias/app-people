@@ -388,7 +388,7 @@ const Login = (props) => {
                         disabled={true}
                         required 
                       />
-                      <label for="user-document">CPF</label>
+                      <label htmlFor="user-document">CPF</label>
                     </div>
                     <div className="invalid-feedback">
                      { user.status.document.erro }
@@ -408,7 +408,7 @@ const Login = (props) => {
                         autoFocus
                         required 
                       />
-                      <label for="user-document">E-mail</label>
+                      <label htmlFor="user-document">E-mail</label>
                     </div>
                     <div className="invalid-feedback">
                      { user.status.email.erro }
@@ -444,7 +444,7 @@ const Login = (props) => {
                         autoFocus={true}
                         required 
                       />
-                      <label for="user-document">Senha</label>                  
+                      <label htmlFor="user-document">Senha</label>                  
                     </div>
                     <span 
                       type="button"
@@ -479,7 +479,7 @@ const Login = (props) => {
                         autoFocus={true}
                         required 
                       />
-                      <label for="user-document">CPF</label>
+                      <label htmlFor="user-document">CPF</label>
                     </div>
                     <div className="invalid-feedback">
                      { user.status.document.erro }
