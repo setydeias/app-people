@@ -457,8 +457,8 @@ const Login = (props) => {
                       {  user.status.password.erro }
                     </div>
                   </div>
-                  <button type="button" class="btn btn-link" onClick={ handleForgotMyPassword }>Esqueci minha senha</button>
-                  <button type="button" class="btn btn-link" style={{"marginLeft":"-0.2em"}} onClick={ handleResendRegistrationEmail }>Reenviar e-mail de cadastro</button>
+                  <button type="button" className="btn btn-link" onClick={ handleForgotMyPassword }>Esqueci minha senha</button>
+                  <button type="button" className="btn btn-link" style={{"marginLeft":"-0.2em"}} onClick={ handleResendRegistrationEmail }>Reenviar e-mail de cadastro</button>
                 </FormGroup>
               </> 
               : <>

@@ -23,6 +23,8 @@ const Dashboard = (props) => {
   const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new Tooltip(tooltipTriggerEl));
   const { id_people, id_user } = useParams();
   
+  const [once, setOnce] = useState(0);
+
   const modalConfirmDataDefalt = { 
     title: '', 
     text: '', 
@@ -85,9 +87,10 @@ const Dashboard = (props) => {
   const [index, setIndex] = useState(-1);
 
   const handleChange = (e) => {
+    e.preventDefault();
     const { name, value } = e.target;
     setContactPerson({ ...contactPerson, [name]: value });
-    console.log(`Name: ${name} Checked: ${value}`);
+    console.log(`Name: ${name} Value: ${value}`);
   }; 
 
   const handleChangeContactType = (e) => {
@@ -107,7 +110,6 @@ const Dashboard = (props) => {
     setContactPerson({ ...contactPerson, [name]: Number(checked) });
     console.log(`Name: ${name} Checked: ${checked}`);
   }; 
-
 
   const testDcumentExists =  async () => { 
     try {
@@ -142,6 +144,7 @@ const Dashboard = (props) => {
     
     e.preventDefault();
     setActionType('add');
+    setContactPerson(contactPersonDefaut);
     
     setModalConfirmData({ 
       ...modalConfirmData, 
@@ -150,12 +153,7 @@ const Dashboard = (props) => {
       emphasis: '',
       textAction1: 'Cancelar',
       textAction2: 'Confirmar', 
-    });
-    
-    setContactPerson({
-      ...contactPerson,
-      ...contactPersonDefaut
-    });
+    });    
   }
 
   const getPersonForId = async () => {
@@ -266,8 +264,8 @@ const Dashboard = (props) => {
           title: 'Informação',
           text: response.data.message
         });     
-        toastEdit.show();
         setContactPerson(contactPersonDefaut);
+        toastEdit.show();
       }
 
       for (let index = 0; index < person.contacts.length; index++) {
@@ -344,12 +342,15 @@ const Dashboard = (props) => {
       textAction1: 'Cancelar',
       textAction2: 'Confirmar', 
     });
+
+    setContactPerson({ ...contactPerson, ...data });
+    setIndex(index-1);
   };
 
   const btnDelete = (e, data, index) => {
     e.preventDefault();
     setActionType('delete');
-    
+   
     setModalConfirmData({ 
       ...modalConfirmData, 
       title: 'Ateção!', 
@@ -364,10 +365,15 @@ const Dashboard = (props) => {
     setIndex(index-1);                        
   }
 
+  const resetContactPerson = (e) => {
+    e.preventDefault();
+    setContactPerson(contactPersonDefaut); 
+  }
+
   useEffect(()=>{
     getPersonForId();
     setContactsType();
-  },[]);
+  },[once]);
 
 
   return(
@@ -467,13 +473,13 @@ const Dashboard = (props) => {
        <ModalConfirm
         id="modalConfirmeDelete" 
         modalConfirmData={ modalConfirmData } 
-        action={ () => { } }       
+        action={ resetContactPerson }       
         action1={ removeContact }
       />
       <ModalConfirm
         id="modalConfirmeContactAdd"
         modalConfirmData={ modalConfirmData }    
-        action={ () => { } }   
+        action={ resetContactPerson }   
         action1={ contactAdd }
       >
         <PersonContactAction 
@@ -492,7 +498,7 @@ const Dashboard = (props) => {
       <ModalConfirm
         id="modalContactEdit"
         modalConfirmData={ modalConfirmData }       
-        action={ () => { } }
+        action={ resetContactPerson }
         action1={ contactEdit }
       >
         <PersonContactAction

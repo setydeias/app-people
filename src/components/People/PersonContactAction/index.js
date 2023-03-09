@@ -6,10 +6,6 @@ import SelectTypeContact from "../../Form/Select/TypeContact";
 
 const PersonContactAction = (props) => { 
 
-  if (props.actionType === 'edit') {
-    
-  }
-
   return(
     <div className='row' id={ props.id }>
       <div className="col-md-4">
