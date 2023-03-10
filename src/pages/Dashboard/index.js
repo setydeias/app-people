@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { PersonContext } from "../../Contexts/Person/PersonContext";
 import { useParams } from "react-router-dom";
-import { PersonContextProvider } from '../../Contexts/Person/PersonContext';
 import PersonAddress from "../../components/People/PersonAddress";
 import PersonData from "../../components/People/PersonData";
 import { 
@@ -15,10 +15,14 @@ import { Tooltip, Toast } from 'bootstrap';
 import ModalConfirm from '../../components/Modal/Confirme';
 import InfoToast from "../../components/InfoToast";
 import PersonContactAction from "../../components/People/PersonContactAction";
-import { setMaskTelefone } from "../../utilities/Masks";
+import { noMask, setMaskTelefone } from "../../utilities/Masks";
+import { testValidPhone } from "../../utilities/Utilities";
 
-const Dashboard = (props) => {
-  
+
+const Dashboard = (props) => {  
+
+  const { formStatus, setFormStatus } = useContext(PersonContext);
+
   const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
   const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new Tooltip(tooltipTriggerEl));
   const { id_people, id_user } = useParams();
@@ -159,33 +163,35 @@ const Dashboard = (props) => {
   const getPersonForId = async () => {
 
     try {
+
       const result = await getPersonById(id_people);
+
       if(result.status === 200) {
         setPerson({
           ...person,
-          description: result.data.person.name,
+          description: result.data.person.name != null ? result.data.person.name : '',
           id_people: result.data.person.id_people,
           id_status: result.data.person.id_status,
           id_document_type: result.data.person.id_document_type,
-          document: result.data.person.document,
-          name: result.data.person.name,
-          usual_name: result.data.person.usual_name,
-          birth_date: result.data.person.birth_date.substring(0, 10),
+          document: result.data.person.document != null ? result.data.person.document : '',
+          name: result.data.person.name != null ? result.data.person.name : '',
+          usual_name: result.data.person.usual_name != null ? result.data.person.usual_name : '',
+          birth_date: result.data.person.birth_date =! null ? result.data.person.birth_date : '',
           sexo: result.data.person.sexo,
           id_treatment: result.data.person.id_treatment,
-          date_registration: result.data.person.date_registration,
-          last_change: result.data.person.last_change,
+          date_registration: result.data.person.date_registration != null ? result.data.person.date_registration : '',
+          last_change: result.data.person.last_change != null ? result.data.person.last_change : '',
           id_address: result.data.person.id_address,
-          id_address_type: result.data.person.id_adress_type,
-          address_type: result.data.person.address_type,
-          address: result.data.person.adress,
-          address_number: result.data.person.address_number,
-          city: result.data.person.city,
-          uf: result.data.person.uf,
-          address_complement: result.data.person.address_complement,
-          district: result.data.person.district,
-          cep: result.data.person.cep,
-          document_type: result.data.person.document_type,
+          id_address_type: result.data.person.id_adress_type != null ?  result.data.person.id_adress_type : '',
+          address_type: result.data.person.address_type != null ? result.data.person.address_type : '',
+          address:  result.data.person.adress != null ? result.data.person.adress : '',
+          address_number: result.data.person.address_number != null ? result.data.person.address_number : '',
+          city: result.data.person.city != null ? result.data.person.city : '',
+          uf: result.data.person.uf != null ? result.data.person.uf : '',
+          address_complement: result.data.person.address_complement != null ? result.data.person.address_complement : '',
+          district: result.data.person.district != null ? result.data.person.district : '',
+          cep: result.data.person.cep != null ? result.data.person.cep : '',
+          document_type: result.data.person.document_type != null ? result.data.person.document_type : '',
           contacts: result.data.contacts,
         });
       }
@@ -224,18 +230,27 @@ const Dashboard = (props) => {
     
     try {
 
-      const response = await addContact(contactPerson);
-      if (response.status === 200) {
+      console.log('apssou aqui!');
 
-        setInfoToastData({
-          icon: 'fa fa-info-circle',
-          icon_color: 'green',
-          title: 'Informação',
-          text: response.data.message
-        });     
-        person.contacts.push(contactPerson);
-        toastAdd.show();
+      if (testPhone()) {
+        const response = await addContact({ ...contactPerson, contact: noMask(contactPerson.contact) });
+        if (response.status === 200) {
+          setInfoToastData({
+            icon: 'fa fa-info-circle',
+            icon_color: 'green',
+            title: 'Informação',
+            text: response.data.message
+          });   
+          person.contacts.push({
+            ...contactPerson,
+            id_contact: response.data.id_contact_inserted,
+            id_contact_type: contactPerson.id_contact_type,
+            contact: noMask(contactPerson.contact)
+          });
+          toastAdd.show();
+        }
       }
+
     } catch (error) {
       setInfoToastData({
         icon: 'fa fa-exclamation-triangle',
@@ -350,7 +365,9 @@ const Dashboard = (props) => {
   const btnDelete = (e, data, index) => {
     e.preventDefault();
     setActionType('delete');
-   
+
+    console.log(`Index: ${index} Dados: ${JSON.stringify(data)}`)
+    
     setModalConfirmData({ 
       ...modalConfirmData, 
       title: 'Ateção!', 
@@ -370,6 +387,34 @@ const Dashboard = (props) => {
     setContactPerson(contactPersonDefaut); 
   }
 
+  const testPhone = () => {
+    if (contactPerson.contact) {
+      setFormStatus({...formStatus, 
+        contatc: {
+          erro: 'Campo obrigatório!',
+          validate: 'form-control is-invalid'
+        }
+      });
+      return false;    
+    }
+    if(!testValidPhone(noMask(contactPerson.contact))){
+      setFormStatus({...formStatus, 
+        contact: {
+          erro: 'Telefone inválido!',
+          validate: 'form-control is-invalid'
+        }
+      });
+      return false; 
+    }
+    setFormStatus({...formStatus, 
+      contact: {
+        erro: '',
+        validate: 'form-control is-valid'
+      }
+    });
+    return true;
+  }
+
   useEffect(()=>{
     getPersonForId();
     setContactsType();
@@ -377,60 +422,62 @@ const Dashboard = (props) => {
 
 
   return(
-    <PersonContextProvider>
-      <div className='container-sm'>
-        <h4 className='title-page'>Cadastro único</h4>
-        <p>Olá, <b className='title-page'>{ person.name.toUpperCase() }</b></p>
-        <nav>
-          <div className="nav nav-tabs d-flex justify-content-start" id="nav-tab" role="tablist">
-            <button 
-              className="nav-link active" 
-              id="nav-home-tab" 
-              data-bs-toggle="tab" 
-              data-bs-target="#nav-home" 
-              type="button" 
-              role="tab" 
-              aria-controls="nav-home" 
-              aria-selected="true"
-            >
-              <i className="fas fa-user"></i> Dados Pessoal
-            </button>
-            <button 
-              className="nav-link" 
-              id="nav-api-tab-1" 
-              data-bs-toggle="tab" 
-              data-bs-target="#nav-api-1" 
-              type="button" 
-              role="tab" 
-              aria-controls="nav-api-1" 
-              aria-selected="false"
-            >
-              <i className="fas fa-map-marker"></i> Endereço
-            </button>
-            <button 
-              className="nav-link"
-              id="nav-api-tab-2" 
-              data-bs-toggle="tab" 
-              data-bs-target="#nav-api-2" 
-              type="button" 
-              role="tab" 
-              aria-controls="nav-api-2" 
-              aria-selected="false">
-                <i className="fas fa-phone"></i> Contato
-            </button>
-            <button 
-              className="nav-link" 
-              id="nav-api-tab-3" 
-              data-bs-toggle="tab" 
-              data-bs-target="#nav-api-3" 
-              type="button" 
-              role="tab" 
-              aria-controls="nav-api-3" 
-              aria-selected="false" 
-            >
-              <i className="fas  fa-tasks"></i> Nível da conta
-            </button>
-          </div>
+    <div className='container-sm'>
+      <h4 className='title-page'>Cadastro único</h4>
+      <p>Olá, <b className='title-page'>{ person.name ? person.name.toUpperCase() : 'Seja bem vindo!' }</b></p>
+      <div className="col-md-6" col style={{"color": "orangered"}}>
+        <i class="fa fa-exclamation-triangle"></i> Para melhorar o nível da conta, informe seus dados.
+      </div>
+       <nav>
+         <div className="nav nav-tabs d-flex justify-content-start" id="nav-tab" role="tablist">
+           <button 
+             className="nav-link active" 
+             id="nav-home-tab" 
+             data-bs-toggle="tab" 
+             data-bs-target="#nav-home" 
+             type="button" 
+             role="tab" 
+             aria-controls="nav-home" 
+             aria-selected="true"
+           >
+             <i className="fas fa-user"></i> Dados Pessoal
+           </button>
+           <button 
+             className="nav-link" 
+             id="nav-api-tab-1" 
+             data-bs-toggle="tab" 
+             data-bs-target="#nav-api-1" 
+             type="button" 
+             role="tab" 
+             aria-controls="nav-api-1" 
+             aria-selected="false"
+           >
+             <i className="fas fa-map-marker"></i> Endereço
+           </button>
+           <button 
+             className="nav-link"
+             id="nav-api-tab-2" 
+             data-bs-toggle="tab" 
+             data-bs-target="#nav-api-2" 
+             type="button" 
+             role="tab" 
+             aria-controls="nav-api-2" 
+             aria-selected="false">
+               <i className="fas fa-phone"></i> Contato
+           </button>
+           <button 
+             className="nav-link" 
+             id="nav-api-tab-3" 
+             data-bs-toggle="tab" 
+             data-bs-target="#nav-api-3" 
+             type="button" 
+             role="tab" 
+             aria-controls="nav-api-3" 
+             aria-selected="false" 
+           >
+             <i className="fas  fa-tasks"></i> Nível da conta
+           </button>
+         </div>
        </nav>
        <form className='row' onSubmit={ ()=>{} }> 
         <div className="tab-content" id="nav-tabContent">
@@ -516,7 +563,6 @@ const Dashboard = (props) => {
       </ModalConfirm>            
       <InfoToast data={ infoToastData } />
     </div>
-    </PersonContextProvider>
   );
 
 }

@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import LogOut from './pages/LogOut';
 import ChangePassword from "./pages/ChangePassword";
 import RecoverPassword from "./pages/RecoverPassword";
+import { PersonContextProvider } from "./Contexts/Person/PersonContext";
 
 const AppRoutes = () => {
 
@@ -19,7 +20,9 @@ const AppRoutes = () => {
         <Route exact path="/dashboard/:id_people?/:id_user?" element={ 
             <PrivateRoute>
               <Menu />
-              <Dashboard /> 
+              <PersonContextProvider>
+                <Dashboard /> 
+              </PersonContextProvider>
             </PrivateRoute>
           } />
         <Route exact path="/logout" element={ 

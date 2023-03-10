@@ -117,7 +117,9 @@ export function setMaskCPF(cpf) {
     
   let value =  cpf;
 
-  value = value.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+  if(value) {
+    value = value.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+  }
   return value;
 }
 
