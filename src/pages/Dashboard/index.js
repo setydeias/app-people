@@ -155,6 +155,7 @@ const Dashboard = (props) => {
     e.preventDefault();
     setActionType('add');
     setContactPerson(contactPersonDefaut);
+    setFormStatusDefault();
     
     setModalConfirmData({ 
       ...modalConfirmData, 
@@ -596,6 +597,7 @@ const Dashboard = (props) => {
               btnAdd={ btnAdd }
               btnEdit={ btnEdit }
               btnDelete={ btnDelete }
+              setFormStatusDefault={ setFormStatusDefault }
             />
           </div>
           <div className="tab-pane fade" id="nav-api-3" role="tabpanel" aria-labelledby="nav-api-3"   tabIndex="0">
