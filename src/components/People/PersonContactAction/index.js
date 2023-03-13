@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useContext } from "react";
-import { PersonContext } from "../../../Contexts/Person/PersonContext";
 import MyCheck from "../../Form/Check";
 import InputContact from "../../Form/Input/Contact";
 import SelectTypeContact from "../../Form/Select/TypeContact";
