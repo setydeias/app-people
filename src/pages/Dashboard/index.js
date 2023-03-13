@@ -16,7 +16,7 @@ import ModalConfirm from '../../components/Modal/Confirme';
 import InfoToast from "../../components/InfoToast";
 import PersonContactAction from "../../components/People/PersonContactAction";
 import { noMask, setMaskTelefone } from "../../utilities/Masks";
-import { isValidEMail, testValidPhone } from "../../utilities/Utilities";
+import { isValidEMail, testValidPhone, isSite } from "../../utilities/Utilities";
 
 
 const Dashboard = (props) => {  
@@ -455,14 +455,64 @@ const Dashboard = (props) => {
     return false;
   }
 
+  const testSite = () => {
+    if (contactPerson.contact) {
+      if (isSite(contactPerson.contact)) {
+        setFormStatus({...formStatus, 
+          contact: {
+            erro: '',
+            validate: 'form-control is-valid'
+          }
+        });
+        return true;
+      }
+      setFormStatus({...formStatus, 
+        contact: {
+          erro: 'Site inválido!',
+          validate: 'form-control is-invalid'
+        }
+      });
+      return false;
+    }
+    setFormStatus({...formStatus, 
+      contact: {
+        erro: 'Página  inválido!',
+        validate: 'form-control is-invalid'
+      }
+    });
+    return false;
+  }
+
+  const testContactPerson = () => {
+    if (contactPerson.contact) {
+      setFormStatus({...formStatus, 
+        contact: {
+          erro: '',
+          validate: 'form-control is-valid'
+        }
+      })
+      return true;
+    }
+    setFormStatus({...formStatus, 
+      contact: {
+        erro: 'Contato inválido!',
+        validate: 'form-control is-invalid'
+      }
+    });
+    return false;
+  }
+
+
   const testContactForType = () => {
     switch (contactPerson.id_contact_type.toString()) {
       case '1':
         return testPhone();
       case '2':
        return testEmail();
+      case '5':
+        return testSite();
       default:
-       return 'Passou aqui!';
+       return testContactPerson();
     }
   }
 

@@ -26,7 +26,8 @@ export const PersonContextProvider = (props) => {
         district: dataDefault,
         cep: dataDefault,
         address_caracters: dataDefault,
-        contact: dataDefault
+        contact: dataDefault,
+        site: dataDefault
     }
     
     const [formStatus, setFormStatus] = useState(()=>statusFormDefault);
