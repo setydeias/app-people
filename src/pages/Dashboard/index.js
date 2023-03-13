@@ -106,11 +106,7 @@ const Dashboard = (props) => {
       ...contactPerson, [name]: value,
       contact: '' 
     });
-    setFormStatus({...formStatus, 
-      contact: {
-        erro: '',
-        validate: 'form-control'
-      }})
+    setFormStatusDefault();
   }; 
   
   const handleChangeContactMain = (e) => {
@@ -398,14 +394,18 @@ const Dashboard = (props) => {
     setContactPerson(contactPersonDefaut); 
   }
 
+  const setFormStatusDefault = () => {
+    setFormStatus({...formStatus, 
+      contact: {
+        erro: '',
+        validate: 'form-control'
+      }
+    });
+  }
+
   const testPhone = () => {
     if (contactPerson.contact) {
-      setFormStatus({...formStatus, 
-        contact: {
-          erro: 'Campo obrigatório!',
-          validate: 'form-control is-invalid'
-        }
-      });
+      setFormStatusDefault();
       return false;    
     }
     if(!testValidPhone(noMask(contactPerson.contact))){
@@ -430,12 +430,7 @@ const Dashboard = (props) => {
     console.log(`testeEmail: ${ contactPerson.contact }`)
     if (contactPerson.contact) {
       if (isValidEMail(contactPerson.contact)) {
-        setFormStatus({...formStatus, 
-          contact: {
-            erro: '',
-            validate: 'form-control is-valid'
-          }
-        });
+        setFormStatusDefault();
         return true;
       }
       setFormStatus({...formStatus, 
@@ -458,12 +453,7 @@ const Dashboard = (props) => {
   const testSite = () => {
     if (contactPerson.contact) {
       if (isSite(contactPerson.contact)) {
-        setFormStatus({...formStatus, 
-          contact: {
-            erro: '',
-            validate: 'form-control is-valid'
-          }
-        });
+        setFormStatusDefault();
         return true;
       }
       setFormStatus({...formStatus, 
@@ -485,12 +475,7 @@ const Dashboard = (props) => {
 
   const testContactPerson = () => {
     if (contactPerson.contact) {
-      setFormStatus({...formStatus, 
-        contact: {
-          erro: '',
-          validate: 'form-control is-valid'
-        }
-      })
+      setFormStatusDefault();
       return true;
     }
     setFormStatus({...formStatus, 
@@ -641,6 +626,7 @@ const Dashboard = (props) => {
           handleChangeContactType={ handleChangeContactType }
           handleChangeContactMain={ handleChangeContactMain }
           handleChangeContactWhatsApp={ handleChangeContactWhatsApp }
+          setFormStatusDefault={ setFormStatusDefault }
         />
       </ModalConfirm>
       <ModalConfirm
@@ -660,6 +646,7 @@ const Dashboard = (props) => {
           handleChangeContactType={ handleChangeContactType }
           handleChangeContactMain={ handleChangeContactMain }
           handleChangeContactWhatsApp={ handleChangeContactWhatsApp }
+          setFormStatusDefault={ setFormStatusDefault }
         />
       </ModalConfirm>            
       <InfoToast data={ infoToastData } />
