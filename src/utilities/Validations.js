@@ -42,6 +42,12 @@ export function isValidEMail (mail) {
     return regex.test(mail)
 }
 
+export function isSite (site) {
+
+  let reDot = /[.]/g
+  return reDot.test(site) // retorna -1 pois não conseguiu encontrar o ponto "."
+}
+
 export function clearForm () {
     var arrForms = document.forms
       for (var j=0,f;f = arrForms[j];j++) {

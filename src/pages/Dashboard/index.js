@@ -16,13 +16,16 @@ import ModalConfirm from '../../components/Modal/Confirme';
 import InfoToast from "../../components/InfoToast";
 import PersonContactAction from "../../components/People/PersonContactAction";
 import { noMask, setMaskTelefone } from "../../utilities/Masks";
-import { testValidPhone } from "../../utilities/Utilities";
+import { isValidEMail, testValidPhone } from "../../utilities/Utilities";
 
 
 const Dashboard = (props) => {  
 
   const { formStatus, setFormStatus } = useContext(PersonContext);
 
+  var references = {
+    contactRef: document.getElementById('floatingTexContact'),    
+  }
   const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
   const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new Tooltip(tooltipTriggerEl));
   const { id_people, id_user } = useParams();
@@ -99,8 +102,15 @@ const Dashboard = (props) => {
 
   const handleChangeContactType = (e) => {
     const { name, value } = e.target;
-    setContactPerson({ ...contactPerson, [name]: value });
-    console.log(`Name: ${name} Value: ${value}`);
+    setContactPerson({ 
+      ...contactPerson, [name]: value,
+      contact: '' 
+    });
+    setFormStatus({...formStatus, 
+      contact: {
+        erro: '',
+        validate: 'form-control'
+      }})
   }; 
   
   const handleChangeContactMain = (e) => {
@@ -230,9 +240,10 @@ const Dashboard = (props) => {
     
     try {
 
-      console.log('apssou aqui!');
+      console.log(testContactForType());
 
-      if (testPhone()) {
+
+      /*if (testPhone()) {
         const response = await addContact({ ...contactPerson, contact: noMask(contactPerson.contact) });
         if (response.status === 200) {
           setInfoToastData({
@@ -249,7 +260,7 @@ const Dashboard = (props) => {
           });
           toastAdd.show();
         }
-      }
+      }*/
 
     } catch (error) {
       setInfoToastData({
@@ -390,7 +401,7 @@ const Dashboard = (props) => {
   const testPhone = () => {
     if (contactPerson.contact) {
       setFormStatus({...formStatus, 
-        contatc: {
+        contact: {
           erro: 'Campo obrigatório!',
           validate: 'form-control is-invalid'
         }
@@ -413,6 +424,46 @@ const Dashboard = (props) => {
       }
     });
     return true;
+  }
+
+  const testEmail = () => {
+    console.log(`testeEmail: ${ contactPerson.contact }`)
+    if (contactPerson.contact) {
+      if (isValidEMail(contactPerson.contact)) {
+        setFormStatus({...formStatus, 
+          contact: {
+            erro: '',
+            validate: 'form-control is-valid'
+          }
+        });
+        return true;
+      }
+      setFormStatus({...formStatus, 
+        contact: {
+          erro: 'E-mail inválido!',
+          validate: 'form-control is-invalid'
+        }
+      });
+      return false;
+    }
+    setFormStatus({...formStatus, 
+      contact: {
+        erro: 'E-mail inválido!',
+        validate: 'form-control is-invalid'
+      }
+    });
+    return false;
+  }
+
+  const testContactForType = () => {
+    switch (contactPerson.id_contact_type.toString()) {
+      case '1':
+        return testPhone();
+      case '2':
+       return testEmail();
+      default:
+       return 'Passou aqui!';
+    }
   }
 
   useEffect(()=>{
