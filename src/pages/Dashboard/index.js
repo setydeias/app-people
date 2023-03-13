@@ -83,7 +83,7 @@ const Dashboard = (props) => {
     main: 0,
     contact_type: ''
   }
-    
+  
   const [actionType, setActionType] = useState('add');
   const [modalConfirmData, setModalConfirmData] = useState(modalConfirmDataDefalt);
   const toastLiveExample = document.getElementById('liveToast');
@@ -92,11 +92,12 @@ const Dashboard = (props) => {
   const [person, setPerson] = useState(personDefault);
   const [contactPerson, setContactPerson] = useState(contactPersonDefaut); 
   const [index, setIndex] = useState(-1);
+  const [contactTypeLabelSelected, setContactTypeLabelSelected] = useState('');
 
   const handleChange = (e) => {
     e.preventDefault();
     const { name, value } = e.target;
-    setContactPerson({ ...contactPerson, [name]: value });
+    setContactPerson({ ...contactPerson, [name]: noMask(value) });
     setFormStatusDefault();
   }; 
 
@@ -104,8 +105,9 @@ const Dashboard = (props) => {
     const { name, value } = e.target;
     setContactPerson({ 
       ...contactPerson, [name]: value,
-      contact: '' 
+      contact: '',
     });
+    updateContactTypeDescription(value);
     setFormStatusDefault();
   }; 
   
@@ -156,7 +158,7 @@ const Dashboard = (props) => {
     setActionType('add');
     setContactPerson(contactPersonDefaut);
     setFormStatusDefault();
-
+    setContactTypeLabelSelected(contactPerson.id_contact_type)
     setModalConfirmData({ 
       ...modalConfirmData, 
       title: 'Adicionar Contato', 
@@ -237,7 +239,7 @@ const Dashboard = (props) => {
     
     try {
 
-      if (testContactForType) {
+      if (testContactForType()) {
         const response = await addContact({ ...contactPerson, contact: noMask(contactPerson.contact) });
         if (response.status === 200) {
           setInfoToastData({
@@ -250,7 +252,8 @@ const Dashboard = (props) => {
             ...contactPerson,
             id_contact: response.data.id_contact_inserted,
             id_contact_type: contactPerson.id_contact_type,
-            contact: noMask(contactPerson.contact)
+            contact: noMask(contactPerson.contact),
+            contact_type: contactTypeLabelSelected
           });
           toastAdd.show();
         }
@@ -267,6 +270,15 @@ const Dashboard = (props) => {
     }
   }
 
+  const updateContactTypeDescription = (data) => {
+    contactTypeList.map((contactType) => {
+      if (contactType.id_contact_type == data) {
+        setContactTypeLabelSelected(contactType.description);
+        return;
+      }
+    });
+  }
+
   const contactEdit = async (e) => {
 
     e.preventDefault();
@@ -275,34 +287,36 @@ const Dashboard = (props) => {
 
     try {
 
-      const response = await patchContact(contactPerson);
-      if (response.status === 200) {
-
-        setInfoToastData({
-          icon: 'fa fa-info-circle',
-          icon_color: 'green',
-          title: 'Informação',
-          text: response.data.message
-        });     
-        setContactPerson(contactPersonDefaut);
-        toastEdit.show();
-      }
-
-      for (let index = 0; index < person.contacts.length; index++) {
-        if (person.contacts[index].id_contact === contactPerson.id_contact) {
-        
-          person.contacts[index] = {
-            id_contact: contactPerson.id_contact,
-            id_people: contactPerson.id_people,
-            id_contact_type: contactPerson.id_contact_type,
-            contact: contactPerson.contact,
-            whatsapp: contactPerson.whatsapp,
-            main: contactPerson.main,
-            contact_type: contactPerson.contact_type
-          };
+      if (testContactForType()) {
+        const response = await patchContact(contactPerson);
+        if (response.status === 200) {
+  
+          setInfoToastData({
+            icon: 'fa fa-info-circle',
+            icon_color: 'green',
+            title: 'Informação',
+            text: response.data.message
+          });     
+          setContactPerson(contactPersonDefaut);
+          toastEdit.show();
+        }
+  
+        for (let index = 0; index < person.contacts.length; index++) {
+          if (person.contacts[index].id_contact === contactPerson.id_contact) {
+          
+            person.contacts[index] = {
+              id_contact: contactPerson.id_contact,
+              id_people: contactPerson.id_people,
+              id_contact_type: contactPerson.id_contact_type,
+              contact: noMask(contactPerson.contact),
+              whatsapp: contactPerson.whatsapp,
+              main: contactPerson.main,
+              contact_type: contactPerson.contact_type
+            };
+          }
         }
       }
-
+      
     } catch (error) {
       setInfoToastData({
         icon: 'fa fa-exclamation-triangle',
@@ -351,9 +365,8 @@ const Dashboard = (props) => {
   const btnEdit = (e, data, index) => {
     e.preventDefault();
     setActionType('edit');
-
     console.log(`Index: ${index} Dados: ${JSON.stringify(data)}`)
-
+    setFormStatusDefault();
     setModalConfirmData({ 
       ...modalConfirmData, 
       title: 'Editar contato', 
@@ -363,7 +376,11 @@ const Dashboard = (props) => {
       textAction2: 'Confirmar', 
     });
 
-    setContactPerson({ ...contactPerson, ...data });
+    setContactPerson({ 
+      ...contactPerson, 
+      ...data, 
+      contact: noMask(data.contact)
+    });
     setIndex(index-1);
   };
 

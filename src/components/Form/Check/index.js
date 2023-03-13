@@ -8,7 +8,7 @@ const MyCheck = (props) => {
         className="form-check-input" 
         id={ props.data.id }
         name={ props.data.name} 
-        defaultChecked={ props.data.checked === 0 ? false : true }
+        checked={ props.data.checked === 0 ? false : true }
         onChange={ props.data.action }
         style={{"marginRight": "0.3em"}}
       />
