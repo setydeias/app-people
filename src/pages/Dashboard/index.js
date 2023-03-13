@@ -97,7 +97,7 @@ const Dashboard = (props) => {
     e.preventDefault();
     const { name, value } = e.target;
     setContactPerson({ ...contactPerson, [name]: value });
-    console.log(`Name: ${name} Value: ${value}`);
+    setFormStatusDefault();
   }; 
 
   const handleChangeContactType = (e) => {
@@ -112,13 +112,13 @@ const Dashboard = (props) => {
   const handleChangeContactMain = (e) => {
     const { name, checked,  } = e.target;
     setContactPerson({ ...contactPerson, [name]: Number(checked) });
-    console.log(`Name: ${name} Checked: ${checked}`);
+    setFormStatusDefault();
   }; 
 
   const handleChangeContactWhatsApp = (e) => {
     const { name, checked } = e.target;
     setContactPerson({ ...contactPerson, [name]: Number(checked) });
-    console.log(`Name: ${name} Checked: ${checked}`);
+    setFormStatusDefault();
   }; 
 
   const testDcumentExists =  async () => { 
@@ -156,7 +156,7 @@ const Dashboard = (props) => {
     setActionType('add');
     setContactPerson(contactPersonDefaut);
     setFormStatusDefault();
-    
+
     setModalConfirmData({ 
       ...modalConfirmData, 
       title: 'Adicionar Contato', 
@@ -237,10 +237,7 @@ const Dashboard = (props) => {
     
     try {
 
-      console.log(testContactForType());
-
-
-      /*if (testPhone()) {
+      if (testContactForType) {
         const response = await addContact({ ...contactPerson, contact: noMask(contactPerson.contact) });
         if (response.status === 200) {
           setInfoToastData({
@@ -257,7 +254,7 @@ const Dashboard = (props) => {
           });
           toastAdd.show();
         }
-      }*/
+      }
 
     } catch (error) {
       setInfoToastData({
@@ -406,25 +403,25 @@ const Dashboard = (props) => {
 
   const testPhone = () => {
     if (contactPerson.contact) {
+      if(!testValidPhone(noMask(contactPerson.contact))){
+        setFormStatus({...formStatus, 
+          contact: {
+            erro: 'Telefone inválido!',
+            validate: 'form-control is-invalid'
+          }
+        });
+        return false; 
+      }
       setFormStatusDefault();
-      return false;    
-    }
-    if(!testValidPhone(noMask(contactPerson.contact))){
-      setFormStatus({...formStatus, 
-        contact: {
-          erro: 'Telefone inválido!',
-          validate: 'form-control is-invalid'
-        }
-      });
-      return false; 
-    }
+      return true 
+    }    
     setFormStatus({...formStatus, 
       contact: {
-        erro: '',
-        validate: 'form-control is-valid'
+        erro: 'Telefone inválido.',
+        validate: 'form-control is-invalid'
       }
     });
-    return true;
+    return false;
   }
 
   const testEmail = () => {
